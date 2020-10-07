@@ -13,6 +13,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 
 // @material-ui/icons
 import { Apps, CloudDownload } from "@material-ui/icons";
+import PersonIcon from '@material-ui/icons/Person';
 
 // core components
 import CustomDropdown from "components/CustomDropdown/CustomDropdown.js";
@@ -27,6 +28,15 @@ export default function HeaderLinks(props) {
   return (
     <List className={classes.list}>
       <ListItem className={classes.listItem}>
+        <Button
+          href="/login-page"
+          color="transparent"
+          className={classes.navLink}
+        >
+           <PersonIcon className={classes.icons} /> Login
+        </Button>
+      </ListItem>
+      {/*<ListItem className={classes.listItem}>
         <CustomDropdown
           noLiPadding
           buttonText="Components"
@@ -59,13 +69,13 @@ export default function HeaderLinks(props) {
           <CloudDownload className={classes.icons} /> Download
         </Button>
       </ListItem>
-      <ListItem className={classes.listItem}>
+      <ListItem className={classes.listItem}>*/}
         {/*<Tooltip title="Delete">
           <IconButton aria-label="Delete">
             <DeleteIcon />
           </IconButton>
         </Tooltip>*/}
-        <Tooltip
+        {/*<Tooltip
           id="instagram-twitter"
           title="Follow us on twitter"
           placement={window.innerWidth > 959 ? "top" : "left"}
@@ -114,7 +124,7 @@ export default function HeaderLinks(props) {
             <i className={classes.socialIcons + " fab fa-instagram"} />
           </Button>
         </Tooltip>
-      </ListItem>
+      </ListItem>*/}
     </List>
   );
 }

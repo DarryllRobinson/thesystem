@@ -34,7 +34,7 @@ export default function LandingPage(props) {
       <Header
         color="transparent"
         routes={dashboardRoutes}
-        brand="Material Kit React"
+        brand="The System"
         rightLinks={<HeaderLinks />}
         fixed
         changeColorOnScroll={{
@@ -47,9 +47,9 @@ export default function LandingPage(props) {
         <div className={classes.container}>
           <GridContainer>
             <GridItem xs={12} sm={12} md={6}>
-              <h1 className={classes.title}>Your Story Starts With Us.</h1>
+              <h1 className={classes.title}>We are here for you</h1>
               <h4>
-                We know how much your customers mean to you, even the ones that struggle to pay on time.
+                We know how much your customers mean to you, even the ones who struggle to pay on time.
                 Let us take of the stress of collecting what is owed to you so you can focus on your business.
               </h4>
               <br />
