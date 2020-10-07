@@ -1,0 +1,22 @@
+{
+  "name": "thesystem",
+  "homepage": "https://thesystem.co.za",
+  "authors": [
+    "Darryll Robinson"
+  ],
+  "description": "The System - a platform to make business life easier, starting with a collections system",
+  "main": "dist/index.js",
+  "keywords": [
+    "collections",
+    "system",
+  ],
+  "license": "Private",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "private": true
+}
