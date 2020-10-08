@@ -52,7 +52,8 @@ export default function LoginPage(props) {
     };
 
     mysqlLayer.PostLogin(`/admin/sessions/`, user, { withCredentials: true }
-    ).then(handleResponse);
+    ).then(handleResponse)
+    .then(user => console.log('user: ', user));
   }
 
   const [cardAnimaton, setCardAnimation] = useState("cardHidden");

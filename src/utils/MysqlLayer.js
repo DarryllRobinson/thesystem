@@ -89,9 +89,9 @@ export default class MysqlLayer {
     //console.log('object: ', object);
     try {
       //console.log(`Posting login to from ${AppSettings.serverEndpoint}${path}`);
-      let response = await axios.post(`${AppSettings.serverEndpoint}${path}`, object, this.setHeaders());
-      //console.log('response: ', response);
-      return response;
+      let user = await axios.post(`${AppSettings.serverEndpoint}${path}`, object, this.setHeaders());
+      //console.log('user: ', user);
+      return user;
     } catch(e) {
       console.log('e: ', e);
       this.sendMessage(
