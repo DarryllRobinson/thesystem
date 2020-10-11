@@ -216,8 +216,8 @@ export default class MysqlLayer {
     const https = require('https');
     // return authorization header with jwt token
     const currentUser = authenticationService.currentUserValue;
-    let token = currentUser ? currentUser.token : null;
-    //console.log('currentUser: ', currentUser.token);
+    let token = currentUser ? currentUser : null;
+    //console.log('currentUser: ', currentUser);
     let user = sessionStorage.getItem('cwsUser');
     //console.log('user: ', user);
 
