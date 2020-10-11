@@ -1,37 +1,42 @@
+// https://jasonwatmore.com/post/2019/02/01/react-role-based-authorization-tutorial-with-example#fake-backend-js
 import { BehaviorSubject } from 'rxjs';
 
 //import config from 'config';
-//import { handleResponse } from '../Services';
+import MysqlLayer from 'utils/MysqlLayer';
+import Security from 'utils/Security';
+import { handleResponse } from 'services';
 
-const currentUserSubject = new BehaviorSubject(localStorage.getItem('currentUser'));
+const currentUserSubject = new BehaviorSubject(sessionStorage.getItem('cwsToken'));
 
 export const authenticationService = {
-  //login,
-  //logout,
+  login,
+  logout,
   currentUser: currentUserSubject.asObservable(),
   get currentUserValue () { return currentUserSubject.value }
 };
 
-/*function login(username, password) {
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-    };
+function login(userCredentials) {
+  //console.log('login userCredentials: ', userCredentials);
+  const mysqlLayer = new MysqlLayer();
+  const security = new Security();
 
-    return fetch(`${config.apiUrl}/users/authenticate`, requestOptions)
-        .then(handleResponse)
-        .then(user => {
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            currentUserSubject.next(user);
+  return mysqlLayer.PostLogin(`/admin/sessions/`, userCredentials)
+    .then(handleResponse)
+    .then(user => {
+      //console.log('writing user details');
+      security.writeLoginSession(user, userCredentials.loginDate)
+      // store user details and jwt token in local storage to keep user logged in between page refreshes
+      //localStorage.setItem('currentUser', JSON.stringify(user));
+      currentUserSubject.next(user);
 
-            return user;
-        });
+      return user;
+    });
 }
 
 function logout() {
-    // remove user from local storage to log user out
-    localStorage.removeItem('currentUser');
+    // remove user from session storage to log user out
+    const security = new Security();
+    security.terminateSession();
     currentUserSubject.next(null);
-}*/
+    window.location.href = '/';
+}

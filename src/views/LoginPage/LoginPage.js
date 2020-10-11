@@ -18,8 +18,7 @@ import CardBody from "components/Card/CardBody.js";
 //import CardHeader from "components/Card/CardHeader.js";
 import CardFooter from "components/Card/CardFooter.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
-import MysqlLayer from 'utils/MysqlLayer';
-import { handleResponse } from 'services';
+import { authenticationService } from 'services';
 import moment from 'moment';
 
 import styles from "assets/jss/material-kit-react/views/loginPage.js";
@@ -42,7 +41,6 @@ export default function LoginPage(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const mysqlLayer = new MysqlLayer();
     const loginDatetime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
 
     const user = {
@@ -51,9 +49,14 @@ export default function LoginPage(props) {
       loginDate: loginDatetime
     };
 
-    mysqlLayer.PostLogin(`/admin/sessions/`, user, { withCredentials: true }
-    ).then(handleResponse)
-    .then(user => console.log('user: ', user));
+    authenticationService.login(user)
+      .then(() => {
+        //console.log('pushing to dashboard');
+        props.history.push('/dashboard');
+        window.location.reload(true);
+      });
+
+
   }
 
   const [cardAnimaton, setCardAnimation] = useState("cardHidden");

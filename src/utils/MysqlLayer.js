@@ -2,7 +2,7 @@ import axios from 'axios';
 import AppSettings from './appSettings';
 import Security from './Security';
 import moment from 'moment';
-//import { authenticationService, handleResponse } from '../Services';
+import { authenticationService } from 'services';
 
 export default class MysqlLayer {
 
@@ -89,7 +89,7 @@ export default class MysqlLayer {
     //console.log('object: ', object);
     try {
       //console.log(`Posting login to from ${AppSettings.serverEndpoint}${path}`);
-      let user = await axios.post(`${AppSettings.serverEndpoint}${path}`, object, this.setHeaders());
+      let user = await axios.post(`${AppSettings.serverEndpoint}${path}`, object);
       //console.log('user: ', user);
       return user;
     } catch(e) {
@@ -215,7 +215,9 @@ export default class MysqlLayer {
   setHeaders() {
     const https = require('https');
     // return authorization header with jwt token
-    //const currentUser = authenticationService.currentUserValue;
+    const currentUser = authenticationService.currentUserValue;
+    let token = currentUser ? currentUser.token : null;
+    //console.log('currentUser: ', currentUser.token);
     let user = sessionStorage.getItem('cwsUser');
     //console.log('user: ', user);
 
@@ -225,7 +227,7 @@ export default class MysqlLayer {
           "Accept": "application/json, application/x-www-form-urlencoded",
           "Content-Type": "application/json",
           'User': user,
-          //'Authorization': `Bearer ${currentUser.token}`
+          'Authorization': `Bearer ${token}`
         }
         /*headers: {
           "Access-Control-Allow-Origin": "http://localhost:3000",
