@@ -120,7 +120,7 @@ class NavBar extends React.Component {
   render() {
     return (
       <Navbar collapseOnSelect bg={this.colourToUse()} expand="lg" variant={this.colourToUse()} fixed="top">
-        <Navbar.Brand href="/">
+        <Navbar.Brand href='/'>
           {this.nametoDisplay()}
         </Navbar.Brand>
 

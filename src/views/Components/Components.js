@@ -75,7 +75,7 @@ export default function Components(props) {
         <SectionCompletedExamples />
         <SectionLogin />
         <GridItem md={12} className={classes.textCenter}>
-          <Link to={"/login-page"} className={classes.link}>
+          <Link to={'/login'} className={classes.link}>
             <Button color="primary" size="lg" simple>
               View Login Page
             </Button>

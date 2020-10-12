@@ -8,14 +8,6 @@ export default function AgentWorkspace(props) {
   return (
     <Router>
       <Container fluid>
-        {/*<NavBar {...this.props}
-          handleLogin={this.handleLogin}
-          handleLogout={this.handleLogout}
-          handleLogoutClick={this.handleLogoutClick}
-          loggedInStatus={this.state.loggedInStatus}
-          handleSuccessfulAuth={this.handleSuccessfulAuth}
-          role={this.state.user.role}
-        />*/}
         <ComponentRoutes />
       </Container>
     </Router>

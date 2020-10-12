@@ -2,9 +2,12 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
 import { authenticationService } from 'services';
+import Security from 'utils/Security';
 
 export const PrivateRoute = ({ component: Component, roles, ...rest }) => (
   <Route {...rest} render={props => {
+    const security = new Security();
+    security.validateSession();
     const currentUser = authenticationService.currentUserValue;
     //console.log('currentUser: ', currentUser);
     if (!currentUser) {

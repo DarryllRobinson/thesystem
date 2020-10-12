@@ -4,6 +4,7 @@ import { PrivateRoute } from "services/PrivateRoute";
 
 import Dashboard from 'views/Components/Dashboard.js';
 import Workzone from 'views/Components/Workzone.js';
+import NavBar from 'views/Components/NavBar';
 
 // Collections
 import Collection from 'views/Components/Collections/Collection';
@@ -31,12 +32,14 @@ const ComponentRoutes = (props) => {
       case 'agent':
         return (
           <React.Fragment>
+            <NavBar role={role}/>
             <Route exact path='/dashboard' component={Dashboard} />
           </React.Fragment>
         )
       case 'superuser':
         return (
           <React.Fragment>
+            <NavBar role={role}/>
             <PrivateRoute exact path='/dashboard' component={Dashboard} />
             <PrivateRoute exact path='/workzone/collections' component={Workzone} />
             <PrivateRoute exact path='/workzone/collections/collection/:id' component={Collection} />
