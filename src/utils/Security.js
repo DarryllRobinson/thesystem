@@ -30,14 +30,17 @@ export default class Security {
         if (sessionAgeSeconds >= 1800) {
           //console.log('1');
             this.terminateSession();
-            window.location = '/';
+            //window.location = '/';
+            return false;
         } else if (session === null) {
           //console.log('2');
           this.terminateSession();
+          return false;
         }
         else {
           //console.log('3');
             this.extendSession();
+            return true;
         }
     }
 

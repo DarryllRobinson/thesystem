@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Camera from "@material-ui/icons/Camera";
 import Palette from "@material-ui/icons/Palette";
 import Favorite from "@material-ui/icons/Favorite";
+
 // core components
 import Header from "components/Header/Header.js";
 import Footer from "components/Footer/Footer.js";
@@ -208,8 +209,8 @@ export default function ProfilePage(props) {
             </GridContainer>
           </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
   );
 }
