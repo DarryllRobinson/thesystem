@@ -1,9 +1,9 @@
 {
   "name": "thesystem",
   "version": "1.9.0",
+  "homepage": "https://thesystem.co.za/",
   "description": "The System - a platform to make business life easier, starting with a collections system",
   "private": true,
-  "main": "src/index.js",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
@@ -51,7 +51,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && gulp licenses",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint:check": "eslint . --ext=js,jsx;  exit 0",

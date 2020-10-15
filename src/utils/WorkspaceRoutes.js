@@ -12,7 +12,6 @@ import LoginPage from 'views/LoginPage/LoginPage.js';
 // common routes go here with specific, role-based routes in the relevant component
 
 const WorkspaceRoutes = (props) => {
-
   return (
     <>
       <Switch>

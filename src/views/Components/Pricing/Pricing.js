@@ -9,6 +9,9 @@ import DvrIcon from '@material-ui/icons/Dvr';
 import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
 
 // core components
+import Header from "components/Header/Header.js";
+import HeaderLinks from "components/Header/HeaderLinks.js";
+import Footer from "components/Footer/Footer.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Parallax from "components/Parallax/Parallax.js";
@@ -69,8 +72,17 @@ const useThemes = makeStyles((theme) => ({
 export default function Pricing(props) {
   const classes = useStyles();
   const themes = useThemes();
+  const { ...rest } = props;
+  
   return (
     <div>
+      <Header
+        absolute
+        color="transparent"
+        brand="The System"
+        rightLinks={<HeaderLinks />}
+        {...rest}
+      />
       <Parallax filter image={require("assets/img/bg2.jpg")}>
         <div className={classes.container}>
           <GridContainer justify="center">
@@ -161,6 +173,7 @@ export default function Pricing(props) {
             </Card>
           </GridItem>
         </GridContainer>
+        <Footer />
       </div>
     </div>
   );
