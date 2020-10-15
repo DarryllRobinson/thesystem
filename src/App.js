@@ -12,7 +12,7 @@ export default function App() {
 
   useEffect(() => {
     setLogin(security.validateSession());
-    if (!isLoggedIn) history.push('/');
+    //if (!isLoggedIn) history.push('/');
   }, [security, isLoggedIn]);
 
   return (
