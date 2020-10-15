@@ -3,9 +3,10 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 // @material-ui/icons
-import Chat from "@material-ui/icons/Chat";
-import VerifiedUser from "@material-ui/icons/VerifiedUser";
-import Fingerprint from "@material-ui/icons/Fingerprint";
+import DvrIcon from '@material-ui/icons/Dvr';
+import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
+import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
+
 // core components
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
@@ -34,27 +35,27 @@ export default function ProductSection() {
         <GridContainer>
           <GridItem xs={12} sm={12} md={4}>
             <InfoArea
-              title="Free Chat"
-              description="Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough."
-              icon={Chat}
+              title="The System"
+              description="Use The System to handle all your collections activites. This includes uploading existing accounts, taking each account through the workflow engine and drawing reports."
+              icon={DvrIcon}
               iconColor="info"
               vertical
             />
           </GridItem>
           <GridItem xs={12} sm={12} md={4}>
             <InfoArea
-              title="Verified Users"
-              description="Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough."
-              icon={VerifiedUser}
+              title="Call Centre"
+              description="Our professional call centre agents will follow up on your outstanding accounts for you. With daily updates and your own client dashboard (coming soon) you are always in control."
+              icon={HeadsetMicIcon}
               iconColor="success"
               vertical
             />
           </GridItem>
           <GridItem xs={12} sm={12} md={4}>
             <InfoArea
-              title="Fingerprint"
-              description="Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough."
-              icon={Fingerprint}
+              title="Best of Both Worlds"
+              description="Any accounts that you don't want to handle yourself can be assigned to our call centre team instead (coming soon)."
+              icon={EmojiEmotionsIcon}
               iconColor="danger"
               vertical
             />
