@@ -21,13 +21,12 @@ export default function ProductSection() {
     <div className={classes.section}>
       <GridContainer justify="center">
         <GridItem xs={12} sm={12} md={8}>
-          <h2 className={classes.title}>Let{"'"}s talk product</h2>
+          <h2 className={classes.title}>How can we help you?</h2>
           <h5 className={classes.description}>
-            This is the paragraph where you can write more details about your
-            product. Keep you user engaged by providing meaningful information.
-            Remember that by this time, the user is curious, otherwise he wouldn
-            {"'"}t scroll to get here. Add a button if you want the user to see
-            more.
+            Our aim is to provide a service that reduces stress in your business life. Few things
+            are more stressful than having to collect money. We have designed a system to make this
+            as simple as possible for you. Or, if you want us to help even further, allow our call
+            centre team to handle the entire process.
           </h5>
         </GridItem>
       </GridContainer>
