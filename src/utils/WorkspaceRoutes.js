@@ -1,13 +1,14 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import AgentWorkspace from './AgentWorkspace';
-import { PrivateRoute } from "services/PrivateRoute";
+import { PrivateRoute } from 'services/PrivateRoute';
 
 // Common routes
 import Pricing from 'views/Components/Pricing/Pricing.js';
 import LandingPage from 'views/LandingPage/LandingPage.js';
 import ProfilePage from 'views/ProfilePage/ProfilePage.js';
 import LoginPage from 'views/LoginPage/LoginPage.js';
+//import Contacts from 'views/Components/Collections/editContacts';
 
 // common routes go here with specific, role-based routes in the relevant component
 

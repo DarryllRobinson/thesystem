@@ -42,9 +42,9 @@ export default class MysqlLayer {
         return e;
       }
       if (e.response.status === 500) {
-        alert('Get request 500 error: ' + e.response.data.message);
+        console.log('Get request 500 error: ' + e.response.data.message);
       } else {
-        alert('Get request error: ' + e);
+        console.log('Get request error: ' + e);
       }
     }
   }
@@ -75,9 +75,9 @@ export default class MysqlLayer {
         return e;
       }
       if (e.response.status === 500) {
-        alert('Get request 500 error: ' + e.response.data.message);
+        console.log('Get request 500 error: ' + e.response.data.message);
       } else {
-        alert('Get request error: ' + e);
+        console.log('Get request error: ' + e);
       }
     }
   }
@@ -108,9 +108,9 @@ export default class MysqlLayer {
         return e;
       }
       if (e.response.status === 500) {
-        alert('Get request 500 error: ' + e.response.data.message);
+        console.log('Get request 500 error: ' + e.response.data.message);
       } else {
-        alert('Get request error: ' + e);
+        console.log('Get request error: ' + e);
       }
     }
   }
@@ -142,9 +142,9 @@ export default class MysqlLayer {
         return e;
       }
       if (e.response.status === 500) {
-        alert('Get request 500 error: ' + e.response.data.message);
+        console.log('Get request 500 error: ' + e.response.data.message);
       } else {
-        alert('Get request error: ' + e);
+        console.log('Get request error: ' + e);
       }
     }
   }
@@ -174,9 +174,9 @@ export default class MysqlLayer {
         return e;
       }
       if (e.response.status === 500) {
-        alert('Get request 500 error: ' + e.response.data.message);
+        console.log('Get request 500 error: ' + e.response.data.message);
       } else {
-        alert('Get request error: ' + e);
+        console.log('Get request error: ' + e);
       }
     }
   }
@@ -205,9 +205,9 @@ export default class MysqlLayer {
         return e;
       }
       if (e.response.status === 500) {
-        alert('Get request 500 error: ' + e.response.data.message);
+        console.log('Get request 500 error: ' + e.response.data.message);
       } else {
-        alert('Get request error: ' + e);
+        console.log('Get request error: ' + e);
       }
     }
   }

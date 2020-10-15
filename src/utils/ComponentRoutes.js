@@ -62,8 +62,9 @@ const ComponentRoutes = (props) => {
           </React.Fragment>
         )
       default:
+      console.log('default');
 
-      props.history.push(window.location.href = '/');
+      props.history.push('/login');
 
         return (
           <h1>Access denied</h1>
