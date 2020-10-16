@@ -18,13 +18,16 @@ const useStyles = makeStyles(styles);
 export default function Footer(props) {
   const classes = useStyles();
   const { whiteFont } = props;
+  const { greyFont } = props;
   const footerClasses = classNames({
     [classes.footer]: true,
-    [classes.footerWhiteFont]: whiteFont
+    [classes.footerWhiteFont]: whiteFont,
+    [classes.footerGreyFont]: greyFont
   });
   const aClasses = classNames({
     [classes.a]: true,
-    [classes.footerWhiteFont]: whiteFont
+    [classes.footerWhiteFont]: whiteFont,
+    [classes.footerGreyFont]: greyFont
   });
   return (
     <footer className={footerClasses}>
@@ -79,5 +82,6 @@ export default function Footer(props) {
 }
 
 Footer.propTypes = {
-  whiteFont: PropTypes.bool
+  whiteFont: PropTypes.bool,
+  greyFont: PropTypes.bool
 };

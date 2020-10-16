@@ -20,7 +20,7 @@ import styles from "assets/jss/material-kit-react/views/landingPage.js";
 // Sections for this page
 import ProductSection from "./Sections/ProductSection.js";
 import TeamSection from "./Sections/TeamSection.js";
-import WorkSection from "./Sections/WorkSection.js";
+import ContactSection from "./Sections/ContactSection.js";
 
 const dashboardRoutes = [];
 
@@ -50,10 +50,10 @@ export default function LandingPage(props) {
               <h1 className={classes.title}>We are here for you</h1>
               <h4>
                 We know how much your customers mean to you, even the ones who struggle to pay on time.
-                Let us take of the stress of collecting what is owed to you so you can focus on your business.
+                Let us take care of the stress of collecting what is owed to you so you can focus on your business.
               </h4>
               <br />
-              <Button
+              {/*<Button
                 color="danger"
                 size="lg"
                 href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ref=creativetim"
@@ -62,7 +62,7 @@ export default function LandingPage(props) {
               >
                 <i className="fas fa-play" />
                 Watch video
-              </Button>
+              </Button>*/}
             </GridItem>
           </GridContainer>
         </div>
@@ -71,7 +71,7 @@ export default function LandingPage(props) {
         <div className={classes.container}>
           <ProductSection />
           <TeamSection />
-          <WorkSection />
+          <ContactSection />
         </div>
         <Footer />
       </div>

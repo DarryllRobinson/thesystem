@@ -248,7 +248,7 @@ export default class MysqlLayer {
     msgObject.to = 'darryll@thesystem.co.za';
     msgObject.subject = 'ALERT! Error picked up!';
 
-    await axios.post(`${AppSettings.serverEndpoint}/admin/email`, msgObject
+    await axios.post(`${AppSettings.serverEndpoint}/admin/error_email`, msgObject
       ).then(response => {
         console.log('response: ', response);
       }

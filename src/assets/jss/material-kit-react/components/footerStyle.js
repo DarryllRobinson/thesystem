@@ -38,6 +38,11 @@ const footerStyle = {
       color: "#FFFFFF"
     }
   },
+  footerGreyFont: {
+    "&,&:hover,&:focus": {
+      color: "#343a40"
+    }
+  },
   container,
   list: {
     marginBottom: "0",

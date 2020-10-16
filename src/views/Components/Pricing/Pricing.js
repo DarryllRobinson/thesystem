@@ -73,7 +73,7 @@ export default function Pricing(props) {
   const classes = useStyles();
   const themes = useThemes();
   const { ...rest } = props;
-  
+
   return (
     <div>
       <Header
@@ -173,8 +173,8 @@ export default function Pricing(props) {
             </Card>
           </GridItem>
         </GridContainer>
-        <Footer />
       </div>
+      <Footer greyFont/>
     </div>
   );
 }
