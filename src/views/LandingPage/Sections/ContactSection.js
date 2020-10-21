@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MysqlLayer from 'utils/MysqlLayer';
 
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 // @material-ui/icons
 
@@ -15,6 +17,10 @@ import Button from 'components/CustomButtons/Button.js';
 import styles from 'assets/jss/material-kit-react/views/landingPageSections/workStyle.js';
 
 const useStyles = makeStyles(styles);
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 export default function ContactSection() {
   // Sending message
@@ -33,10 +39,25 @@ export default function ContactSection() {
     setMsg(event.target.value);
   }
 
+  // showing email notification
+  const [open, setOpen] = useState(false);
+
+  // handling feedback from email send attempt
+  const [response, setResponse] = useState('');
+  useEffect(() => {
+    //console.log('response: ', response);
+    if (response.status === 200) {
+      setOpen(true);
+      window.location.reload();
+      window.scrollTo(0, 0);
+    }
+  }, [response]);
+
   const mysqlLayer = new MysqlLayer();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    //console.log('about to send...');
     const emailObject = {
       purpose: 'contact form',
       to: 'darryll@thesystem.co.za',
@@ -48,7 +69,12 @@ export default function ContactSection() {
             Message: ${msg}`
     }
 
-    mysqlLayer.Post('/admin/email', emailObject);
+    const response = await mysqlLayer.Post('/admin/email', emailObject);
+    setResponse(response);
+  }
+
+  const handleClose = (event) => {
+    setOpen(false);
   }
 
   const classes = useStyles();
@@ -111,6 +137,21 @@ export default function ContactSection() {
           </form>
         </GridItem>
       </GridContainer>
+
+
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        open={open}
+        autoHideDuration={10000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success">
+          Thank you for your message
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

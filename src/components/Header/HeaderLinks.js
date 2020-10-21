@@ -26,6 +26,26 @@ import styles from "assets/jss/material-kit-react/components/headerLinksStyle.js
 
 const useStyles = makeStyles(styles);
 
+const milestones = [
+  {
+    title: 'Milestone 1',
+    version: '0.0.1',
+    description: 'Just getting started...',
+    complete: true,
+  },
+  {
+    title: 'Milestone 2',
+    version: '1.0.0',
+    description: (
+      <div>
+        <h2>Launch!</h2>
+        <p>Woohoo!</p>
+      </div>
+    ),
+    complete: true,
+  },
+];
+
 export default function HeaderLinks(props) {
   const classes = useStyles();
   return (
@@ -33,12 +53,12 @@ export default function HeaderLinks(props) {
       <ListItem className={classes.listItem}>
         <Tooltip
           id="roadmap-tooltip"
-          title="Coming soon..."
+          title="Exciting new features on their way!"
           placement={window.innerWidth > 959 ? "top" : "left"}
           classes={{ tooltip: classes.tooltip }}
         >
           <Button
-            href="#"
+            href="roadmap"
             color="transparent"
             className={classes.navLink}
           >
@@ -49,7 +69,7 @@ export default function HeaderLinks(props) {
       <ListItem className={classes.listItem}>
         <Tooltip
           id="pricing-tooltip"
-          title="Come see how we can save you money"
+          title="See how we can save you money"
           placement={window.innerWidth > 959 ? "top" : "left"}
           classes={{ tooltip: classes.tooltip }}
         >

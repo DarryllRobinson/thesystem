@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -19,7 +19,7 @@ import styles from "assets/jss/material-kit-react/views/landingPage.js";
 
 // Sections for this page
 import ProductSection from "./Sections/ProductSection.js";
-import TeamSection from "./Sections/TeamSection.js";
+//import TeamSection from "./Sections/TeamSection.js";
 import ContactSection from "./Sections/ContactSection.js";
 
 const dashboardRoutes = [];
@@ -70,7 +70,7 @@ export default function LandingPage(props) {
       <div className={classNames(classes.main, classes.mainRaised)}>
         <div className={classes.container}>
           <ProductSection />
-          <TeamSection />
+          {/*<TeamSection />*/}
           <ContactSection />
         </div>
         <Footer />

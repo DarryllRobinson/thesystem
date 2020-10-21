@@ -9,6 +9,7 @@ import AgentWorkspace from 'utils/AgentWorkspace';
 import { PrivateRoute } from 'services/PrivateRoute';
 
 // Common routes
+import Roadmap from 'views/Components/Roadmap/Roadmap.js';
 import Pricing from 'views/Components/Pricing/Pricing.js';
 import LandingPage from 'views/LandingPage/LandingPage.js';
 import ProfilePage from 'views/ProfilePage/ProfilePage.js';
@@ -26,6 +27,7 @@ export default function App() {
   return (
     <Router history={history}>
       <Switch>
+        <Route path='/roadmap' component={Roadmap} />
         <Route path='/pricing' component={Pricing} />
         <Route path='/profile-page' component={ProfilePage} />
         <Route path='/login' component={LoginPage} />

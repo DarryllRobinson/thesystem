@@ -5,6 +5,7 @@ import { PrivateRoute } from 'services/PrivateRoute';
 
 // Common routes
 import Pricing from 'views/Components/Pricing/Pricing.js';
+import Roadmap from 'views/Components/Roadmap/Roadmap.js';
 import LandingPage from 'views/LandingPage/LandingPage.js';
 import ProfilePage from 'views/ProfilePage/ProfilePage.js';
 import LoginPage from 'views/LoginPage/LoginPage.js';
@@ -16,6 +17,7 @@ const WorkspaceRoutes = (props) => {
   return (
     <>
       <Switch>
+        <Route path='/roadmap' component={Roadmap} />
         <Route path='/pricing' component={Pricing} />
         <Route path='/profile-page' component={ProfilePage} />
         <Route path='/login' component={LoginPage} />
