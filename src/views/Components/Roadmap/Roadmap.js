@@ -20,81 +20,34 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import Button from "components/CustomButtons/Button.js";
 
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
 
-import RoadmapProgress from 'react-roadmap-progress';
-
 const useStyles = makeStyles(styles);
-const useThemes = makeStyles((theme) => ({
-  priceCard: {
-    backgroundColor: "white",
-    //border: "1px solid #7b8a8b",
-    borderRadius: 7,
-    display: 'flex',
-    minHeight: "400px",
-    //padding: "15px",
-    textAlign: "center"
-  },
-  priceDivTitle: {
-    //border: "1px solid green",
-    color: "#7b8a8b",
-    fontSize: "15px",
-    justifyContent: "center",
-    minHeight: "60px",
-    paddingTop: "10px"
-  },
-  priceIcon: {
-    //border: "1px solid blue",
-    color: "teal",
-    fontSize: 80,
-    padding: "5px"
-  },
-  pricePrice: {
-    //border: "1px solid purple",
-    color: "#343a40",
-    fontSize: "25px",
-    fontWeight: "bold",
-    padding: "15px"
-  },
-  priceButton: {
-    backgroundColor: "#3498db",
-    borderRadius: 7,
-  },
-  priceDescription: {
-    color: "#7b8a8b",
-    padding: "15px"
-  },
-  priceFooter: {
-    //border: "1px solid orange",
-    justifyContent: "center",
-    padding: 0
-  }
-}));
+
+function createData(ability, description, dropdate, impact) {
+  return { ability, description, dropdate, impact };
+}
+
+const rows = [
+  createData('Frozen yoghurt', 'fy', 'Nov', 24),
+  createData('Ice cream sandwich', 'ics', 'Dec', 13),
+  createData('Eclair', 'ec', 'Jan', 24),
+  createData('Cupcake', 'cc', 'Feb', 67),
+  createData('Gingerbread', 'gb', 'Mar', 49),
+];
 
 export default function Roadmap(props) {
   const classes = useStyles();
-  const themes = useThemes();
   const { ...rest } = props;
-
-  const milestones = [
-    {
-      title: 'Milestone 1',
-      version: '0.0.1',
-      description: 'Just getting started...',
-      complete: true,
-    },
-    {
-      title: 'Milestone 2',
-      version: '1.0.0',
-      description: (
-        <div>
-          <h2>Launch!</h2>
-          <p>Woohoo!</p>
-        </div>
-      ),
-      complete: true,
-    },
-  ];
 
   return (
     <div>
@@ -120,15 +73,34 @@ export default function Roadmap(props) {
         </div>
       </Parallax>
       <div className={classes.container}>
-        <GridContainer justify="center">
-            {console.log('RoadmapProgress: ', RoadmapProgress)
-              /*
-              <GridItem xs={12} sm={12} md={3}>
-              <div>
-              <RoadmapProgress milestones={milestones} />
-            </div>
-          </GridItem>*/}
-        </GridContainer>
+        <Card>
+          <CardBody>
+            <TableContainer component={Paper}>
+              <Table className={classes.table} size="small" aria-label="a dense table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>New functionality</TableCell>
+                    <TableCell align="left">Description</TableCell>
+                    <TableCell align="right">Drop Date</TableCell>
+                    <TableCell align="right">Impact</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow key={row.ability}>
+                      <TableCell component="th" scope="row">
+                        {row.ability}
+                      </TableCell>
+                      <TableCell align="left">{row.description}</TableCell>
+                      <TableCell align="right">{row.dropdate}</TableCell>
+                      <TableCell align="right">{row.impact}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </CardBody>
+        </Card>
       </div>
       <Footer greyFont/>
     </div>

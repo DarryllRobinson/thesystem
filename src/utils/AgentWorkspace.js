@@ -7,7 +7,7 @@ import Container from '@material-ui/core/Container';
 export default function AgentWorkspace(props) {
   return (
     <Router>
-      <Container>
+      <Container style={{ marginTop: "80px" }}>
         <ComponentRoutes />
       </Container>
     </Router>
