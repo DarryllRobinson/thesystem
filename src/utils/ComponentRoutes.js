@@ -25,6 +25,7 @@ import ExcelReader from 'views/Components/ExcelUpload/ExcelReader';
 import Reports from 'views/Components/Reports/Reports';
 
 const ComponentRoutes = (props) => {
+  console.log('ComponentRoutes props: ', props);
   let role = sessionStorage.getItem('cwsRole');
 
   function getAccessPaths() {
