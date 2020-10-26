@@ -5,7 +5,7 @@ import Container from '@material-ui/core/Container';
 import { history } from 'services/history';
 
 export default function AgentWorkspace(props) {
-  console.log('AgentWorkspace props: ', props);
+  //console.log('AgentWorkspace props: ', props);
   return (
     <Container style={{ marginTop: "80px" }}>
       <ComponentRoutes history={history}/>

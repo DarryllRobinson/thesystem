@@ -94,7 +94,7 @@ class Collection extends Component {
     let record = null;
     await this.mysqlLayer.Get(`/${type}/${workspace}/read_item/${clientId}/${recordId}`)
       .then(response => {
-        //console.log('Collection response: ', response);
+        console.log('Collection response: ', response);
         if (response) record = response[0];
       }
 
@@ -131,6 +131,7 @@ class Collection extends Component {
     let transactionTypes = await this.mysqlLayer.Get(`/admin/transactiontypes/list_all`);
     let accountStatuses = await this.mysqlLayer.Get(`/admin/accountstatuses/list_all`);
     let cipcStatuses = await this.mysqlLayer.Get(`/admin/cipcstatuses/list_all`);
+    let idvStatuses = await this.mysqlLayer.Get(`/admin/idvstatuses/list_all`);
     let users = await this.mysqlLayer.Get(`/admin/users/${clientId}`);
 
     // saving the previous status so we can unlock it properly after releasing the record
@@ -141,6 +142,7 @@ class Collection extends Component {
       accountStatus: record.accountStatus,
       caseNotes: record.caseNotes,
       cipcStatuses: cipcStatuses,
+      idvStatuses: idvStatuses,
       regIdStatus: record.regIdStatus,
       contactRecords: contactRecords,
       collection: record,
@@ -1191,10 +1193,15 @@ class Collection extends Component {
         <option key={cipcStatus.id} value={cipcStatus.cipcStatus}>{cipcStatus.cipcStatus}</option>
       ));
 
-      const idvStatusList = <>
+      const idvStatusList = [<option key="0" value={this.state.collection.regIdStatus}>{this.state.collection.regIdStatus}</option>];
+      idvStatusList.push(this.state.idvStatuses.map(idvStatus =>
+        <option key={idvStatus.id} value={idvStatus.idvStatus}>{idvStatus.idvStatus}</option>
+      ));
+
+      /*const idvStatusList = <>
         <option key="1" value="option1">Option 1</option>
         <option key="2" value="option2">Option 2</option></>
-      ;
+      ;*/
 
       let repNumber = (this.state.contactRecords[0].representativeNumber) ? `tel:${this.state.contactRecords[0].representativeNumber}` : '00000';
 
