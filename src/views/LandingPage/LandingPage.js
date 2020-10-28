@@ -1,4 +1,5 @@
 import React from 'react';
+import Explainer from './Explainer';
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
@@ -11,7 +12,6 @@ import Header from "components/Header/Header.js";
 import Footer from "components/Footer/Footer.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import Button from "components/CustomButtons/Button.js";
 import HeaderLinks from "components/Header/HeaderLinks.js";
 import Parallax from "components/Parallax/Parallax.js";
 
@@ -53,6 +53,7 @@ export default function LandingPage(props) {
                 Let us take care of the stress of collecting what is owed to you so you can focus on your business.
               </h4>
               <br />
+              <Explainer />
               {/*<Button
                 color="danger"
                 size="lg"

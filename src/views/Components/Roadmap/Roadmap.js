@@ -2,11 +2,7 @@ import React from 'react';
 // nodejs library that concatenates classes
 //import classNames from "classnames";
 // @material-ui/core components
-import { makeStyles } from '@material-ui/core/styles';
-
-// @material-ui/icons
-import DvrIcon from '@material-ui/icons/Dvr';
-import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 // core components
 import Header from "components/Header/Header.js";
@@ -18,7 +14,6 @@ import Parallax from "components/Parallax/Parallax.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-import Button from "components/CustomButtons/Button.js";
 
 
 import Table from '@material-ui/core/Table';
@@ -31,22 +26,50 @@ import Paper from '@material-ui/core/Paper';
 
 import styles from "assets/jss/material-kit-react/views/landingPage.js";
 
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
+
 const useStyles = makeStyles(styles);
 
-function createData(ability, description, dropdate, impact) {
-  return { ability, description, dropdate, impact };
+const useThemes = makeStyles((themes) => ({
+  CardFooter: {
+    color: "#7b8a8b",
+    fontSize: "10px"
+  }
+}));
+
+function createData(ability, description, dropdate) {
+  return { ability, description, dropdate };
 }
 
 const rows = [
-  createData('Frozen yoghurt', 'fy', 'Nov', 24),
-  createData('Ice cream sandwich', 'ics', 'Dec', 13),
-  createData('Eclair', 'ec', 'Jan', 24),
-  createData('Cupcake', 'cc', 'Feb', 67),
-  createData('Gingerbread', 'gb', 'Mar', 49),
+  createData('User manual', 'A simple video manual on how to use The System', 'Q4 2020'),
+  createData('Client dashboard', 'A snapshot of the current collections situation from the client point of view', 'Q4 2020'),
+  createData('Email notifications', 'Email notifications for daily work per user', 'Q4 2020'),
+  createData('Payments', 'The ability to accept credit card payments', 'Q1 2021'),
+  createData('Applications', 'Expanding the platform to enable application processing', 'Q1 2021'),
+  createData('Salesforce integration', 'Integration to Salesforce CRM', 'Q1 2021'),
+  createData('Xero integration', 'Integration to Xero accounting system', 'Q2 2021'),
 ];
 
 export default function Roadmap(props) {
   const classes = useStyles();
+  const themes = useThemes();
   const { ...rest } = props;
 
   return (
@@ -62,9 +85,9 @@ export default function Roadmap(props) {
         <div className={classes.container}>
           <GridContainer justify="center">
             <GridItem xs={12} sm={12} md={6}>
-              <h1 className={classes.title}>What is coming next?</h1>
+              <h1 className={classes.title}>"If you look for perfection, you'll never be content" - Leo Tolstoy</h1>
               <h5 className={classes.description}>
-                Cool stuffs
+                Whilst we don{"'"}t believe we{"'"}ll ever achieve perfection, we may as well aim for it!
               </h5>
               <br />
             </GridItem>
@@ -76,30 +99,29 @@ export default function Roadmap(props) {
         <Card>
           <CardBody>
             <TableContainer component={Paper}>
-              <Table className={classes.table} size="small" aria-label="a dense table">
+              <Table className={classes.table} aria-label="product roadmap table">
                 <TableHead>
                   <TableRow>
-                    <TableCell>New functionality</TableCell>
-                    <TableCell align="left">Description</TableCell>
-                    <TableCell align="right">Drop Date</TableCell>
-                    <TableCell align="right">Impact</TableCell>
+                    <StyledTableCell>New functionality</StyledTableCell>
+                    <StyledTableCell align="left">Description</StyledTableCell>
+                    <StyledTableCell align="left">Drop Date</StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {rows.map((row) => (
-                    <TableRow key={row.ability}>
-                      <TableCell component="th" scope="row">
+                    <StyledTableRow key={row.ability}>
+                      <StyledTableCell component="th" scope="row">
                         {row.ability}
-                      </TableCell>
-                      <TableCell align="left">{row.description}</TableCell>
-                      <TableCell align="right">{row.dropdate}</TableCell>
-                      <TableCell align="right">{row.impact}</TableCell>
-                    </TableRow>
+                      </StyledTableCell>
+                      <StyledTableCell align="left">{row.description}</StyledTableCell>
+                      <StyledTableCell align="left">{row.dropdate}</StyledTableCell>
+                    </StyledTableRow>
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
           </CardBody>
+          <CardFooter className={themes.CardFooter}>Drop dates are estimates only and as such, are subject to change without notice</CardFooter>
         </Card>
       </div>
       <Footer greyFont/>

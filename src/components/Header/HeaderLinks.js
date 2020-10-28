@@ -26,26 +26,6 @@ import styles from "assets/jss/material-kit-react/components/headerLinksStyle.js
 
 const useStyles = makeStyles(styles);
 
-const milestones = [
-  {
-    title: 'Milestone 1',
-    version: '0.0.1',
-    description: 'Just getting started...',
-    complete: true,
-  },
-  {
-    title: 'Milestone 2',
-    version: '1.0.0',
-    description: (
-      <div>
-        <h2>Launch!</h2>
-        <p>Woohoo!</p>
-      </div>
-    ),
-    complete: true,
-  },
-];
-
 export default function HeaderLinks(props) {
   const classes = useStyles();
   return (
