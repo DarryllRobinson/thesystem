@@ -23,14 +23,19 @@ function login(userCredentials) {
   return mysqlLayer.PostLogin(`/admin/sessions/`, userCredentials)
     .then(handleResponse)
     .then(user => {
-      //console.log('writing user details');
-      security.writeLoginSession(user, userCredentials.loginDate)
+      console.log('writing user details: ', user);
+      if (user.error) {
+        console.log('return error');
+        return { error: user };
+      }
+      security.writeLoginSession(user.user, userCredentials.loginDate)
       // store user details and jwt token in local storage to keep user logged in between page refreshes
       //localStorage.setItem('currentUser', JSON.stringify(user));
-      currentUserSubject.next(user);
+      currentUserSubject.next(user.user);
 
       return user;
-    });
+    }
+  );
 }
 
 function logout() {

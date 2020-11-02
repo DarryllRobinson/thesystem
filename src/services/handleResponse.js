@@ -9,8 +9,9 @@ export function handleResponse(response) {
     }
 
     const error = response.data.text || response.statusText;
-    return error;
+    //console.log('error: ', error);
+    return { error: error };
   }
 
-  return response.data.text;
+  return { user: response.data.text };
 }

@@ -51,14 +51,29 @@ export default function LoginPage(props) {
     };
 
     authenticationService.login(user)
-      .then(() => {
-        //console.log('pushing to dashboard');
-        props.history.push('/dashboard');
-        window.location.reload(true);
-      });
+      .then(user => {
+        if (user.error) {
+          console.log('Login error: ', user.error);
+        } else {
+          const { from } = props.location.state || { from: { pathname: '/dashboard' } };
+          props.history.push(from);
+          window.location.reload(true);
+        }
+      }
+    );
 
 
-  }
+
+/*authenticationService.login(username, password)
+.then(user => {
+  const { from } = this.props.location.state || { from: { pathname: "/" } };
+  this.props.history.push(from);
+  error => {
+    setSubmitting(false);
+    setStatus(error);
+  }                             );
+*/
+}
 
   const [cardAnimaton, setCardAnimation] = useState("cardHidden");
   setTimeout(function() {
