@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { ToastContainer } from 'react-toastify';
+import Toasts from 'utils/Toasts';
+
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -53,7 +56,7 @@ export default function LoginPage(props) {
     authenticationService.login(user)
       .then(user => {
         if (user.error) {
-          console.log('Login error: ', user.error);
+          Toasts('error', user.error.error, true);
         } else {
           const { from } = props.location.state || { from: { pathname: '/dashboard' } };
           props.history.push(from);
@@ -61,19 +64,7 @@ export default function LoginPage(props) {
         }
       }
     );
-
-
-
-/*authenticationService.login(username, password)
-.then(user => {
-  const { from } = this.props.location.state || { from: { pathname: "/" } };
-  this.props.history.push(from);
-  error => {
-    setSubmitting(false);
-    setStatus(error);
-  }                             );
-*/
-}
+  }
 
   const [cardAnimaton, setCardAnimation] = useState("cardHidden");
   setTimeout(function() {
@@ -153,6 +144,7 @@ export default function LoginPage(props) {
               </Card>
             </GridItem>
           </GridContainer>
+          <ToastContainer />
         </div>
         <Footer whiteFont />
       </div>

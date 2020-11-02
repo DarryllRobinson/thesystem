@@ -23,9 +23,9 @@ function login(userCredentials) {
   return mysqlLayer.PostLogin(`/admin/sessions/`, userCredentials)
     .then(handleResponse)
     .then(user => {
-      console.log('writing user details: ', user);
+      //console.log('writing user details: ', user);
       if (user.error) {
-        console.log('return error');
+        //console.log('return error');
         return { error: user };
       }
       security.writeLoginSession(user.user, userCredentials.loginDate)

@@ -37,6 +37,31 @@ const ComponentRoutes = (props) => {
             <Route exact path='/dashboard' component={Dashboard} />
           </React.Fragment>
         )
+      case 'kam':
+        return (
+          <React.Fragment>
+            <NavBar role={role}/>
+            <PrivateRoute exact path='/dashboard' component={Dashboard} />
+            <PrivateRoute exact path='/workzone/collections' component={Workzone} />
+            <PrivateRoute exact path='/workzone/collections/collection/:id' component={Collection} />
+            <PrivateRoute exact path='/workzone/collections/contacts/:id' component={Contacts} />
+
+            {/* User */}
+            <PrivateRoute exact path='/user/registration' component={UserRegistration} />
+            <PrivateRoute exact path='/user/admin' component={UserAdmin} />
+
+            {/* Client */}
+            <PrivateRoute exact path='/client/registration' component={ClientRegistration} />
+            <PrivateRoute exact path='/client/admin' component={ClientAdmin} />
+
+            {/* Reports */}
+            <PrivateRoute exact path='/reports' component={Reports} />
+
+            {/* Excel upload */}
+            <PrivateRoute exact path='/collections/upload' component={ExcelReader} />
+
+          </React.Fragment>
+        )
       case 'superuser':
         return (
           <React.Fragment>
@@ -63,12 +88,10 @@ const ComponentRoutes = (props) => {
           </React.Fragment>
         )
       default:
-      console.log('default');
-
-      props.history.push('/login');
-
         return (
-          <h1>Access denied</h1>
+          <React.Fragment>
+            <h1>No routes have been enabled for this role. Please contact Support.</h1>
+          </React.Fragment>
         )
     }
   }

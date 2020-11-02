@@ -94,7 +94,7 @@ class Collection extends Component {
     let record = null;
     await this.mysqlLayer.Get(`/${type}/${workspace}/read_item/${clientId}/${recordId}`)
       .then(response => {
-        console.log('Collection response: ', response);
+        //console.log('Collection response: ', response);
         if (response) record = response[0];
       }
 

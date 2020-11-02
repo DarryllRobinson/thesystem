@@ -43,6 +43,36 @@ class NavBar extends React.Component {
           </Button>
         </>
       );
+    } else if (role === "kam") {
+      let firstName = sessionStorage.getItem('cwsFirstName');
+
+      return (
+        <>
+          <Nav.Link href="/dashboard">Dashboard</Nav.Link>
+          <Nav.Link href="/collections/upload">Upload</Nav.Link>
+          <Nav.Link href="/reports">Reports</Nav.Link>
+
+          <NavDropdown title="Admin" id="admin-dropdown">
+            <NavDropdown.Item href="/client/admin">Client</NavDropdown.Item>
+            <NavDropdown.Item href="/user/admin">User</NavDropdown.Item>
+          </NavDropdown>
+
+          <Container>
+            <Navbar.Text>
+              {firstName}
+            </Navbar.Text>
+          </Container>
+          <Button
+            onClick={() => authenticationService.logout()}
+            style={{
+              background: "#48B711",
+              borderColor: "#48B711"
+            }}
+          >
+            Logout
+          </Button>
+        </>
+      );
     } else if (role === "client") {
       let firstName = sessionStorage.getItem('cwsFirstName');
 
