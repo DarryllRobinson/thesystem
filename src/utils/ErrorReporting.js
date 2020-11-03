@@ -4,7 +4,7 @@ export default class ErrorReporting {
 
   mysqlLayer = new MysqlLayer();
 
-  async sendMessage(msgObject) {
+  sendMessage(msgObject) {
 
     /* these fields are required
     purpose
@@ -22,11 +22,7 @@ export default class ErrorReporting {
     msgObject.to = 'darryll@thesystem.co.za';
     msgObject.subject = 'ALERT! Error picked up!';
 
-    await this.mysqlLayer.Post(`/admin/error_email`, msgObject
-      ).then(response => {
-        console.log('response: ', response);
-      }
-    );
+    this.mysqlLayer.Post(`/admin/error_email`, msgObject);
   }
 
 }

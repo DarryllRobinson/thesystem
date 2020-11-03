@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import ErrorReporting from 'utils/ErrorReporting';
+import Security from 'utils/Security';
 import moment from 'moment';
 import { PrivateRoute } from "services/PrivateRoute";
 
@@ -91,6 +92,8 @@ const ComponentRoutes = (props) => {
         )
       default:
         const errorReporting = new ErrorReporting();
+        const security = new Security();
+
         errorReporting.sendMessage({
           error: 'No role found in ComponentRoutes.js',
           fileName: 'n/a',
@@ -99,6 +102,8 @@ const ComponentRoutes = (props) => {
           dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
           path: props.history.location.pathname
         });
+
+        security.terminateSession();
         props.history.push('/login');
     }
   }
