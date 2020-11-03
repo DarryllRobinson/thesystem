@@ -26,11 +26,13 @@ class ExcelReader extends Component {
       caseDone: false,
       outcomeDone: false,
       compliance: '',
-      uploaded: [
-        {
-          customers: true
-        }
-      ],
+      uploaded: {
+        customers: false,
+        accounts: false,
+        contacts: false,
+        cases: false,
+        outcomes: false
+      },
       workspaces: [
         'customers',
         'accounts',
@@ -55,6 +57,7 @@ class ExcelReader extends Component {
   componentDidMount() {
     //console.log('ExcelReader props: ', this.props);
     //this.randmonGenerator();
+    //console.log('uploaded: ', this.state.uploaded);
     this.setState({
       type: sessionStorage.getItem('cwsType')
     });
@@ -256,7 +259,7 @@ class ExcelReader extends Component {
       this.setState({ customerErrors: error });
     }
 
-    this.setState({ customerDone: true });
+    this.setState({ uploaded: { customers: true }});
     return response.data.insertId;
   }
 
@@ -340,6 +343,7 @@ class ExcelReader extends Component {
         error.push(response.data);
         this.setState({ accountErrors: error });
       }
+      this.setState({ uploaded: { accounts: true }});
     //});
 
     /*const response = await this.postToDb(accounts, 'accounts');
@@ -393,6 +397,7 @@ class ExcelReader extends Component {
         error.push(response.data);
         this.setState({ caseErrors: error });
       }
+      this.setState({ uploaded: { cases: true }});
     //});
 
     /*const response = await this.postToDb(accounts, 'accounts');
@@ -460,6 +465,7 @@ class ExcelReader extends Component {
         error.push(response.data);
         this.setState({ outcomeErrors: error });
       }
+      this.setState({ uploaded: { outcomes: true }});
     //});
 
     /*const response = await this.postToDb(accounts, 'accounts');
@@ -506,6 +512,7 @@ class ExcelReader extends Component {
         error.push(response.data);
         this.setState({ contactErrors: error });
       }
+      this.setState({ uploaded: { contacts: true }});
     //});
 
     /*const response = await this.postToDb(accounts, 'accounts');
@@ -526,6 +533,15 @@ class ExcelReader extends Component {
     const response = await this.mysqlLayer.Post(`/${type}/${workspace}/${task}/${clientId}`, records);
     //console.log('postToDb response: ', response);
     return response;
+  }
+
+  checkToDisplay(workspace) {
+    let display = false;
+    for (const [key, value] of Object.entries(this.state.uploaded)) {
+      if (key === workspace) display = value;
+      //console.log(`${key}: ${value}`);
+    }
+    return display;
   }
 
   render() {
@@ -566,12 +582,12 @@ class ExcelReader extends Component {
               accept={SheetJSFT}
               onChange={this.handleChange}
             />
-            <input
+            {!this.checkToDisplay(workspace) && <input
               type='submit'
               name={workspace}
               value="Upload file"
               onClick={this.handleFile}
-            />
+            />}
             <br /><br />
           </div>
         </div>
