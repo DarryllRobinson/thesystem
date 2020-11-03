@@ -1,5 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import ErrorReporting from 'utils/ErrorReporting';
+import moment from 'moment';
 import { PrivateRoute } from "services/PrivateRoute";
 
 import Dashboard from 'views/Components/Dashboard.js';
@@ -26,7 +28,7 @@ import Reports from 'views/Components/Reports/Reports';
 
 const ComponentRoutes = (props) => {
   //console.log('ComponentRoutes props: ', props);
-  let role = sessionStorage.getItem('cwsRole');
+  const role = sessionStorage.getItem('cwsRole');
 
   function getAccessPaths() {
     switch (role) {
@@ -88,11 +90,16 @@ const ComponentRoutes = (props) => {
           </React.Fragment>
         )
       default:
-        return (
-          <React.Fragment>
-            <h1>No routes have been enabled for this role. Please contact Support.</h1>
-          </React.Fragment>
-        )
+        const errorReporting = new ErrorReporting();
+        errorReporting.sendMessage({
+          error: 'No role found in ComponentRoutes.js',
+          fileName: 'n/a',
+          user: `user: ${sessionStorage.getItem('cwsUser')} role: ${sessionStorage.getItem('cwsRole')}`,
+          state: null,
+          dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+          path: props.history.location.pathname
+        });
+        props.history.push('/login');
     }
   }
 

@@ -5,6 +5,18 @@ export default class ErrorReporting {
   mysqlLayer = new MysqlLayer();
 
   async sendMessage(msgObject) {
+
+    /* these fields are required
+    purpose
+    to
+    subject
+    error
+    fileName
+    user
+    state
+    dateTime
+    path
+    */
     //console.log('msgObject before: ', msgObject);
     msgObject.purpose = 'error';
     msgObject.to = 'darryll@thesystem.co.za';

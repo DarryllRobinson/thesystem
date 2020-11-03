@@ -20,7 +20,17 @@ class ExcelReader extends Component {
       caseErrors: [],
       outcomeErrors: [],
       errors: [],
+      customerDone: false,
+      accountDone: false,
+      contactDone: false,
+      caseDone: false,
+      outcomeDone: false,
       compliance: '',
+      uploaded: [
+        {
+          customers: true
+        }
+      ],
       workspaces: [
         'customers',
         'accounts',
@@ -245,6 +255,8 @@ class ExcelReader extends Component {
       error.push(response.data);
       this.setState({ customerErrors: error });
     }
+
+    this.setState({ customerDone: true });
     return response.data.insertId;
   }
 
