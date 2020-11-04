@@ -66,6 +66,7 @@ class Collection extends Component {
   }
 
   async componentDidMount() {
+    //console.log('Collection props: ', this.props);
     this._isMounted = true;
     let type = '';
     let workspace = '';
@@ -507,7 +508,9 @@ class Collection extends Component {
       await this.mysqlLayer.Put(`/${type}/accounts/update_item/${clientId}/${this.state.collection.accountNumber}`, accountUpdate);
       await this.mysqlLayer.Put(`/${type}/cases/update_item/${clientId}/${this.state.collection.caseId}`, caseUpdate);
 
-      await this.mysqlLayer.Post(`/${type}/outcomes/create_item/${clientId}`, outcomeInsert);
+      let resp = await this.mysqlLayer.Post(`/${type}/outcomes/create_item/${clientId}`, outcomeInsert);
+      console.log('outcomeInsert: ', outcomeInsert);
+      console.log('resp: ', resp);
       this.props.history.push({
         pathname: '/workzone/collections',
         state: {

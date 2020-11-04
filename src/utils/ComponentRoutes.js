@@ -30,6 +30,8 @@ import Reports from 'views/Components/Reports/Reports';
 const ComponentRoutes = (props) => {
   //console.log('ComponentRoutes props: ', props);
   const role = sessionStorage.getItem('cwsRole');
+  const security = new Security();
+  security.validateSession();
 
   function getAccessPaths() {
     switch (role) {
@@ -91,14 +93,14 @@ const ComponentRoutes = (props) => {
           </React.Fragment>
         )
       default:
+        //if (props.history.location.pathname != )
         const errorReporting = new ErrorReporting();
-        const security = new Security();
 
         errorReporting.sendMessage({
-          error: 'No role found in ComponentRoutes.js',
-          fileName: 'n/a',
+          error: 'No role found',
+          fileName: 'ComponentRoutes.js',
           user: `user: ${sessionStorage.getItem('cwsUser')} role: ${sessionStorage.getItem('cwsRole')}`,
-          state: null,
+          state: `props: ${JSON.stringify(props)}`,
           dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
           path: props.history.location.pathname
         });

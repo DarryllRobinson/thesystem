@@ -105,16 +105,7 @@ class ExcelReader extends Component {
         //console.log('data: ', data);
         try {
           //this.uploadData(this.state.data);
-          //console.log('data loaded: ', data);
-          const loops = data.length/10;
-          let start = 0;
-          for (let index = 0; index < loops; index++) {
-            console.log('start: ', start);
-            for (let inside = start; inside < start + 10; inside++) {
-              console.log('inside: ', inside);
-            }
-            start = start + 10;
-          }
+          console.log('data loaded: ', data.length);
           let cont = await this.checkData(workspace, this.state.data);
           //console.log('cont: ', cont);
           if (cont) this.uploadData(workspace, this.state.data);

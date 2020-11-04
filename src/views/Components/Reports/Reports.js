@@ -27,7 +27,7 @@ export default class Reports extends Component {
   }
 
   componentDidMount() {
-    //console.log('state: ', this.state);
+    console.log('state: ', this.state);
     this.loadCollectionRecords();
   }
 
@@ -38,7 +38,7 @@ export default class Reports extends Component {
     const clientId = this.state.clientId;
 
     this.reportData = await this.mysqlLayer.Get(`/${type}/${workspace}/list_all_report/${clientId}`);
-    //console.log('this.reportData: ', this.reportData);
+    console.log('this.reportData: ', this.reportData);
     this.processReportData();
     this.setState({ staticContext: this.state.staticContext });
   }
