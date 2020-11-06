@@ -1,5 +1,12 @@
 import React from 'react';
 
+import GridContainer from "components/Grid/GridContainer.js";
+import GridItem from "components/Grid/GridItem.js";
+
+import Card from "components/Card/Card.js";
+import CardBody from "components/Card/CardBody.js";
+import CardFooter from "components/Card/CardFooter.js";
+
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -35,12 +42,90 @@ const data = [
   {
     goal: '30 Days',
     target: 1000,
-    current: 500
+    current: 11000
   },
   {
     goal: '60 Days',
     target: 3000,
+    current: 7000
+  },
+  {
+    goal: '90 Days',
+    target: 3000,
     current: 5000
+  },
+  {
+    goal: '120 Days',
+    target: 5000,
+    current: 3000
+  },
+  {
+    goal: '150 Days',
+    target: 11000,
+    current: 1000
+  }
+];
+
+const extract = [
+  {
+    reportName: 'Aging',
+    data: [
+      {
+        goal: '30 Days',
+        target: 1000,
+        current: 11000
+      },
+      {
+        goal: '60 Days',
+        target: 3000,
+        current: 7000
+      },
+      {
+        goal: '90 Days',
+        target: 3000,
+        current: 5000
+      },
+      {
+        goal: '120 Days',
+        target: 5000,
+        current: 3000
+      },
+      {
+        goal: '150 Days',
+        target: 11000,
+        current: 1000
+      }
+    ]
+  },
+  {
+    reportName: 'Other',
+    data: [
+      {
+        goal: 'goal 1',
+        target: 1000,
+        current: 11000
+      },
+      {
+        goal: '60 Days',
+        target: 3000,
+        current: 7000
+      },
+      {
+        goal: '90 Days',
+        target: 3000,
+        current: 5000
+      },
+      {
+        goal: '120 Days',
+        target: 5000,
+        current: 3000
+      },
+      {
+        goal: '150 Days',
+        target: 11000,
+        current: 1000
+      }
+    ]
   }
 ];
 
@@ -48,39 +133,83 @@ function createData(goal, target, current, percentage) {
   return { goal, target, current, percentage };
 }
 
-const rows = data.map((row, idx) =>
-  createData(row.goal, row.target, row.current, `${Math.floor(row.current/row.target*100)}%`)
+const rows = extract.map(report =>
+  report.data.map((row, idx) =>
+    //console.log('row: ', row)
+    createData(row.goal, row.target, row.current, `${Math.floor(row.current/row.target*100)}%`)
+  )
 );
 
 export default function Targets(props) {
   const classes = useStyles();
 
   return (
-    <div>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="targets table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Goal</StyledTableCell>
-              <StyledTableCell align="left">Target</StyledTableCell>
-              <StyledTableCell align="left">Current</StyledTableCell>
-              <StyledTableCell align="left">Percentage</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <StyledTableRow key={row.goal}>
-                <StyledTableCell component="th" scope="row">
-                  {row.goal}
-                </StyledTableCell>
-                <StyledTableCell align="left">{row.target}</StyledTableCell>
-                <StyledTableCell align="left">{row.current}</StyledTableCell>
-                <StyledTableCell align="left">{row.percentage}</StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+    <div className={classes.container}>{console.log({rows})}
+      <GridContainer justify="center">
+        <GridItem xs={12} sm={8} md={6}>
+          <Card>
+            <CardBody>
+              <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="targets table">
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell>Goal</StyledTableCell>
+                      <StyledTableCell align="right">Target</StyledTableCell>
+                      <StyledTableCell align="right">Current</StyledTableCell>
+                      <StyledTableCell align="right">Percentage</StyledTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {rows.map((row, idx) => (
+                      <StyledTableRow key={row[idx].goal}>
+                        <StyledTableCell component="th" scope="row">
+                          {row[idx].goal}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">R {row[idx].target}</StyledTableCell>
+                        <StyledTableCell align="right">R {row[idx].current}</StyledTableCell>
+                        <StyledTableCell align="right">{row[idx].percentage}</StyledTableCell>
+                      </StyledTableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardBody>
+            <CardFooter>Aging Report</CardFooter>
+          </Card>
+        </GridItem>
+
+        <GridItem xs={12} sm={12} md={6}>
+          <Card>
+            <CardBody>
+              <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="targets table">
+                  <TableHead>
+                    <TableRow>
+                      <StyledTableCell>Goal</StyledTableCell>
+                      <StyledTableCell align="right">Target</StyledTableCell>
+                      <StyledTableCell align="right">Current</StyledTableCell>
+                      <StyledTableCell align="right">Percentage</StyledTableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {rows.map((row, idx) => (
+                      <StyledTableRow key={row[idx].goal}>
+                        <StyledTableCell component="th" scope="row">
+                          {row[idx].goal}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">R {row[idx].target}</StyledTableCell>
+                        <StyledTableCell align="right">R {row[idx].current}</StyledTableCell>
+                        <StyledTableCell align="right">{row[idx].percentage}</StyledTableCell>
+                      </StyledTableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardBody>
+            <CardFooter>Aging Report</CardFooter>
+          </Card>
+        </GridItem>
+      </GridContainer>
     </div>
   )
 }
