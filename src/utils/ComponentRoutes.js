@@ -23,6 +23,7 @@ import ClientAdmin from 'views/Components/Client/Admin';
 
 // Reports
 import ExcelReader from 'views/Components/ExcelUpload/ExcelReader';
+import Targets from 'views/Components/Reports/Targets';
 
 // Excel uploading function
 import Reports from 'views/Components/Reports/Reports';
@@ -61,6 +62,7 @@ const ComponentRoutes = (props) => {
 
             {/* Reports */}
             <PrivateRoute exact path='/reports' component={Reports} />
+            <PrivateRoute exact path='/targets' component={Targets} />
 
             {/* Excel upload */}
             <PrivateRoute exact path='/collections/upload' component={ExcelReader} />
@@ -89,6 +91,7 @@ const ComponentRoutes = (props) => {
 
             {/* Excel upload */}
             <PrivateRoute exact path='/collections/upload' component={ExcelReader} />
+            <PrivateRoute exact path='/targets' component={Targets} />
 
           </React.Fragment>
         )

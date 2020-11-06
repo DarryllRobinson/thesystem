@@ -106,18 +106,12 @@ class ExcelReader extends Component {
         try {
           //this.uploadData(this.state.data);
           //console.log('data loaded: ', data);
-          const loops = data.length/10;
-          let start = 0;
-          for (let index = 0; index < loops; index++) {
-            console.log('start: ', start);
-            for (let inside = start; inside < start + 10; inside++) {
-              console.log('inside: ', inside);
-            }
-            start = start + 10;
-          }
+
+          this.chunkData(data);
+
           let cont = await this.checkData(workspace, this.state.data);
           //console.log('cont: ', cont);
-          if (cont) this.uploadData(workspace, this.state.data);
+          //if (cont) this.uploadData(workspace, this.state.data);
         } catch(e) {
           console.log('Uploading Collection update file problem (e): ', e);
           this.errorReporting.sendMessage(
@@ -139,6 +133,26 @@ class ExcelReader extends Component {
     } else {
       reader.readAsArrayBuffer(this.state.file);
     };
+  }
+
+  chunkData(data) {
+    const maxRecords = 10;
+    const loops = (data.length % maxRecords > 0) ? Math.floor(data.length / maxRecords) + 1 : data.length / maxRecords;
+    //console.log('data: ', data);
+    //console.log('loops: ', loops);
+
+    //setInterval(() => {
+        for (let loop = 0; loop < loops; loop++) {
+        console.log('loop: ', loop);
+        let start = loop * maxRecords;
+        //setInterval(() => {
+          for (let batch = start; batch < start + maxRecords; batch++) {
+            if (data[batch] !== undefined) console.log('data[batch]: ', data[batch]);
+          }
+          //start = start + 10;
+        //}, 5000);
+      }
+    //}, 5000);
   }
 
   checkData(workspace, records) {

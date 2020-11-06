@@ -64,6 +64,11 @@ const rows = [
   createData('Applications', 'Expanding the platform to enable application processing', 'Q1 2021'),
   createData('Salesforce integration', 'Integration to Salesforce CRM', 'Q1 2021'),
   createData('Xero integration', 'Integration to Xero accounting system', 'Q2 2021'),
+  createData('Policies', 'Integration to Xero accounting system', 'Q2 2021'),
+  createData('Automated quotes', 'Integration to Xero accounting system', 'Q2 2021'),
+  createData('Chatbots', 'Integration to Xero accounting system', 'Q2 2021'),
+  createData('Upload invoices, emails, contact details', 'Integration to Xero accounting system', 'Q2 2021'),
+  createData('Xero integration', 'Integration to Xero accounting system', 'Q2 2021'),
 ];
 
 export default function Roadmap(props) {

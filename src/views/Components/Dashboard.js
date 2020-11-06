@@ -94,7 +94,11 @@ class Dashboard extends Component {
       let type = this.getType(clientservices, service);
       let workzones = this.getWorkzones('agent');
       let worklists = [];
-      await this.mysqlLayer.Get(`/${type}/${service}/list_all/${client}`
+      console.log('Dashboard service: ', service);
+      console.log('Dashboard service type: ', typeof service);
+      console.log('Dashboard workspace: ', workspace);
+      console.log('Dashboard workspace type: ', typeof workspace);
+      await this.mysqlLayer.Get(`/${type}/${workspace}/list_all/${client}`
       ).then(async records => {
         worklists = await this.getWorklists(workzones, records);
         let workspaces = [];
