@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import ErrorReporting from 'utils/ErrorReporting';
+//import ErrorReporting from 'utils/ErrorReporting';
 import Security from 'utils/Security';
-import moment from 'moment';
+//import moment from 'moment';
 import { PrivateRoute } from "services/PrivateRoute";
 
 import Dashboard from 'views/Components/Dashboard.js';
@@ -97,7 +97,7 @@ const ComponentRoutes = (props) => {
         )
       default:
         //if (props.history.location.pathname != )
-        const errorReporting = new ErrorReporting();
+        /*const errorReporting = new ErrorReporting();
 
         errorReporting.sendMessage({
           error: 'No role found',
@@ -106,7 +106,7 @@ const ComponentRoutes = (props) => {
           state: `props: ${JSON.stringify(props)}`,
           dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
           path: props.history.location.pathname
-        });
+        });*/
 
         security.terminateSession();
         props.history.push('/login');

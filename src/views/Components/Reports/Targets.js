@@ -69,6 +69,21 @@ const reportList = [
       13000,
       17000
     ]
+  },
+  {
+    name: 'Another Report',
+    goals: [
+      '30 Days',
+      '60 Days'
+    ],
+    current: [
+      7000,
+      11000
+    ],
+    target: [
+      13000,
+      17000
+    ]
   }
 ];
 
