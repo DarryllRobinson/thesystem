@@ -21,7 +21,7 @@ class NavBar extends React.Component {
           <Nav.Link href="/dashboard">Dashboard</Nav.Link>
           <Nav.Link href="/collections/upload">Upload</Nav.Link>
 
-          <NavDropdown title="Reports" id="admin-dropdown">
+          <NavDropdown title="Reports" id="reports-dropdown">
             <NavDropdown.Item href="/reports">Reports</NavDropdown.Item>
             <NavDropdown.Item href="/targets">Targets</NavDropdown.Item>
           </NavDropdown>
@@ -55,7 +55,7 @@ class NavBar extends React.Component {
           <Nav.Link href="/dashboard">Dashboard</Nav.Link>
           <Nav.Link href="/collections/upload">Upload</Nav.Link>
 
-          <NavDropdown title="Reports" id="admin-dropdown">
+          <NavDropdown title="Reports" id="reports-dropdown">
             <NavDropdown.Item href="/reports">Reports</NavDropdown.Item>
             <NavDropdown.Item href="/targets">Targets</NavDropdown.Item>
           </NavDropdown>
