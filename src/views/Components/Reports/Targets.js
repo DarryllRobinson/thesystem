@@ -120,8 +120,8 @@ function buildTable(report) {
   for (let loop = 0; loop < report.goals.length; loop++) {
     rows.push(createData(
       report.goals[loop],
-      report.target[loop],
       report.current[loop],
+      report.target[loop],
       Math.floor(report.current[loop]/report.target[loop]*100)));
   }
   return (
@@ -138,8 +138,8 @@ function buildTable(report) {
   )
 }
 
-function createData(goal, target, current, percentage) {
-  return { goal, target, current, percentage };
+function createData(goal, current, target, percentage) {
+  return { goal, current, target, percentage };
 }
 
 export default function Targets(props) {
