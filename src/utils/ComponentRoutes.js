@@ -22,11 +22,12 @@ import ClientRegistration from 'views/Components/Client/Registration';
 import ClientAdmin from 'views/Components/Client/Admin';
 
 // Reports
-import ExcelReader from 'views/Components/ExcelUpload/ExcelReader';
+import Reports from 'views/Components/Reports/Reports';
 import Targets from 'views/Components/Reports/Targets';
 
 // Excel uploading function
-import Reports from 'views/Components/Reports/Reports';
+import ExcelReader from 'views/Components/Upload/ExcelReader';
+import CsvUploader from 'views/Components/Upload/CsvUploader';
 
 const ComponentRoutes = (props) => {
   //console.log('ComponentRoutes props: ', props);
@@ -66,6 +67,7 @@ const ComponentRoutes = (props) => {
 
             {/* Excel upload */}
             <PrivateRoute exact path='/collections/upload' component={ExcelReader} />
+            <PrivateRoute exact path='/collections/csvupload' component={CsvUploader} />
 
           </React.Fragment>
         )
@@ -88,10 +90,11 @@ const ComponentRoutes = (props) => {
 
             {/* Reports */}
             <PrivateRoute exact path='/reports' component={Reports} />
+            <PrivateRoute exact path='/targets' component={Targets} />
 
             {/* Excel upload */}
             <PrivateRoute exact path='/collections/upload' component={ExcelReader} />
-            <PrivateRoute exact path='/targets' component={Targets} />
+            <PrivateRoute exact path='/collections/csvupload' component={CsvUploader} />
 
           </React.Fragment>
         )

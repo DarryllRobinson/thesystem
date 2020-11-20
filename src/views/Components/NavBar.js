@@ -19,7 +19,11 @@ class NavBar extends React.Component {
       return (
         <>
           <Nav.Link href="/dashboard">Dashboard</Nav.Link>
-          <Nav.Link href="/collections/upload">Upload</Nav.Link>
+
+          <NavDropdown title="Upload" id="uploads-dropdown">
+            <NavDropdown.Item href="/collections/upload">Excel Upload</NavDropdown.Item>
+            <NavDropdown.Item href="/collections/csvupload">CSV Upload</NavDropdown.Item>
+          </NavDropdown>
 
           <NavDropdown title="Reports" id="reports-dropdown">
             <NavDropdown.Item href="/reports">Reports</NavDropdown.Item>
@@ -53,7 +57,11 @@ class NavBar extends React.Component {
       return (
         <>
           <Nav.Link href="/dashboard">Dashboard</Nav.Link>
-          <Nav.Link href="/collections/upload">Upload</Nav.Link>
+
+          <NavDropdown title="Upload" id="uploads-dropdown">
+            <NavDropdown.Item href="/collections/upload">Excel Upload</NavDropdown.Item>
+            <NavDropdown.Item href="/collections/csvupload">CSV Upload</NavDropdown.Item>
+          </NavDropdown>
 
           <NavDropdown title="Reports" id="reports-dropdown">
             <NavDropdown.Item href="/reports">Reports</NavDropdown.Item>

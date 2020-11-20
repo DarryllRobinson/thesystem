@@ -1,12 +1,14 @@
 import React from 'react';
-import FetchData from 'utils/FetchData';
+//import MyChart from './Charts';
+import ColumnChart from './ColumnChart';
+//import FetchData from 'utils/FetchData';
 
-import GridContainer from "components/Grid/GridContainer.js";
-import GridItem from "components/Grid/GridItem.js";
+import GridContainer from 'components/Grid/GridContainer.js';
+import GridItem from 'components/Grid/GridItem.js';
 
-import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
+import Card from 'components/Card/Card.js';
+import CardBody from 'components/Card/CardBody.js';
+import CardFooter from 'components/Card/CardFooter.js';
 
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -17,7 +19,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-import styles from "assets/jss/material-kit-react/views/landingPage.js";
+import styles from 'assets/jss/material-kit-react/views/landingPage.js';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -72,6 +74,21 @@ const reportList = [
   },
   {
     name: 'Another Report',
+    goals: [
+      '30 Days',
+      '60 Days'
+    ],
+    current: [
+      7000,
+      11000
+    ],
+    target: [
+      13000,
+      17000
+    ]
+  },
+  {
+    name: 'Casey Report',
     goals: [
       '30 Days',
       '60 Days'
@@ -147,6 +164,7 @@ export default function Targets(props) {
 
   return (
     <div className={classes.container}>
+      <ColumnChart reports={reportList}/>
       <GridContainer justify="center">
       {reportList.map((report, idx) => (
         buildReport(report, classes, idx)

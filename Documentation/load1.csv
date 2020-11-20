@@ -1,0 +1,2 @@
+account_number,age,msisdn,customer_name,balance,current_value,balouts,Value_30_days,Value_60_days,Value_90_days,Value_120_days,debit_order_date,id_number,telephone1,telephone2,telephone3,telephone4,telephone5,telephone6,telephone7,telephone8,telephone9,telephone10,dialler_comments,agentname
+Acc101,60,825588888,Adrian Robson,500,100,400,100,200,50,50,30/11/20,7.11E+12,111111111,122222222,133333333,144444444,155555555,166666666,177777777,188888888,199999999,101010101,Comments,Agent
