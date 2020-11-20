@@ -57,7 +57,7 @@ function UploadFile(file, customers) {
   let fileReader = new FileReader();
   fileReader.readAsText(file);
 
-  fileReader.onload = function() {
+  fileReader.onload = async function() {
     const dataset = fileReader.result;
     let lines = dataset.split('\r\n');
     let result = [];
@@ -73,7 +73,9 @@ function UploadFile(file, customers) {
       if (obj.account_number) {
         if (checkUnique(obj.account_number, customers)) {
           result.push(obj);
-          UploadData(result[0]);
+          const uploadMsg = await UploadData(result[0]);
+          //console.log('uploadMsg: ', uploadMsg);
+          if (uploadMsg === 'problem') console.log('problem uploading record');
         }
       }
     }
@@ -116,10 +118,26 @@ async function UploadData(record) {
       f_clientId: sessionStorage.getItem('cwsClient')
     }
   ];
-  console.log('customer: ', customer);
+  //console.log('customer: ', customer);
 
   const response = await PostToDb(customer, 'customers');
+
+  if (response.data.errno) {
+    //console.log('problem');
+    return 'problem';
+  }
   console.log('response: ', response);
+
+  const accResponse = await saveAccountRecordsToDatabase(response.data.insertId, user, record);
+
+  if (accResponse.data.errno) {
+    //console.log('problem');
+    return 'accResponse problem';
+  }
+  console.log('accResponse: ', accResponse);
+
+  // account upload
+
 /*  if (response.data.errno) {
     let error =[];
     error = customerErrors;
@@ -129,6 +147,54 @@ async function UploadData(record) {
 */
   //this.setState({ uploaded: { customers: true }});
   return response.data.insertId;
+}
+
+async function saveAccountRecordsToDatabase(fId, user, record) {
+  const paymentDueDate = null;
+
+  const debitOrderDate = record.debit_order_date ?
+    moment(ExcelDateToJSDate(record.debit_order_date)).format('YYYY-MM-DD') :
+    null;
+  console.log('record.debit_order_date: ', record.debit_order_date);
+  console.log('debitOrderDate: ', debitOrderDate);
+
+  const lastPaymentDate = null;
+
+  const lastPTPDate = null;
+
+  const openDate = null;
+
+  let account = [
+    {
+      accountNumber: record.account_number,
+      accountName: record.customer_name,
+      createdBy: `System Upload - ${user}`,
+      //createdDate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+      openDate: openDate,
+      debtorAge: record.age,
+      //creditLimit: record.CreditLimit,
+      currentBalance: record.current_value,
+      days30: record.Value_30_days,
+      days60: record.Value_60_days,
+      days90: record.Value_90_days,
+      days120: record.Value_120_days,
+      //days150: record.days150,
+      //days180: record.days180,
+      //days180Over: record.days180Over,
+      f_customerId: fId,
+      lastPTPDate: lastPTPDate,
+      paymentDueDate: paymentDueDate,
+      debitOrderDate: debitOrderDate,
+      lastPaymentDate: lastPaymentDate,
+      //paymentMethod: record.PaymentMethod,
+      //paymentTermDays: record.PaymentTerms,
+      totalBalance: record.balance
+    }
+  ];
+
+  let response = await PostToDb(account, 'accounts');
+  console.log('saveAccountRecordsToDatabase response: ', response);
+  return response;
 }
 
 async function PostToDb(records, workspace) {
@@ -141,4 +207,10 @@ async function PostToDb(records, workspace) {
   const response = await mysqlLayer.Post(`/${type}/${workspace}/${task}/${clientId}`, records);
   //console.log('postToDb response: ', response);
   return response;
+}
+
+function ExcelDateToJSDate(date) {
+  console.log('date before: ', date);
+  console.log('date: ', new Date(Math.round((date - 25569)*86400*1000)));
+  return new Date(Math.round((date - 25569)*86400*1000));
 }
