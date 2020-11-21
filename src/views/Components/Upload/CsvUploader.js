@@ -129,7 +129,7 @@ async function UploadData(record) {
   }
   console.log('response: ', response);
 
-  const accResponse = await saveAccountRecordsToDatabase(response.data.insertId, user, record);
+  const accResponse = await saveAccountRecordsToDatabase(user, record);
 
   if (accResponse.data.errno) {
     //console.log('problem');
@@ -137,7 +137,8 @@ async function UploadData(record) {
   }
   console.log('accResponse: ', accResponse);
 
-  // account upload
+  const contResponse = await saveContactRecordsToDatabase(user, record);
+
 
 /*  if (response.data.errno) {
     let error =[];
@@ -150,7 +151,7 @@ async function UploadData(record) {
   return response.data.insertId;
 }
 
-async function saveAccountRecordsToDatabase(fId, user, record) {
+async function saveAccountRecordsToDatabase(user, record) {
   const paymentDueDate = null;
 
   const debitOrderDate = record.debit_order_date; /*?
@@ -184,7 +185,7 @@ async function saveAccountRecordsToDatabase(fId, user, record) {
       //days150: record.days150,
       //days180: record.days180,
       //days180Over: record.days180Over,
-      f_customerId: fId,
+      f_customerId: record.account_number,
       lastPTPDate: lastPTPDate,
       paymentDueDate: paymentDueDate,
       debitOrderDate: debitOrderDate,
@@ -197,6 +198,47 @@ async function saveAccountRecordsToDatabase(fId, user, record) {
 
   let response = await PostToDb(account, 'accounts');
   console.log('saveAccountRecordsToDatabase response: ', response);
+  return response;
+}
+
+async function saveContactRecordsToDatabase(user, record) {
+  let contact = [
+    {
+      f_accountNumber: record.account_number,
+      //primaryContactName: record.PrimaryContactName,
+      primaryContactNumber: record.telephone1,
+      //primaryContactEmail: record.PrimaryEmailAddress,
+      //representativeName: record.RepresentativeName,
+      //representativeNumber: record.RepresentativeContactNumber,
+      //representativeEmail: record.RepresentativeEmailAddress,
+      //alternativeRepName: record.AltRepName,
+      //alternativeRepNumber: record.AltRepContact,
+      //alternativeRepEmail: record.AltRepEmail,
+      otherNumber1: record.telephone2,
+      otherNumber2: record.telephone3,
+      otherNumber3: record.telephone4,
+      otherNumber4: record.telephone5,
+      otherNumber5: record.telephone6,
+      otherNumber6: record.telephone7,
+      otherNumber7: record.telephone8,
+      otherNumber8: record.telephone9,
+      otherNumber9: record.telephone10,
+      //otherEmail1: record.OtherEmail1,
+      //otherEmail2: record.OtherEmail2,
+      //otherEmail3: record.OtherEmail3,
+      //otherEmail4: record.OtherEmail4,
+      //otherEmail5: record.OtherEmail5,
+      //dnc1: record.DNC1,
+      //dnc2: record.DNC2,
+      //dnc3: record.DNC3,
+      //dnc4: record.DNC4,
+      //dnc5: record.DNC5
+    }
+  ];
+
+  let response = await PostToDb(contact, 'contacts');
+  console.log('saveContactRecordsToDatabase response: ', response);
+
   return response;
 }
 
