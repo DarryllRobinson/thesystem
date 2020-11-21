@@ -114,7 +114,8 @@ async function UploadData(record) {
       customerName: record.customer_name,
       customerEntity: 'Consumer',
       regIdNumber: record.id_number,
-      createdBy: `System Upload - ${user}`,
+      //createdBy: `System Upload - ${user}`,
+      createdBy: user,
       f_clientId: sessionStorage.getItem('cwsClient')
     }
   ];
@@ -152,11 +153,12 @@ async function UploadData(record) {
 async function saveAccountRecordsToDatabase(fId, user, record) {
   const paymentDueDate = null;
 
-  const debitOrderDate = record.debit_order_date ?
-    moment(ExcelDateToJSDate(record.debit_order_date)).format('YYYY-MM-DD') :
+  const debitOrderDate = record.debit_order_date; /*?
+    moment(xlSerialToJsDate(record.debit_order_date)).format('YYYY-MM-DD HH:mm:ss') :
     null;
-  console.log('record.debit_order_date: ', record.debit_order_date);
-  console.log('debitOrderDate: ', debitOrderDate);
+    console.log('record.debit_order_date: ', record.debit_order_date);
+  console.log('typeof record.debit_order_date: ', typeof record.debit_order_date);
+  console.log('debitOrderDate: ', debitOrderDate);*/
 
   const lastPaymentDate = null;
 
@@ -168,7 +170,8 @@ async function saveAccountRecordsToDatabase(fId, user, record) {
     {
       accountNumber: record.account_number,
       accountName: record.customer_name,
-      createdBy: `System Upload - ${user}`,
+      //createdBy: `System Upload - ${user}`,
+      createdBy: user,
       //createdDate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       openDate: openDate,
       debtorAge: record.age,
@@ -213,4 +216,12 @@ function ExcelDateToJSDate(date) {
   console.log('date before: ', date);
   console.log('date: ', new Date(Math.round((date - 25569)*86400*1000)));
   return new Date(Math.round((date - 25569)*86400*1000));
+}
+
+function SerialDateToJSDate(serialDate, offsetUTC) {
+  return new Date(Date.UTC(0, 0, serialDate, offsetUTC));
+}
+
+function xlSerialToJsDate(xlSerial){
+  return new Date(-2209075200000 + (xlSerial - (xlSerial < 61 ? 0 : 1)) * 86400000);
 }
