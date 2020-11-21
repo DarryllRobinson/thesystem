@@ -137,7 +137,8 @@ async function UploadData(record) {
   }
   console.log('accResponse: ', accResponse);
 
-  const contResponse = await saveContactRecordsToDatabase(user, record);
+  const contResponse = await saveContactRecordsToDatabase(record);
+  const caseResponse = await saveCaseRecordsToDatabase(user, record);
 
 
 /*  if (response.data.errno) {
@@ -201,7 +202,7 @@ async function saveAccountRecordsToDatabase(user, record) {
   return response;
 }
 
-async function saveContactRecordsToDatabase(user, record) {
+async function saveContactRecordsToDatabase(record) {
   let contact = [
     {
       f_accountNumber: record.account_number,
@@ -238,6 +239,50 @@ async function saveContactRecordsToDatabase(user, record) {
 
   let response = await PostToDb(contact, 'contacts');
   console.log('saveContactRecordsToDatabase response: ', response);
+
+  return response;
+}
+
+async function saveCaseRecordsToDatabase(user, record) {
+
+  /*const createdDate = record.DateCreated ?
+    moment(this.ExcelDateToJSDate(record.DateCreated)).format('YYYY-MM-DD HH:mm:ss') :
+    null;
+
+  const nextVisitDateTime = record.nextVisitDateTime ?
+    moment(this.ExcelDateToJSDate(record.nextVisitDateTime)).format('YYYY-MM-DD HH:mm:ss') :
+    null;
+
+  const updatedDate = record.DateLastUpdated ?
+    moment(this.ExcelDateToJSDate(record.DateLastUpdated)).format('YYYY-MM-DD HH:mm:ss') :
+    null;
+    //console.log('updatedDate: ', updatedDate);
+
+  const reopenedDate = record.DateReopened ?
+    moment(this.ExcelDateToJSDate(record.DateReopened)).format('YYYY-MM-DD HH:mm:ss') :
+    null;
+    //console.log('reopenedDate: ', reopenedDate);*/
+
+  let caseUpdate = [
+    {
+      //caseNumber: record.CaseNumber,
+      f_accountNumber: record.account_number,
+      //createdDate: createdDate,
+      createdBy: user,
+      currentAssignment: record.agentname,
+      //nextVisitDateTime: nextVisitDateTime,
+      //updatedDate: updatedDate,
+      //updatedBy: record.LastUpdatedBy,
+      //reopenedDate: reopenedDate,
+      //reopenedBy: record.ReopenedBy,
+      //caseReason: record.CaseReason,
+      //currentStatus: record.CurrentStatus,
+      caseNotes: record.dialler_comments
+    }
+  ];
+
+  let response = await PostToDb(caseUpdate, 'cases');
+  console.log('saveCaseRecordsToDatabase response: ', response);
 
   return response;
 }
