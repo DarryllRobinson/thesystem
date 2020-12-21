@@ -210,6 +210,9 @@ class Workzone extends Component {
         } else if (record.currentStatus === recordStatus && workspace === 'collections') {
           //console.log('recordStatus: ', recordStatus);
           //console.log('records: ', record);
+          //console.log('record.updatedDate: ', record.updatedDate);
+          const updatedDate = record.updatedDate ? moment(record.updatedDate).format('YYYY-MM-DD HH:mm:ss') : '';
+          //console.log('updatedDate: ', updatedDate);
 
           //record.tags.forEach(tag => {
             //if (tag === task) {
@@ -220,6 +223,7 @@ class Workzone extends Component {
                 caseNumber: record.caseNumber,
                 caseNotes: record.caseNotes,
                 name: record.customerName,
+                customerAnalysis: record.customerAnalysis,
                 regIdNumber: record.regIdNumber,
                 debtorAge: record.debtorAge,
                 resolution: record.resolution,
@@ -242,7 +246,7 @@ class Workzone extends Component {
                 nextVisitDate: moment(record.nextVisitDate).format('YYYY-MM-DD'),
                 currentAssignment: record.currentAssignment,
                 updatedBy: record.updatedBy,
-                updatedDate: moment(record.updatedDate).format('YYYY-MM-DD HH:mm:ss'),
+                updatedDate: updatedDate,
                 createdBy: record.createdBy,
                 createdDate: moment(record.createdDate).format('YYYY-MM-DD HH:mm:ss'),
                 id: <Link className="nav-link" to={{
@@ -277,6 +281,11 @@ class Workzone extends Component {
                 {
                   label: 'Customer Name',
                   field: 'name',
+                  sort: 'asc'
+                },
+                {
+                  label: 'Customer Analysis',
+                  field: 'customerAnalysis',
                   sort: 'asc'
                 },
                 {

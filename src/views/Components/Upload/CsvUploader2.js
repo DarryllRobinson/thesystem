@@ -16,7 +16,6 @@ export default function CsvUploader(props) {
   const clientId = sessionStorage.getItem('cwsClient');
   const [file, setFile] = useState(null);
   const [customers, setCustomers] = useState(null);
-  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     let ignore = false;
@@ -35,10 +34,6 @@ export default function CsvUploader(props) {
     return () => { ignore = true; }
   }, [clientId]);
 
-  useEffect(() => {
-    console.log('something changed: ', progress);
-  }, [progress]);
-
   return (
     <div>
       <h3>Import CSV</h3>
@@ -47,17 +42,23 @@ export default function CsvUploader(props) {
         onChange={event => setFile(event.target.files[0])}
         accept=".csv"
       />
-      <button onClick={() => {
-        const progressUpdate = UploadFile(file, customers);
-        //setProgress(progress + progressUpdate);
-      }}>Upload</button>
+      <button onClick={() => UploadFile(file, customers)}>Upload</button>
       <br /><br />
     </div>
   )
 }
 
+const UploadButton = () => {
+  const [progress, setProgress] = useState(0);
+   return (
+     <div>
+      <button onClick={() => UploadFile()}>Upload</button>
+    </div>
+   )
+}
+
 function UploadFile(file, customers) {
-  console.log('upload start');
+  console.log('upload start: ', file);
   if (!file) {
     console.log('no file: ', file);
     return
@@ -79,13 +80,10 @@ function UploadFile(file, customers) {
         obj[headers[j].trim()] = currentline[j];
       }
 
-      console.log('obj: ', obj);
-
       if (obj.account_number) {
         if (checkUnique(obj.account_number, customers)) {
           result.push(obj);
-          console.log('result: ', result);
-          const uploadMsg = await UploadData(obj);
+          const uploadMsg = await UploadData(result[0]);
           //console.log('uploadMsg: ', uploadMsg);
           if (uploadMsg === 'problem') console.log('problem uploading record');
         } else {
@@ -93,21 +91,18 @@ function UploadFile(file, customers) {
         }
       }
     }
-    //console.log('result: ', result[0]);
+    console.log('result: ', result[0]);
 
   };
   return 1;
 }
 
 function checkUnique(accNum, customers) {
-  console.log('checkUnique accNum: ', accNum);
-  console.log('checkUnique customers: ', customers);
   const found = customers.find(customer => customer === accNum);
   return !found;
 }
 
 async function UploadData(record) {
-  console.log('record: ', record);
   const user = sessionStorage.getItem('cwsUser');
 
   let customer = null;
@@ -134,15 +129,14 @@ async function UploadData(record) {
   //console.log('response: ', response);
 
   const accResponse = await saveAccountRecordsToDatabase(user, record);
-  console.log('accResponse: ', accResponse);
 
-  if (accResponse) {
+  if (accResponse.data.errno) {
     //console.log('problem');
-    //return accResponse;
+    return 'accResponse problem';
   }
+  //console.log('accResponse: ', accResponse);
 
   const contResponse = await saveContactRecordsToDatabase(record);
-  console.log('contResponse: ', contResponse);
 
   if (contResponse.data.errno) {
     //console.log('problem');
@@ -172,7 +166,7 @@ async function UploadData(record) {
 async function saveAccountRecordsToDatabase(user, record) {
   const paymentDueDate = null;
 
-  const debitOrderDate = record.debit_order_date ? record.debit_order_date : null; /*?
+  const debitOrderDate = record.debit_order_date; /*?
     moment(xlSerialToJsDate(record.debit_order_date)).format('YYYY-MM-DD HH:mm:ss') :
     null;
     console.log('record.debit_order_date: ', record.debit_order_date);
@@ -220,62 +214,44 @@ async function saveAccountRecordsToDatabase(user, record) {
 }
 
 async function saveContactRecordsToDatabase(record) {
-  // check phone number length
-  if (
-        record.telephone1.length < 14 &&
-        record.telephone2.length < 14 &&
-        record.telephone3.length < 14 &&
-        record.telephone4.length < 14 &&
-        record.telephone5.length < 14 &&
-        record.telephone6.length < 14 &&
-        record.telephone7.length < 14 &&
-        record.telephone8.length < 14 &&
-        record.telephone9.length < 14
-      ) {
-        console.log('number lengths okay');
-        let contact = [
-          {
-            f_accountNumber: record.account_number,
-            //primaryContactName: record.PrimaryContactName,
-            primaryContactNumber: record.telephone1,
-            //primaryContactEmail: record.PrimaryEmailAddress,
-            //representativeName: record.RepresentativeName,
-            //representativeNumber: record.RepresentativeContactNumber,
-            //representativeEmail: record.RepresentativeEmailAddress,
-            //alternativeRepName: record.AltRepName,
-            //alternativeRepNumber: record.AltRepContact,
-            //alternativeRepEmail: record.AltRepEmail,
-            otherNumber1: record.telephone2,
-            otherNumber2: record.telephone3,
-            otherNumber3: record.telephone4,
-            otherNumber4: record.telephone5,
-            otherNumber5: record.telephone6,
-            otherNumber6: record.telephone7,
-            otherNumber7: record.telephone8,
-            otherNumber8: record.telephone9,
-            otherNumber9: record.telephone10,
-            //otherEmail1: record.OtherEmail1,
-            //otherEmail2: record.OtherEmail2,
-            //otherEmail3: record.OtherEmail3,
-            //otherEmail4: record.OtherEmail4,
-            //otherEmail5: record.OtherEmail5,
-            //dnc1: record.DNC1,
-            //dnc2: record.DNC2,
-            //dnc3: record.DNC3,
-            //dnc4: record.DNC4,
-            //dnc5: record.DNC5
-          }
-        ];
+  let contact = [
+    {
+      f_accountNumber: record.account_number,
+      //primaryContactName: record.PrimaryContactName,
+      primaryContactNumber: record.telephone1,
+      //primaryContactEmail: record.PrimaryEmailAddress,
+      //representativeName: record.RepresentativeName,
+      //representativeNumber: record.RepresentativeContactNumber,
+      //representativeEmail: record.RepresentativeEmailAddress,
+      //alternativeRepName: record.AltRepName,
+      //alternativeRepNumber: record.AltRepContact,
+      //alternativeRepEmail: record.AltRepEmail,
+      otherNumber1: record.telephone2,
+      otherNumber2: record.telephone3,
+      otherNumber3: record.telephone4,
+      otherNumber4: record.telephone5,
+      otherNumber5: record.telephone6,
+      otherNumber6: record.telephone7,
+      otherNumber7: record.telephone8,
+      otherNumber8: record.telephone9,
+      otherNumber9: record.telephone10,
+      //otherEmail1: record.OtherEmail1,
+      //otherEmail2: record.OtherEmail2,
+      //otherEmail3: record.OtherEmail3,
+      //otherEmail4: record.OtherEmail4,
+      //otherEmail5: record.OtherEmail5,
+      //dnc1: record.DNC1,
+      //dnc2: record.DNC2,
+      //dnc3: record.DNC3,
+      //dnc4: record.DNC4,
+      //dnc5: record.DNC5
+    }
+  ];
 
-        let response = await PostToDb(contact, 'contacts');
-        //console.log('saveContactRecordsToDatabase response: ', response);
+  let response = await PostToDb(contact, 'contacts');
+  //console.log('saveContactRecordsToDatabase response: ', response);
 
-        return response;
-      } else {
-        console.log('numbers too long');
-        return 'Telephone number too long';
-      }
-
+  return response;
 }
 
 async function saveCaseRecordsToDatabase(user, record) {

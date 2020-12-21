@@ -107,11 +107,13 @@ class ExcelReader extends Component {
           //this.uploadData(this.state.data);
           //console.log('data loaded: ', data);
 
-          this.chunkData(data);
+          //this.chunkData(data);
 
           let cont = await this.checkData(workspace, this.state.data);
-          //console.log('cont: ', cont);
-          //if (cont) this.uploadData(workspace, this.state.data);
+          console.log('cont: ', cont);
+          if (cont) setInterval(() => {
+            this.uploadData(workspace, this.state.data);
+          }, 100);
         } catch(e) {
           console.log('Uploading Collection update file problem (e): ', e);
           this.errorReporting.sendMessage(
@@ -248,6 +250,7 @@ class ExcelReader extends Component {
           customerRefNo: record.CustomerNumber,
           customerName: record.Customer,
           customerEntity: record.CustomerEntity,
+          customerAnalysis: record.CustomerAnalysis,
           regIdNumber: record.CompanyRegNo,
           customerType: record.Customer_Type,
           productType: record.ProductType,
@@ -263,6 +266,7 @@ class ExcelReader extends Component {
           customerRefNo: record.CustomerNumber,
           customerName: record.Customer,
           customerEntity: record.CustomerEntity,
+          customerAnalysis: record.CustomerAnalysis,
           regIdNumber: record.ConsumerIDNumber,
           customerType: record.Customer_Type,
           productType: record.ProductType,
@@ -359,7 +363,7 @@ class ExcelReader extends Component {
 
     //accounts.forEach(async account => {
       let response = await this.postToDb(account, 'accounts');
-      //console.log('saveAccountRecordsToDatabase response: ', response);
+      console.log('saveAccountRecordsToDatabase response: ', response);
       if (response.data.errno) {
         let error =[];
         error = this.state.accountErrors;

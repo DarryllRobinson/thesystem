@@ -95,7 +95,7 @@ class Collection extends Component {
     let record = null;
     await this.mysqlLayer.Get(`/${type}/${workspace}/read_item/${clientId}/${recordId}`)
       .then(response => {
-        //console.log('Collection response: ', response);
+        console.log('Collection response: ', response);
         if (response) record = response[0];
       }
 
@@ -136,7 +136,8 @@ class Collection extends Component {
     let users = await this.mysqlLayer.Get(`/admin/users/${clientId}`);
 
     // saving the previous status so we can unlock it properly after releasing the record
-    const prevStatus = record.currentStatus;
+    console.log('currentStatus: ', record);
+    const prevStatus = record.currentStatus !== undefined ? record.currentStatus : 'Open';
 
     this.setState({
       accountStatuses: accountStatuses,
@@ -1282,6 +1283,18 @@ class Collection extends Component {
                         name="customerName"
                         className="form-control"
                         value={collection.customerName || ''}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-4">
+                    <div className="form-group">
+                      <label htmlFor="customerAnalysis">Customer Analysis</label>
+                      <input
+                        disabled={true}
+                        type="text"
+                        name="customerAnalysis"
+                        className="form-control"
+                        value={collection.customerAnalysis || ''}
                       />
                     </div>
                   </div>
