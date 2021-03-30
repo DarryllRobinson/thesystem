@@ -27,17 +27,17 @@ export default function ContactSection() {
   const [name, setName] = useState('');
   const handleName = (event) => {
     setName(event.target.value);
-  }
+  };
 
   const [email, setEmail] = useState('');
   const handleEmail = (event) => {
     setEmail(event.target.value);
-  }
+  };
 
   const [msg, setMsg] = useState('');
   const handleMsg = (event) => {
     setMsg(event.target.value);
-  }
+  };
 
   // showing email notification
   const [open, setOpen] = useState(false);
@@ -66,16 +66,16 @@ export default function ContactSection() {
       html: `Sender: ${name}\n\r
             Email: ${email}\n\r
             <br />
-            Message: ${msg}`
-    }
+            Message: ${msg}`,
+    };
 
     const response = await mysqlLayer.Post('/admin/email', emailObject);
     setResponse(response);
-  }
+  };
 
   const handleClose = (event) => {
     setOpen(false);
-  }
+  };
 
   const classes = useStyles();
   return (
@@ -84,23 +84,21 @@ export default function ContactSection() {
         <GridItem cs={12} sm={12} md={8}>
           <h2 className={classes.title}>Contact us</h2>
           <h4 className={classes.description}>
-            We would love to hear from you. Please complete the form below
-            and we will get back to you as soon as possible.
+            We would love to hear from you. Please complete the form below and
+            we will get back to you as soon as possible.
           </h4>
-          <form className={classes.form}
-            onSubmit={handleSubmit}
-          >
+          <form className={classes.form} onSubmit={handleSubmit}>
             <GridContainer>
               <GridItem xs={12} sm={12} md={6}>
                 <CustomInput
                   labelText="Your Name"
                   id="name"
                   formControlProps={{
-                    fullWidth: true
+                    fullWidth: true,
                   }}
                   inputProps={{
                     onChange: (event) => handleName(event),
-                    type: "text"
+                    type: 'text',
                   }}
                 />
               </GridItem>
@@ -109,11 +107,11 @@ export default function ContactSection() {
                   labelText="Your Email"
                   id="email"
                   formControlProps={{
-                    fullWidth: true
+                    fullWidth: true,
                   }}
                   inputProps={{
                     onChange: (event) => handleEmail(event),
-                    type: "email"
+                    type: 'email',
                   }}
                 />
               </GridItem>
@@ -122,22 +120,23 @@ export default function ContactSection() {
                 id="message"
                 formControlProps={{
                   fullWidth: true,
-                  className: classes.textArea
+                  className: classes.textArea,
                 }}
                 inputProps={{
                   multiline: true,
                   onChange: (event) => handleMsg(event),
-                  rows: 5
+                  rows: 5,
                 }}
               />
               <GridItem xs={12} sm={12} md={4}>
-                <Button color="primary" type="submit">Send Message</Button>
+                <Button color="primary" type="submit">
+                  Send Message
+                </Button>
               </GridItem>
             </GridContainer>
           </form>
         </GridItem>
       </GridContainer>
-
 
       <Snackbar
         anchorOrigin={{

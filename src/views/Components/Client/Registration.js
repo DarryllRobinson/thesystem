@@ -18,8 +18,8 @@ export default class Registration extends Component {
       email: '',
       createdDate: '',
       registrationErrors: '',
-      clients: []
-    }
+      clients: [],
+    };
 
     this.mysqlLayer = new MysqlLayer();
 
@@ -29,14 +29,16 @@ export default class Registration extends Component {
 
   async componentDidMount() {
     //console.log('Registration props: ', this.props);
-    let clients = await this.mysqlLayer.Get(`/admin/clients`, { withCredentials: true });
+    let clients = await this.mysqlLayer.Get(`/admin/clients`, {
+      withCredentials: true,
+    });
     //console.log('clients: ', clients);
     await this.setState({ clients: clients });
   }
 
   handleChange(event) {
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   }
 
@@ -44,13 +46,7 @@ export default class Registration extends Component {
     event.preventDefault();
 
     // Don't let the missing this.state.values confuse you below :)
-    const {
-      name,
-      regNum,
-      mainContact,
-      phone,
-      email
-    } = this.state;
+    const { name, regNum, mainContact, phone, email } = this.state;
 
     let unique = this.checkUnique(regNum);
 
@@ -64,43 +60,56 @@ export default class Registration extends Component {
         email: email,
         phone: phone,
         mainContact: mainContact,
+        active: 1,
         hasPaid: 1,
         createdDate: createdDate,
-        createdBy: createdBy
+        createdBy: createdBy,
       };
 
-      await this.mysqlLayer.Post(`/admin/clients`, client, { withCredentials: true }
-      ).then(async response => {
-        //console.log('response: ', response);
-        //console.log('response.data.insertId: ', response.data.insertId);
-        if (response.data.affectedRows === 1) {
-          const services = {
-            f_clientId: response.data.insertId,
-            service: 'collections',
-            type: 'business'
-          };
+      await this.mysqlLayer
+        .Post(`/admin/clients`, client, { withCredentials: true })
+        .then(async (response) => {
+          //console.log('response: ', response);
+          //console.log('response.data.insertId: ', response.data.insertId);
+          if (response.data.affectedRows === 1) {
+            const services = {
+              f_clientId: response.data.insertId,
+              service: 'collections',
+              type: 'business',
+            };
 
-          await this.mysqlLayer.Post('/admin/clientservices', services, { withCredentials: true }
-          ).then(serviceResponse => {
-            //console.log('serviceResponse: ', serviceResponse);
-            Toasts('success', 'Client successfully added to The System', true);
-            this.props.loadClients();
-          });
-        } else {
-          Toasts('error', 'Problem adding client to The System', false);
-        }
-      }).catch(error => {
-        console.log('Client registration error: ', error);
-      });
-
+            await this.mysqlLayer
+              .Post('/admin/clientservices', services, {
+                withCredentials: true,
+              })
+              .then((serviceResponse) => {
+                //console.log('serviceResponse: ', serviceResponse);
+                Toasts(
+                  'success',
+                  'Client successfully added to The System',
+                  true
+                );
+                this.props.loadClients();
+              });
+          } else {
+            Toasts('error', 'Problem adding client to The System', false);
+          }
+        })
+        .catch((error) => {
+          console.log('Client registration error: ', error);
+        });
     } else {
-      Toasts('error', 'The client already exists. Please check the registration nunber.', false);
+      Toasts(
+        'error',
+        'The client already exists. Please check the registration nunber.',
+        false
+      );
     }
   }
 
   checkUnique(regNum) {
     let unique = true;
-    this.state.clients.forEach(client => {
+    this.state.clients.forEach((client) => {
       if (client.regNum === regNum) unique = false;
     });
     return unique;
@@ -177,10 +186,11 @@ export default class Registration extends Component {
             </Col>
           </Row>
 
-          <Button type="submit"
+          <Button
+            type="submit"
             style={{
-              background: "#48B711",
-              borderColor: "#48B711"
+              background: '#48B711',
+              borderColor: '#48B711',
             }}
           >
             Register
@@ -188,7 +198,6 @@ export default class Registration extends Component {
         </Form>
         <ToastContainer />
       </>
-
     );
   }
 }

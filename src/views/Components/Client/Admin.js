@@ -12,8 +12,8 @@ class Admin extends Component {
 
     this.state = {
       update: false,
-      clients: null
-    }
+      clients: null,
+    };
 
     this.mysqlLayer = new MysqlLayer();
     this.loadClients = this.loadClients.bind(this);
@@ -24,77 +24,75 @@ class Admin extends Component {
   }
 
   async loadClients() {
-    await this.mysqlLayer.Get(`/admin/clients`
-    ).then(clients => {
+    await this.mysqlLayer.Get(`/admin/clients`).then((clients) => {
       this.setState({
         //update: true,
-        clients: clients
+        clients: clients,
       });
     });
-
   }
 
   async deleteClient(client) {
-    await this.mysqlLayer.Delete(`/admin/clients/${client}`
-    ).then(response => {
-      //console.log('response: ', response);
-      if (response.affectedRows === 1) {
-        Toasts('success', 'The client was deleted', true);
-        this.loadClients();
-      } else {
-        Toasts('error', 'There was a problem deleting the client', false);
-      }
-    });
+    await this.mysqlLayer
+      .Delete(`/admin/clients/${client}`)
+      .then((response) => {
+        //console.log('response: ', response);
+        if (response.affectedRows === 1) {
+          Toasts('success', 'The client was deleted', true);
+          this.loadClients();
+        } else {
+          Toasts('error', 'There was a problem deleting the client', false);
+        }
+      });
   }
 
   async deactivateClient(client) {
-    await this.mysqlLayer.Put(`/admin/clients/deactivate/${client}`
-    ).then(response => {
-      //console.log('response: ', response);
-      if (response.affectedRows === 1) {
-        Toasts('success', 'The client was deactivated', true);
-        this.loadClients();
-      } else {
-        Toasts('error', 'There was a problem deactivating the client', false);
-      }
-    });
+    await this.mysqlLayer
+      .Put(`/admin/clients/deactivate/${client}`)
+      .then((response) => {
+        //console.log('response: ', response);
+        if (response.affectedRows === 1) {
+          Toasts('success', 'The client was deactivated', true);
+          this.loadClients();
+        } else {
+          Toasts('error', 'There was a problem deactivating the client', false);
+        }
+      });
   }
 
   async reactivateClient(client) {
-    await this.mysqlLayer.Put(`/admin/clients/reactivate/${client}`
-    ).then(response => {
-      //console.log('response: ', response);
-      if (response.affectedRows === 1) {
-        Toasts('success', 'The client was reactivated', true);
-        this.loadClients();
-      } else {
-        Toasts('error', 'There was a problem reactivating the client', false);
-      }
-    });
+    await this.mysqlLayer
+      .Put(`/admin/clients/reactivate/${client}`)
+      .then((response) => {
+        //console.log('response: ', response);
+        if (response.affectedRows === 1) {
+          Toasts('success', 'The client was reactivated', true);
+          this.loadClients();
+        } else {
+          Toasts('error', 'There was a problem reactivating the client', false);
+        }
+      });
   }
 
   render() {
     if (!this.state.clients) {
-      return (
-        <div>Loading clients...</div>
-      )
+      return <div>Loading clients...</div>;
     } else {
       const clients = this.state.clients.map((client, idx) => {
         const clientId = client.id;
         return (
           <tr key={idx}>
-            <td key={idx+1}>{client.name}</td>
-            <td key={idx+2}>{client.regNum}</td>
-            <td key={idx+3}>{client.mainContact}</td>
-            <td key={idx+4}>{client.email}</td>
-            <td key={idx+5}>{client.phone}</td>
-            {
-              client.active === 1 &&
+            <td key={idx + 1}>{client.name}</td>
+            <td key={idx + 2}>{client.regNum}</td>
+            <td key={idx + 3}>{client.mainContact}</td>
+            <td key={idx + 4}>{client.email}</td>
+            <td key={idx + 5}>{client.phone}</td>
+            {client.active === 1 && (
               <td>
                 <Button
                   style={{
-                    background: "#48B711",
-                    borderColor: "#48B711"
+                    background: '#48B711',
+                    borderColor: '#48B711',
                   }}
                   size="sm"
                   onClick={() => this.deactivateClient(clientId)}
@@ -102,15 +100,14 @@ class Admin extends Component {
                   Deactivate
                 </Button>
               </td>
-            }
+            )}
 
-            {
-              client.active === 0 &&
+            {client.active === 0 && (
               <td>
                 <Button
                   style={{
-                    background: "#48B711",
-                    borderColor: "#48B711"
+                    background: '#48B711',
+                    borderColor: '#48B711',
                   }}
                   size="sm"
                   onClick={() => this.reactivateClient(clientId)}
@@ -118,10 +115,10 @@ class Admin extends Component {
                   Reactivate
                 </Button>
               </td>
-            }
+            )}
           </tr>
-        )}
-      );
+        );
+      });
 
       return (
         <Container>
@@ -136,9 +133,7 @@ class Admin extends Component {
                 <th>Deactivate/Reactivate client</th>
               </tr>
             </thead>
-            <tbody>
-              {clients}
-            </tbody>
+            <tbody>{clients}</tbody>
           </Table>
 
           <Accordion>
@@ -147,13 +142,13 @@ class Admin extends Component {
             </Accordion.Toggle>
 
             <Accordion.Collapse eventKey="0">
-            <Registration loadClients={this.loadClients}/>
+              <Registration loadClients={this.loadClients} />
             </Accordion.Collapse>
           </Accordion>
 
           <ToastContainer />
         </Container>
-      )
+      );
     }
   }
 }

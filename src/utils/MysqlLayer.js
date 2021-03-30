@@ -5,7 +5,6 @@ import moment from 'moment';
 import { authenticationService } from 'services';
 
 export default class MysqlLayer {
-
   security = new Security();
 
   /*async _Get(path) {
@@ -24,20 +23,21 @@ export default class MysqlLayer {
 
     try {
       //console.log(`Getting from ${AppSettings.serverEndpoint}${path}`);
-      let response = await axios.get(`${AppSettings.serverEndpoint}${path}`, this.setHeaders());
-      return response.data;
-    } catch(e) {
-      console.log('e: ', e);
-      this.sendMessage(
-        {
-          error: `Get error: ${e}`,
-          fileName: 'MysqlLayer.js',
-          dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-          user: sessionStorage.getItem('cwsUser'),
-          state: null,
-          path: path
-        }
+      let response = await axios.get(
+        `${AppSettings.serverEndpoint}${path}`,
+        this.setHeaders()
       );
+      return response.data;
+    } catch (e) {
+      console.log('e: ', e);
+      this.sendMessage({
+        error: `Get error: ${e}`,
+        fileName: 'MysqlLayer.js',
+        dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        user: sessionStorage.getItem('cwsUser'),
+        state: null,
+        path: path,
+      });
       if (!e.response) {
         return e;
       }
@@ -55,22 +55,24 @@ export default class MysqlLayer {
 
     try {
       //console.log(`Posting to ${AppSettings.serverEndpoint}${path}`);
-      let response = await axios.post(`${AppSettings.serverEndpoint}${path}`, object, this.setHeaders());
+      let response = await axios.post(
+        `${AppSettings.serverEndpoint}${path}`,
+        object,
+        this.setHeaders()
+      );
       //console.log('response: ', response);
       return response;
-    } catch(e) {
+    } catch (e) {
       console.log('e: ', e);
-      this.sendMessage(
-        {
-          error: `Post error: ${e}`,
-          fileName: 'MysqlLayer.js',
-          dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-          user: sessionStorage.getItem('cwsUser'),
-          path: path,
-          state: null,
-          object: JSON.stringify(object)
-        }
-      );
+      this.sendMessage({
+        error: `Post error: ${e}`,
+        fileName: 'MysqlLayer.js',
+        dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        user: sessionStorage.getItem('cwsUser'),
+        path: path,
+        state: null,
+        object: JSON.stringify(object),
+      });
       if (!e.response) {
         return e;
       }
@@ -89,21 +91,22 @@ export default class MysqlLayer {
     //console.log('object: ', object);
     try {
       //console.log(`Posting login to from ${AppSettings.serverEndpoint}${path}`);
-      let user = await axios.post(`${AppSettings.serverEndpoint}${path}`, object);
+      let user = await axios.post(
+        `${AppSettings.serverEndpoint}${path}`,
+        object
+      );
       //console.log('user: ', user);
       return user;
-    } catch(e) {
+    } catch (e) {
       console.log('e: ', e);
-      this.sendMessage(
-        {
-          error: `PostLogin error: ${e}`,
-          fileName: 'MysqlLayer.js',
-          dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-          path: path,
-          state: null,
-          object: JSON.stringify(object)
-        }
-      );
+      this.sendMessage({
+        error: `PostLogin error: ${e}`,
+        fileName: 'MysqlLayer.js',
+        dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        path: path,
+        state: null,
+        object: JSON.stringify(object),
+      });
       if (!e.response) {
         return e;
       }
@@ -122,22 +125,24 @@ export default class MysqlLayer {
     //console.log('object: ', object);
     try {
       //console.log(`Posting login to from ${AppSettings.serverEndpoint}${path}`);
-      let response = await axios.post(`${AppSettings.serverEndpoint}${path}`, object, this.setHeaders());
+      let response = await axios.post(
+        `${AppSettings.serverEndpoint}${path}`,
+        object,
+        this.setHeaders()
+      );
       console.log('response: ', response);
       return response;
-    } catch(e) {
+    } catch (e) {
       console.log('e: ', e);
-      this.sendMessage(
-        {
-          error: `PostChange error: ${e}`,
-          fileName: 'MysqlLayer.js',
-          dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-          user: sessionStorage.getItem('cwsUser'),
-          path: path,
-          state: null,
-          object: JSON.stringify(object)
-        }
-      );
+      this.sendMessage({
+        error: `PostChange error: ${e}`,
+        fileName: 'MysqlLayer.js',
+        dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        user: sessionStorage.getItem('cwsUser'),
+        path: path,
+        state: null,
+        object: JSON.stringify(object),
+      });
       if (!e.response) {
         return e;
       }
@@ -155,21 +160,23 @@ export default class MysqlLayer {
 
     try {
       //console.log(`Putting into ${AppSettings.serverEndpoint}${path}`);
-      let response = await axios.put(`${AppSettings.serverEndpoint}${path}`, object, this.setHeaders());
-      return response.data;
-    } catch(e) {
-      console.log('e: ', e);
-      this.sendMessage(
-        {
-          error: `Put error: ${e}`,
-          fileName: 'MysqlLayer.js',
-          dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-          user: sessionStorage.getItem('cwsUser'),
-          path: path,
-          state: null,
-          object: JSON.stringify(object)
-        }
+      let response = await axios.put(
+        `${AppSettings.serverEndpoint}${path}`,
+        object,
+        this.setHeaders()
       );
+      return response.data;
+    } catch (e) {
+      console.log('e: ', e);
+      this.sendMessage({
+        error: `Put error: ${e}`,
+        fileName: 'MysqlLayer.js',
+        dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        user: sessionStorage.getItem('cwsUser'),
+        path: path,
+        state: null,
+        object: JSON.stringify(object),
+      });
       if (!e.response) {
         return e;
       }
@@ -187,20 +194,21 @@ export default class MysqlLayer {
 
     try {
       //console.log(`Deleting from ${AppSettings.serverEndpoint}${path}`);
-      let response = await axios.delete(`${AppSettings.serverEndpoint}${path}`, this.setHeaders());
-      return response.data;
-    } catch(e) {
-      console.log('e: ', e);
-      this.sendMessage(
-        {
-          error: `Post error: ${e}`,
-          fileName: 'MysqlLayer.js',
-          dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-          user: sessionStorage.getItem('cwsUser'),
-          state: null,
-          path: path
-        }
+      let response = await axios.delete(
+        `${AppSettings.serverEndpoint}${path}`,
+        this.setHeaders()
       );
+      return response.data;
+    } catch (e) {
+      console.log('e: ', e);
+      this.sendMessage({
+        error: `Post error: ${e}`,
+        fileName: 'MysqlLayer.js',
+        dateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+        user: sessionStorage.getItem('cwsUser'),
+        state: null,
+        path: path,
+      });
       if (!e.response) {
         return e;
       }
@@ -222,26 +230,29 @@ export default class MysqlLayer {
     let user = sessionStorage.getItem('cwsUser');
     //console.log('user: ', user);
 
-  //  if (currentUser && currentUser.token) {
-      return {
-        headers: {
-          "Accept": "application/json, application/x-www-form-urlencoded",
-          "Content-Type": "application/json",
-          'User': user,
-          'Authorization': `Bearer ${token}`
-        }
-        /*headers: {
+    //  if (currentUser && currentUser.token) {
+    return {
+      headers: {
+        Accept: 'application/json, application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
+        User: user,
+        Authorization: `Bearer ${token}`,
+      },
+      /*headers: {
           "Access-Control-Allow-Origin": "http://localhost:3000",
           "Access-Control-Allow-Methods": "POST",
           "Access-Control-Allow-Headers": "Origin, Methods, Content-Type",
 
         }*/
-        , httpsAgent: new https.Agent({ rejectUnauthorized: false, withCredentials: true }),
-        //user: user
-      }
-  //  } else {
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: false,
+        withCredentials: true,
+      }),
+      //user: user
+    };
+    //  } else {
     //  return {};
-  //  }
+    //  }
   }
 
   async sendMessage(msgObject) {
@@ -249,10 +260,10 @@ export default class MysqlLayer {
     msgObject.to = 'darryll@thesystem.co.za';
     msgObject.subject = 'ALERT! Error picked up!';
 
-    await axios.post(`${AppSettings.serverEndpoint}/admin/error_email`, msgObject
-      ).then(response => {
+    await axios
+      .post(`${AppSettings.serverEndpoint}/admin/error_email`, msgObject)
+      .then((response) => {
         console.log('response: ', response);
-      }
-    );
+      });
   }
 }

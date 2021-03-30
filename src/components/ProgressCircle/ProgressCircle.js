@@ -18,9 +18,11 @@ function CircularProgressWithLabel(props) {
         alignItems="center"
         justifyContent="center"
       >
-        <Typography variant="caption" component="div" color="textSecondary">{`${Math.round(
-          props.value,
-        )}%`}</Typography>
+        <Typography
+          variant="caption"
+          component="div"
+          color="textSecondary"
+        >{`${Math.round(props.value)}%`}</Typography>
       </Box>
     </Box>
   );
@@ -35,6 +37,10 @@ CircularProgressWithLabel.propTypes = {
 };
 
 export default function CircularStatic(props) {
+  CircularStatic.propTypes = {
+    progress: PropTypes.any,
+  };
+
   console.log('CircularStatic(props): ', props);
   //const step = 1;
   const interval = 10;
@@ -44,9 +50,10 @@ export default function CircularStatic(props) {
   console.log('progressPercentage: ', progressPercentage);
 
   useEffect(() => {
-    const updateProgress = () => setProgressPercentage(progressPercentage + props.progress)
+    const updateProgress = () =>
+      setProgressPercentage(progressPercentage + props.progress);
     if (progressPercentage < maxProgress) {
-      setTimeout(updateProgress, interval)
+      setTimeout(updateProgress, interval);
     }
   }, [progressPercentage, props]);
 

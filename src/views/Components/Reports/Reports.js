@@ -2,28 +2,28 @@ import React, { Component } from 'react';
 import { MDBBtn, MDBRow } from 'mdbreact';
 import PivotTableUI from 'react-pivottable/PivotTableUI';
 import 'react-pivottable/pivottable.css';
-import { CSVLink } from "react-csv";
+import { CSVLink } from 'react-csv';
 import _ from 'lodash';
 import MysqlLayer from 'utils/MysqlLayer';
 
 export default class Reports extends Component {
-
-  reportData = [{
-    'dummy': 'dummy'
-  }];
+  reportData = [
+    {
+      dummy: 'dummy',
+    },
+  ];
 
   constructor(props) {
     super(props);
     this.state = {
       type: 'business',
       workspace: 'collections',
-      clientId: sessionStorage.getItem('cwsClient')
+      clientId: sessionStorage.getItem('cwsClient'),
     };
 
     this.loadCollectionRecords = this.loadCollectionRecords.bind(this);
     this.setExportData = this.setExportData.bind(this);
     this.mysqlLayer = new MysqlLayer();
-
   }
 
   componentDidMount() {
@@ -37,7 +37,9 @@ export default class Reports extends Component {
     const workspace = this.state.workspace;
     const clientId = this.state.clientId;
 
-    this.reportData = await this.mysqlLayer.Get(`/${type}/${workspace}/list_all_report/${clientId}`);
+    this.reportData = await this.mysqlLayer.Get(
+      `/${type}/${workspace}/list_all_report/${clientId}`
+    );
     console.log('this.reportData: ', this.reportData);
     this.processReportData();
     this.setState({ staticContext: this.state.staticContext });
@@ -47,9 +49,8 @@ export default class Reports extends Component {
     //console.log('processReportData...');
     if (!this.reportData) this.reportData = [];
 
-    _.forEach(this.reportData, function(obj) {
-
-      Object.entries(obj).forEach(item => {
+    _.forEach(this.reportData, function (obj) {
+      Object.entries(obj).forEach((item) => {
         _.set(obj, _.startCase(item[0]), item[1]);
       });
 
@@ -94,8 +95,10 @@ export default class Reports extends Component {
       <div>
         <h3 className="mb-3">Report</h3>
         <MDBRow className="mb-3">
-          <MDBBtn color="mdb-color" onClick={this.loadCollectionRecords}>Load Collection Records</MDBBtn>
-          <CSVLink data={exportData} filename={"theSystemDataExport.csv"}>
+          <MDBBtn color="mdb-color" onClick={this.loadCollectionRecords}>
+            Load Collection Records
+          </MDBBtn>
+          <CSVLink data={exportData} filename={'theSystemDataExport.csv'}>
             <MDBBtn color="mdb-color">Export</MDBBtn>
           </CSVLink>
         </MDBRow>
@@ -109,6 +112,6 @@ export default class Reports extends Component {
           {...this.state}
         />
       </div>
-    )
+    );
   }
 }

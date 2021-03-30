@@ -7,8 +7,8 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   title: {
-    color: "black"
-  }
+    color: 'black',
+  },
 }));
 
 export default function Welcome(props) {
@@ -20,7 +20,9 @@ export default function Welcome(props) {
       <Grid container spacing={3}>
         <Grid item xs>
           <h3 className={classes.title}>Welcome to your workspace, {user}</h3>
-          <p className={classes.title}>{`It will provide you with an overview of what's happening and is where you will start your day`}</p>
+          <p
+            className={classes.title}
+          >{`It will provide you with an overview of what's happening and is where you will start your day`}</p>
         </Grid>
       </Grid>
     </div>

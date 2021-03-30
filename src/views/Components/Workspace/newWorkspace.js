@@ -9,16 +9,15 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 const useStyles = makeStyles((theme) => ({
   list: {
-    border: "2px solid orange",
+    border: '2px solid orange',
     width: '100%',
   },
   workspace: {
-    border: "2px solid brown",
-    color: "black",
-    fontWeight: "bold"
-  }
+    border: '2px solid brown',
+    color: 'black',
+    fontWeight: 'bold',
+  },
 }));
-
 
 function Workspace(props) {
   const classes = useStyles();
@@ -29,7 +28,8 @@ function Workspace(props) {
     const records = props.records;
     const tasks = props.tasks;
     const type = props.type;
-    const workspaceCapitalised = workspace.charAt(0).toUpperCase() + workspace.slice(1);
+    const workspaceCapitalised =
+      workspace.charAt(0).toUpperCase() + workspace.slice(1);
     const worklists = props.workspaces.worklists;
     //console.log('Workspace worklists: ', worklists);
 
@@ -53,16 +53,13 @@ function Workspace(props) {
     return (
       <>
         <h3 className={classes.workspace}>{workspaceCapitalised}</h3>
-        <AppButton workspace={workspace}/>
-        <List className={classes.list}>
-          {worklist}
-        </List>
+        <AppButton workspace={workspace} />
+        <List className={classes.list}>{worklist}</List>
       </>
     );
   } else {
-    return <div>Workspace loading...</div>
+    return <div>Workspace loading...</div>;
   }
 }
-
 
 export default Workspace;

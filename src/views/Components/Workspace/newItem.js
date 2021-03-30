@@ -9,27 +9,27 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
   li: {
-    border: "10px solid black",
-    color: "green",
+    border: '10px solid black',
+    color: 'green',
     display: 'flex',
     //justifyContent: "flex-end",
     //justifyContent: "flex",
   },
   link: {
-    border: "3px solid yellow",
-    color: "blue",
-    padding: "10px",
-    width: "100%"
+    border: '3px solid yellow',
+    color: 'blue',
+    padding: '10px',
+    width: '100%',
   },
   span: {
     backgroundColor: 'blue',
-    border: "3px solid purple",
-    color: "white",
-    fontWeight: "bold",
+    border: '3px solid purple',
+    color: 'white',
+    fontWeight: 'bold',
     //justifyContent: "flex-end",
-    margin: "10px",
-    padding: "7px",
-  }
+    margin: '10px',
+    padding: '7px',
+  },
 }));
 
 function Item(props) {
@@ -47,17 +47,19 @@ function Item(props) {
     <>
       {/*<ListItem alignItems="flex-start">*/}
       <ListItem>
-        <ListItemText className={classes.li}
+        <ListItemText
+          className={classes.li}
           primary={
-            <Link className={classes.link}
+            <Link
+              className={classes.link}
               to={{
                 pathname: `/workzone/${workspace}`,
                 state: {
                   recordStatus: item,
                   records: records,
                   type: type,
-                  workspace: workspace
-                }
+                  workspace: workspace,
+                },
               }}
             >
               {item}
@@ -73,15 +75,13 @@ function Item(props) {
               >
                 {count}
               </Typography>
-
             </React.Fragment>
           }
-        >
-        </ListItemText>
+        ></ListItemText>
       </ListItem>
       <Divider variant="inset" component="li" />
     </>
-  )
+  );
 }
 
 export default Item;

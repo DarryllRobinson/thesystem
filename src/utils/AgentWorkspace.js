@@ -4,11 +4,11 @@ import ComponentRoutes from './ComponentRoutes';
 import Container from '@material-ui/core/Container';
 import { history } from 'services/history';
 
-export default function AgentWorkspace(props) {
+export default function AgentWorkspace() {
   //console.log('AgentWorkspace props: ', props);
   return (
-    <Container style={{ marginTop: "80px" }}>
-      <ComponentRoutes history={history}/>
+    <Container style={{ marginTop: '80px' }}>
+      <ComponentRoutes history={history} />
     </Container>
-  )
+  );
 }

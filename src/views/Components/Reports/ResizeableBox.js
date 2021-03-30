@@ -1,7 +1,7 @@
-import React from "react";
-import { ResizableBox as ReactResizableBox } from "react-resizable";
+import React from 'react';
+import { ResizableBox as ReactResizableBox } from 'react-resizable';
 
-import "react-resizable/css/styles.css";
+import 'react-resizable/css/styles.css';
 
 export default function ResizableBox({
   children,
@@ -9,7 +9,7 @@ export default function ResizableBox({
   height = 300,
   resizable = true,
   style = {},
-  className
+  className,
 }) {
   return (
     <div>
@@ -18,8 +18,8 @@ export default function ResizableBox({
           <div
             style={{
               ...style,
-              width: "100%",
-              height: "100%"
+              width: '100%',
+              height: '100%',
             }}
             className={className}
           >
@@ -31,7 +31,7 @@ export default function ResizableBox({
           style={{
             width: `${width}px`,
             height: `${height}px`,
-            ...style
+            ...style,
           }}
           className={className}
         >

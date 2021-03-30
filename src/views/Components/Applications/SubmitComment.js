@@ -1,13 +1,13 @@
-import React, {Component, Fragment} from 'react';
-import {withRouter} from 'react-router-dom';
+import React, { Component, Fragment } from 'react';
+import { withRouter } from 'react-router-dom';
 
 class SubmitComment extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      comment: ''
-    }
+      comment: '',
+    };
   }
 
   updateComment(value) {
@@ -27,7 +27,9 @@ class SubmitComment extends Component {
           <label htmlFor="exampleInputEmail1">Comment</label>
           <input
             type="text"
-            onChange={(e) => {this.updateComment(e.target.value)}}
+            onChange={(e) => {
+              this.updateComment(e.target.value);
+            }}
             className="form-control"
             placeholder="Share your comment"
             value={this.state.comment}
@@ -35,12 +37,15 @@ class SubmitComment extends Component {
         </div>
         <button
           className="btn btn-primary"
-          onClick={() => {this.submit()}}>
+          onClick={() => {
+            this.submit();
+          }}
+        >
           Submit
         </button>
         <hr className="my-4" />
       </Fragment>
-    )
+    );
   }
 }
 

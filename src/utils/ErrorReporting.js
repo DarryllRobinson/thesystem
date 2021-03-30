@@ -1,11 +1,9 @@
 import MysqlLayer from './MysqlLayer';
 
 export default class ErrorReporting {
-
   mysqlLayer = new MysqlLayer();
 
   sendMessage(msgObject) {
-
     /* these fields are required
     purpose
     to
@@ -24,5 +22,4 @@ export default class ErrorReporting {
 
     this.mysqlLayer.Post(`/admin/error_email`, msgObject);
   }
-
 }

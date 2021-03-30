@@ -7,22 +7,22 @@ function filterRecords(worklist, records) {
 
   switch (worklist) {
     case 'Queues':
-      records.forEach(record => {
-        record.tags.forEach(tag => {
+      records.forEach((record) => {
+        record.tags.forEach((tag) => {
           if (tag === 'list_all') worklistRecords.push(record);
         });
       });
       break;
     case 'Today':
-      records.forEach(record => {
-        record.tags.forEach(tag => {
+      records.forEach((record) => {
+        record.tags.forEach((tag) => {
           if (tag === 'list_today') worklistRecords.push(record);
         });
       });
       break;
     case 'Financial':
-      records.forEach(record => {
-        record.tags.forEach(tag => {
+      records.forEach((record) => {
+        record.tags.forEach((tag) => {
           if (tag === 'financial') worklistRecords.push(record);
         });
       });
@@ -45,7 +45,7 @@ function Worklist(props) {
     const type = props.type;
     const items = props.worklist.items;
 
-    const item = items.map((item, idx) =>
+    const item = items.map((item, idx) => (
       <Item
         key={idx}
         records={records}
@@ -54,22 +54,24 @@ function Worklist(props) {
         tasks={tasks}
         type={type}
         item={item.item}
-        count={item.count} />
-    );
+        count={item.count}
+      />
+    ));
 
     return (
-
       <div className="col-lg-4">
         <div className="bs-component">
           <ul className="list-group">
-            <h5 className="card-subtitle" style={{ padding: "15px" }}>{worklist}</h5>
-              {item}
+            <h5 className="card-subtitle" style={{ padding: '15px' }}>
+              {worklist}
+            </h5>
+            {item}
           </ul>
         </div>
       </div>
     );
   } else {
-    return <div>Worklist loading...</div>
+    return <div>Worklist loading...</div>;
   }
 }
 

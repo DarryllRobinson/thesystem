@@ -17,15 +17,15 @@ const WorkspaceRoutes = (props) => {
   return (
     <>
       <Switch>
-        <Route path='/roadmap' component={Roadmap} />
-        <Route path='/pricing' component={Pricing} />
-        <Route path='/profile-page' component={ProfilePage} />
-        <Route path='/login' component={LoginPage} />
-        <PrivateRoute exact path='/dashboard' component={AgentWorkspace} />
-        <Route path='/' component={LandingPage} />
+        <Route path="/roadmap" component={Roadmap} />
+        <Route path="/pricing" component={Pricing} />
+        <Route path="/profile-page" component={ProfilePage} />
+        <Route path="/login" component={LoginPage} />
+        <PrivateRoute exact path="/dashboard" component={AgentWorkspace} />
+        <Route path="/" component={LandingPage} />
       </Switch>
     </>
   );
-}
+};
 
 export default WorkspaceRoutes;

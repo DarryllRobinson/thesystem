@@ -7,10 +7,14 @@ switch (process.env.REACT_APP_STAGE) {
     AppSettings = { serverEndpoint: 'https://thesystem.co.za/integration' };
     break;
   case 'sit':
-    AppSettings = { serverEndpoint: 'https://sit.thesystem.co.za/sitintegration' };
+    AppSettings = {
+      serverEndpoint: 'https://sit.thesystem.co.za/sitintegration',
+    };
     break;
   case 'uat':
-    AppSettings = { serverEndpoint: 'https://uat.thesystem.co.za/uatintegration' };
+    AppSettings = {
+      serverEndpoint: 'https://uat.thesystem.co.za/uatintegration',
+    };
     break;
   default:
     AppSettings = { serverEndpoint: 'http://localhost:8080/api' };

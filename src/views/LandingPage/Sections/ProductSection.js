@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 
 // @material-ui/icons
 import DvrIcon from '@material-ui/icons/Dvr';
@@ -8,11 +8,11 @@ import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
 import EmojiEmotionsIcon from '@material-ui/icons/EmojiEmotions';
 
 // core components
-import GridContainer from "components/Grid/GridContainer.js";
-import GridItem from "components/Grid/GridItem.js";
-import InfoArea from "components/InfoArea/InfoArea.js";
+import GridContainer from 'components/Grid/GridContainer.js';
+import GridItem from 'components/Grid/GridItem.js';
+import InfoArea from 'components/InfoArea/InfoArea.js';
 
-import styles from "assets/jss/material-kit-react/views/landingPageSections/productStyle.js";
+import styles from 'assets/jss/material-kit-react/views/landingPageSections/productStyle.js';
 
 const useStyles = makeStyles(styles);
 
@@ -24,10 +24,11 @@ export default function ProductSection() {
         <GridItem xs={12} sm={12} md={8}>
           <h2 className={classes.title}>How can we help you?</h2>
           <h5 className={classes.description}>
-            Our aim is to provide a service that reduces stress in your business life. Few things
-            are more stressful than having to collect money. We have designed a system to make this
-            as simple as possible for you. Or, if you want us to help even further, allow our call
-            centre team to handle the entire process.
+            Our aim is to provide a service that reduces stress in your business
+            life. Few things are more stressful than having to collect money. We
+            have designed a system to make this as simple as possible for you.
+            Or, if you want us to help even further, allow our call centre team
+            to handle the entire process.
           </h5>
         </GridItem>
       </GridContainer>

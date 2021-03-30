@@ -27,14 +27,14 @@ export default function App() {
   return (
     <Router history={history}>
       <Switch>
-        <Route path='/roadmap' component={Roadmap} />
-        <Route path='/pricing' component={Pricing} />
-        <Route path='/profile-page' component={ProfilePage} />
-        <Route path='/login' component={LoginPage} />
+        <Route path="/roadmap" component={Roadmap} />
+        <Route path="/pricing" component={Pricing} />
+        <Route path="/profile-page" component={ProfilePage} />
+        <Route path="/login" component={LoginPage} />
         {/*<WorkspaceRoutes />*/}
-        <Route exact path='/' component={LandingPage} />
+        <Route exact path="/" component={LandingPage} />
         <PrivateRoute component={AgentWorkspace} />
       </Switch>
     </Router>
-  )
+  );
 }

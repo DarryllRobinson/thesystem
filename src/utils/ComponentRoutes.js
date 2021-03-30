@@ -1,9 +1,10 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import PropTypes from 'prop-types';
 //import ErrorReporting from 'utils/ErrorReporting';
 import Security from 'utils/Security';
 //import moment from 'moment';
-import { PrivateRoute } from "services/PrivateRoute";
+import { PrivateRoute } from 'services/PrivateRoute';
 
 import Dashboard from 'views/Components/Dashboard.js';
 import Workzone from 'views/Components/Workzone.js';
@@ -24,10 +25,12 @@ import ClientAdmin from 'views/Components/Client/Admin';
 // Reports
 import Reports from 'views/Components/Reports/Reports';
 import Targets from 'views/Components/Reports/Targets';
+import Victory from 'views/Components/Reports/Victory';
 
 // Excel uploading function
 import ExcelReader from 'views/Components/Upload/ExcelReader';
 import CsvUploader from 'views/Components/Upload/CsvUploader';
+import UploadyComponent from 'views/Components/Upload/Uploady/UploadyComponent';
 
 const ComponentRoutes = (props) => {
   //console.log('ComponentRoutes props: ', props);
@@ -40,64 +43,124 @@ const ComponentRoutes = (props) => {
       case 'agent':
         return (
           <React.Fragment>
-            <NavBar role={role}/>
-            <Route exact path='/dashboard' component={Dashboard} />
+            <NavBar role={role} />
+            <Route exact path="/dashboard" component={Dashboard} />
           </React.Fragment>
-        )
+        );
       case 'kam':
         return (
           <React.Fragment>
-            <NavBar role={role}/>
-            <PrivateRoute exact path='/dashboard' component={Dashboard} />
-            <PrivateRoute exact path='/workzone/collections' component={Workzone} />
-            <PrivateRoute exact path='/workzone/collections/collection/:id' component={Collection} />
-            <PrivateRoute exact path='/workzone/collections/contacts/:id' component={Contacts} />
+            <NavBar role={role} />
+            <PrivateRoute exact path="/dashboard" component={Dashboard} />
+            <PrivateRoute
+              exact
+              path="/workzone/collections"
+              component={Workzone}
+            />
+            <PrivateRoute
+              exact
+              path="/workzone/collections/collection/:id"
+              component={Collection}
+            />
+            <PrivateRoute
+              exact
+              path="/workzone/collections/contacts/:id"
+              component={Contacts}
+            />
 
             {/* User */}
-            <PrivateRoute exact path='/user/registration' component={UserRegistration} />
-            <PrivateRoute exact path='/user/admin' component={UserAdmin} />
+            <PrivateRoute
+              exact
+              path="/user/registration"
+              component={UserRegistration}
+            />
+            <PrivateRoute exact path="/user/admin" component={UserAdmin} />
 
             {/* Client */}
-            <PrivateRoute exact path='/client/registration' component={ClientRegistration} />
-            <PrivateRoute exact path='/client/admin' component={ClientAdmin} />
+            <PrivateRoute
+              exact
+              path="/client/registration"
+              component={ClientRegistration}
+            />
+            <PrivateRoute exact path="/client/admin" component={ClientAdmin} />
 
             {/* Reports */}
-            <PrivateRoute exact path='/reports' component={Reports} />
-            <PrivateRoute exact path='/targets' component={Targets} />
+            <PrivateRoute exact path="/reports" component={Reports} />
+            <PrivateRoute exact path="/targets" component={Targets} />
 
             {/* Excel upload */}
-            <PrivateRoute exact path='/collections/upload' component={ExcelReader} />
-            <PrivateRoute exact path='/collections/csvupload' component={CsvUploader} />
-
+            <PrivateRoute
+              exact
+              path="/collections/upload"
+              component={ExcelReader}
+            />
+            <PrivateRoute
+              exact
+              path="/collections/csvupload"
+              component={CsvUploader}
+            />
           </React.Fragment>
-        )
+        );
       case 'superuser':
         return (
           <React.Fragment>
-            <NavBar role={role}/>
-            <PrivateRoute exact path='/dashboard' component={Dashboard} />
-            <PrivateRoute exact path='/workzone/collections' component={Workzone} />
-            <PrivateRoute exact path='/workzone/collections/collection/:id' component={Collection} />
-            <PrivateRoute exact path='/workzone/collections/contacts/:id' component={Contacts} />
+            <NavBar role={role} />
+            <PrivateRoute exact path="/dashboard" component={Dashboard} />
+            <PrivateRoute
+              exact
+              path="/workzone/collections"
+              component={Workzone}
+            />
+            <PrivateRoute
+              exact
+              path="/workzone/collections/collection/:id"
+              component={Collection}
+            />
+            <PrivateRoute
+              exact
+              path="/workzone/collections/contacts/:id"
+              component={Contacts}
+            />
 
             {/* User */}
-            <PrivateRoute exact path='/user/registration' component={UserRegistration} />
-            <PrivateRoute exact path='/user/admin' component={UserAdmin} />
+            <PrivateRoute
+              exact
+              path="/user/registration"
+              component={UserRegistration}
+            />
+            <PrivateRoute exact path="/user/admin" component={UserAdmin} />
 
             {/* Client */}
-            <PrivateRoute exact path='/client/registration' component={ClientRegistration} />
-            <PrivateRoute exact path='/client/admin' component={ClientAdmin} />
+            <PrivateRoute
+              exact
+              path="/client/registration"
+              component={ClientRegistration}
+            />
+            <PrivateRoute exact path="/client/admin" component={ClientAdmin} />
 
             {/* Reports */}
-            <PrivateRoute exact path='/reports' component={Reports} />
-            <PrivateRoute exact path='/targets' component={Targets} />
+            <PrivateRoute exact path="/reports" component={Reports} />
+            <PrivateRoute exact path="/targets" component={Targets} />
+            <PrivateRoute exact path="/victory" component={Victory} />
 
             {/* Excel upload */}
-            <PrivateRoute exact path='/collections/upload' component={ExcelReader} />
-            <PrivateRoute exact path='/collections/csvupload' component={CsvUploader} />
-
+            <PrivateRoute
+              exact
+              path="/collections/upload"
+              component={ExcelReader}
+            />
+            <PrivateRoute
+              exact
+              path="/collections/csvupload"
+              component={CsvUploader}
+            />
+            <PrivateRoute
+              exact
+              path="/collections/uploady"
+              component={UploadyComponent}
+            />
           </React.Fragment>
-        )
+        );
       default:
         //if (props.history.location.pathname != )
         /*const errorReporting = new ErrorReporting();
@@ -116,11 +179,7 @@ const ComponentRoutes = (props) => {
     }
   }
 
-  return (
-    <Switch>
-      { getAccessPaths() }
-    </Switch>
-  )
-}
+  return <Switch>{getAccessPaths()}</Switch>;
+};
 
 export default ComponentRoutes;

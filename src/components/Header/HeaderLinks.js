@@ -1,16 +1,16 @@
 /*eslint-disable*/
-import React from "react";
-import DeleteIcon from "@material-ui/icons/Delete";
-import IconButton from "@material-ui/core/IconButton";
+import React from 'react';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
 // react components for routing our app without refresh
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { authenticationService } from 'services';
 
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Tooltip from "@material-ui/core/Tooltip";
+import { makeStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Tooltip from '@material-ui/core/Tooltip';
 
 // @material-ui/icons
 import PersonIcon from '@material-ui/icons/Person';
@@ -20,9 +20,9 @@ import LocalAtmIcon from '@material-ui/icons/LocalAtm';
 
 // core components
 //import CustomDropdown from "components/CustomDropdown/CustomDropdown.js";
-import Button from "components/CustomButtons/Button.js";
+import Button from 'components/CustomButtons/Button.js';
 
-import styles from "assets/jss/material-kit-react/components/headerLinksStyle.js";
+import styles from 'assets/jss/material-kit-react/components/headerLinksStyle.js';
 
 const useStyles = makeStyles(styles);
 
@@ -34,7 +34,7 @@ export default function HeaderLinks(props) {
         <Tooltip
           id="roadmap-tooltip"
           title="Exciting new features on their way!"
-          placement={window.innerWidth > 959 ? "top" : "left"}
+          placement={window.innerWidth > 959 ? 'top' : 'left'}
           classes={{ tooltip: classes.tooltip }}
         >
           <Button
@@ -50,7 +50,7 @@ export default function HeaderLinks(props) {
         <Tooltip
           id="pricing-tooltip"
           title="See how we can save you money"
-          placement={window.innerWidth > 959 ? "top" : "left"}
+          placement={window.innerWidth > 959 ? 'top' : 'left'}
           classes={{ tooltip: classes.tooltip }}
         >
           <Button
@@ -89,7 +89,7 @@ export default function HeaderLinks(props) {
         </ListItem>
         */}
     </List>
-  )
+  );
 }
 
 function listToDisplay() {
@@ -103,37 +103,33 @@ function listToDisplay() {
         <Tooltip
           id="login-tooltip"
           title="Login to access the agent workspace"
-          placement={window.innerWidth > 959 ? "top" : "left"}
+          placement={window.innerWidth > 959 ? 'top' : 'left'}
           classes={{ tooltip: classes.tooltip }}
         >
-          <Button
-            href='/login'
-            color="transparent"
-            className={classes.navLink}
-          >
-             <PersonIcon className={classes.icons} /> Login
+          <Button href="/login" color="transparent" className={classes.navLink}>
+            <PersonIcon className={classes.icons} /> Login
           </Button>
         </Tooltip>
       </ListItem>
-    )
+    );
   } else {
     return (
       <ListItem className={classes.listItem}>
         <Tooltip
           id="workspace-tooltip"
           title="Return to the agent workspace"
-          placement={window.innerWidth > 959 ? "top" : "left"}
+          placement={window.innerWidth > 959 ? 'top' : 'left'}
           classes={{ tooltip: classes.tooltip }}
         >
           <Button
-            href='/dashboard'
+            href="/dashboard"
             color="transparent"
             className={classes.navLink}
           >
-             <DashboardIcon className={classes.icons} /> Workspace
+            <DashboardIcon className={classes.icons} /> Workspace
           </Button>
         </Tooltip>
       </ListItem>
-    )
+    );
   }
 }

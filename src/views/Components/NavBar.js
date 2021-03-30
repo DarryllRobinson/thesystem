@@ -13,7 +13,7 @@ class NavBar extends React.Component {
     //console.log('NavBar props: ', this.props);
     //console.log('NavBar loggedInStatus: ', this.props.loggedInStatus);
     const role = this.props.role;
-    if (role === "superuser") {
+    if (role === 'superuser') {
       let firstName = sessionStorage.getItem('cwsFirstName');
 
       return (
@@ -21,8 +21,56 @@ class NavBar extends React.Component {
           <Nav.Link href="/dashboard">Dashboard</Nav.Link>
 
           <NavDropdown title="Upload" id="uploads-dropdown">
-            <NavDropdown.Item href="/collections/upload">Excel Upload</NavDropdown.Item>
-            <NavDropdown.Item href="/collections/csvupload">CSV Upload</NavDropdown.Item>
+            <NavDropdown.Item href="/collections/upload">
+              Excel Upload
+            </NavDropdown.Item>
+            <NavDropdown.Item href="/collections/csvupload">
+              CSV Upload
+            </NavDropdown.Item>
+            <NavDropdown.Item href="/collections/uploady">
+              Uploady
+            </NavDropdown.Item>
+          </NavDropdown>
+
+          <NavDropdown title="Reports" id="reports-dropdown">
+            <NavDropdown.Item href="/reports">Reports</NavDropdown.Item>
+            <NavDropdown.Item href="/targets">Targets</NavDropdown.Item>
+            <NavDropdown.Item href="/victory">Victory</NavDropdown.Item>
+          </NavDropdown>
+
+          <NavDropdown title="Admin" id="admin-dropdown">
+            <NavDropdown.Item href="/client/admin">Client</NavDropdown.Item>
+            <NavDropdown.Item href="/user/admin">User</NavDropdown.Item>
+          </NavDropdown>
+
+          <Container>
+            <Navbar.Text>{firstName}</Navbar.Text>
+          </Container>
+          <Button
+            onClick={() => authenticationService.logout()}
+            style={{
+              background: '#48B711',
+              borderColor: '#48B711',
+            }}
+          >
+            Logout
+          </Button>
+        </>
+      );
+    } else if (role === 'kam') {
+      let firstName = sessionStorage.getItem('cwsFirstName');
+
+      return (
+        <>
+          <Nav.Link href="/dashboard">Dashboard</Nav.Link>
+
+          <NavDropdown title="Upload" id="uploads-dropdown">
+            <NavDropdown.Item href="/collections/upload">
+              Excel Upload
+            </NavDropdown.Item>
+            <NavDropdown.Item href="/collections/csvupload">
+              CSV Upload
+            </NavDropdown.Item>
           </NavDropdown>
 
           <NavDropdown title="Reports" id="reports-dropdown">
@@ -36,60 +84,20 @@ class NavBar extends React.Component {
           </NavDropdown>
 
           <Container>
-            <Navbar.Text>
-              {firstName}
-            </Navbar.Text>
+            <Navbar.Text>{firstName}</Navbar.Text>
           </Container>
           <Button
             onClick={() => authenticationService.logout()}
             style={{
-              background: "#48B711",
-              borderColor: "#48B711"
+              background: '#48B711',
+              borderColor: '#48B711',
             }}
           >
             Logout
           </Button>
         </>
       );
-    } else if (role === "kam") {
-      let firstName = sessionStorage.getItem('cwsFirstName');
-
-      return (
-        <>
-          <Nav.Link href="/dashboard">Dashboard</Nav.Link>
-
-          <NavDropdown title="Upload" id="uploads-dropdown">
-            <NavDropdown.Item href="/collections/upload">Excel Upload</NavDropdown.Item>
-            <NavDropdown.Item href="/collections/csvupload">CSV Upload</NavDropdown.Item>
-          </NavDropdown>
-
-          <NavDropdown title="Reports" id="reports-dropdown">
-            <NavDropdown.Item href="/reports">Reports</NavDropdown.Item>
-            <NavDropdown.Item href="/targets">Targets</NavDropdown.Item>
-          </NavDropdown>
-
-          <NavDropdown title="Admin" id="admin-dropdown">
-            <NavDropdown.Item href="/client/admin">Client</NavDropdown.Item>
-            <NavDropdown.Item href="/user/admin">User</NavDropdown.Item>
-          </NavDropdown>
-
-          <Container>
-            <Navbar.Text>
-              {firstName}
-            </Navbar.Text>
-          </Container>
-          <Button
-            onClick={() => authenticationService.logout()}
-            style={{
-              background: "#48B711",
-              borderColor: "#48B711"
-            }}
-          >
-            Logout
-          </Button>
-        </>
-      );
-    } else if (role === "client") {
+    } else if (role === 'client') {
       let firstName = sessionStorage.getItem('cwsFirstName');
 
       return (
@@ -99,15 +107,13 @@ class NavBar extends React.Component {
           <Nav.Link href="/reports">Reports</Nav.Link>*/}
 
           <Container>
-            <Navbar.Text>
-              {firstName}
-            </Navbar.Text>
+            <Navbar.Text>{firstName}</Navbar.Text>
           </Container>
           <Button
             onClick={() => authenticationService.logout()}
             style={{
-              background: "#48B711",
-              borderColor: "#48B711"
+              background: '#48B711',
+              borderColor: '#48B711',
             }}
           >
             Logout
@@ -122,9 +128,7 @@ class NavBar extends React.Component {
           <Nav.Link href="/dashboard">Dashboard</Nav.Link>
 
           <Container expand="lg" className="justify-content-end">
-            <Navbar.Text>
-              {firstName}
-            </Navbar.Text>
+            <Navbar.Text>{firstName}</Navbar.Text>
           </Container>
           <Button onClick={() => authenticationService.logout()}>Logout</Button>
         </>
@@ -136,45 +140,47 @@ class NavBar extends React.Component {
     //console.log('process.env.REACT_APP_STAGE: ', process.env.REACT_APP_STAGE);
     switch (process.env.REACT_APP_STAGE) {
       case 'development':
-        return ('The System - Dev');
+        return 'The System - Dev';
       case 'production':
-        return ('The System');
+        return 'The System';
       case 'sit':
-        return ('The System - SIT');
+        return 'The System - SIT';
       case 'uat':
-        return ('The System - UAT');
+        return 'The System - UAT';
       default:
-        return ('The System - ???');
+        return 'The System - ???';
     }
   }
 
   colourToUse() {
     switch (process.env.REACT_APP_STAGE) {
       case 'development':
-        return ("dark");
+        return 'dark';
       case 'production':
-        return ("dark");
+        return 'dark';
       case 'sit':
-        return ("dark");
+        return 'dark';
       case 'uat':
-        return ("dark");
+        return 'dark';
       default:
-        return ('light');
+        return 'light';
     }
   }
 
   render() {
     return (
-      <Navbar collapseOnSelect bg={this.colourToUse()} expand="lg" variant={this.colourToUse()} fixed="top">
-        <Navbar.Brand href='/'>
-          {this.nametoDisplay()}
-        </Navbar.Brand>
+      <Navbar
+        collapseOnSelect
+        bg={this.colourToUse()}
+        expand="lg"
+        variant={this.colourToUse()}
+        fixed="top"
+      >
+        <Navbar.Brand href="/">{this.nametoDisplay()}</Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ml-auto">
-            {this.menuToDisplay()}
-          </Nav>
+          <Nav className="ml-auto">{this.menuToDisplay()}</Nav>
         </Navbar.Collapse>
       </Navbar>
     );

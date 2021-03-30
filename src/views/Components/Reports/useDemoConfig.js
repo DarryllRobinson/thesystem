@@ -1,43 +1,43 @@
-import React from "react";
+import React from 'react';
 //
 
 const options = {
-  elementType: ["line", "area", "bar", "bubble"],
-  primaryAxisType: ["linear", "time", "log", "ordinal"],
-  secondaryAxisType: ["linear", "time", "log", "ordinal"],
-  primaryAxisPosition: ["top", "left", "right", "bottom"],
-  secondaryAxisPosition: ["top", "left", "right", "bottom"],
+  elementType: ['line', 'area', 'bar', 'bubble'],
+  primaryAxisType: ['linear', 'time', 'log', 'ordinal'],
+  secondaryAxisType: ['linear', 'time', 'log', 'ordinal'],
+  primaryAxisPosition: ['top', 'left', 'right', 'bottom'],
+  secondaryAxisPosition: ['top', 'left', 'right', 'bottom'],
   secondaryAxisStack: [true, false],
   primaryAxisShow: [true, false],
   secondaryAxisShow: [true, false],
-  grouping: ["single", "series", "primary", "secondary"],
+  grouping: ['single', 'series', 'primary', 'secondary'],
   tooltipAnchor: [
-    "closest",
-    "top",
-    "bottom",
-    "left",
-    "right",
-    "center",
-    "gridTop",
-    "gridBottom",
-    "gridLeft",
-    "gridRight",
-    "gridCenter",
-    "pointer"
+    'closest',
+    'top',
+    'bottom',
+    'left',
+    'right',
+    'center',
+    'gridTop',
+    'gridBottom',
+    'gridLeft',
+    'gridRight',
+    'gridCenter',
+    'pointer',
   ],
   tooltipAlign: [
-    "auto",
-    "top",
-    "bottom",
-    "left",
-    "right",
-    "topLeft",
-    "topRight",
-    "bottomLeft",
-    "bottomRight",
-    "center"
+    'auto',
+    'top',
+    'bottom',
+    'left',
+    'right',
+    'topLeft',
+    'topRight',
+    'bottomLeft',
+    'bottomRight',
+    'center',
   ],
-  snapCursor: [true, false]
+  snapCursor: [true, false],
 };
 
 const optionKeys = Object.keys(options);
@@ -49,21 +49,21 @@ export default function useChartConfig({
   count = 1,
   resizable = true,
   canRandomize = true,
-  dataType = "time",
-  elementType = "line",
-  primaryAxisType = "time",
-  secondaryAxisType = "linear",
-  primaryAxisPosition = "bottom",
-  secondaryAxisPosition = "left",
+  dataType = 'time',
+  elementType = 'line',
+  primaryAxisType = 'time',
+  secondaryAxisType = 'linear',
+  primaryAxisPosition = 'bottom',
+  secondaryAxisPosition = 'left',
   primaryAxisStack = false,
   secondaryAxisStack = true,
   primaryAxisShow = true,
   secondaryAxisShow = true,
-  tooltipAnchor = "closest",
-  tooltipAlign = "auto",
-  grouping = "primary",
+  tooltipAnchor = 'closest',
+  tooltipAlign = 'auto',
+  grouping = 'primary',
   snapCursor = true,
-  datums = 10
+  datums = 10,
 }) {
   const [state, setState] = React.useState({
     count,
@@ -84,40 +84,40 @@ export default function useChartConfig({
     grouping,
     snapCursor,
     datums,
-    data: makeDataFrom(dataType, series, useR, datums)
+    data: makeDataFrom(dataType, series, useR, datums),
   });
 
   React.useEffect(() => {
-    setState(old => ({
+    setState((old) => ({
       ...old,
-      data: makeDataFrom(dataType, series, useR, datums)
+      data: makeDataFrom(dataType, series, useR, datums),
     }));
   }, [count, dataType, datums, series, useR]);
 
   const randomizeData = () =>
-    setState(old => ({
+    setState((old) => ({
       ...old,
-      data: makeDataFrom(dataType, series, useR, datums)
+      data: makeDataFrom(dataType, series, useR, datums),
     }));
 
   const Options = optionKeys
-    .filter(option => show.indexOf(option) > -1)
-    .map(option => (
+    .filter((option) => show.indexOf(option) > -1)
+    .map((option) => (
       <div key={option}>
         {option}: &nbsp;
         <select
           value={state[option]}
           onChange={({ target: { value } }) =>
-            setState(old => ({
+            setState((old) => ({
               ...old,
               [option]:
-                typeof options[option][0] === "boolean"
-                  ? value === "true"
-                  : value
+                typeof options[option][0] === 'boolean'
+                  ? value === 'true'
+                  : value,
             }))
           }
         >
-          {options[option].map(d => (
+          {options[option].map((d) => (
             <option value={d} key={d.toString()}>
               {d.toString()}
             </option>
@@ -130,13 +130,13 @@ export default function useChartConfig({
   return {
     ...state,
     randomizeData,
-    Options
+    Options,
   };
 }
 
 function makeDataFrom(dataType, series, useR, datums) {
   return [
-    ...new Array(series || Math.max(Math.round(Math.random() * 5), 1))
+    ...new Array(series || Math.max(Math.round(Math.random() * 5), 1)),
   ].map((d, i) => makeSeries(i, dataType, useR, datums));
 }
 
@@ -157,13 +157,13 @@ function makeSeries(i, dataType, useR, datums) {
     label: `Series ${i + 1}`,
     data: [...new Array(length)].map((_, i) => {
       let x = start + i;
-      if (dataType === "ordinal") {
+      if (dataType === 'ordinal') {
         x = `Ordinal Group ${x}`;
       }
-      if (dataType === "time") {
+      if (dataType === 'time') {
         x = new Date(startDate.getTime() + 60 * 1000 * 30 * i);
       }
-      if (dataType === "linear") {
+      if (dataType === 'linear') {
         x =
           Math.random() < nullChance
             ? null
@@ -184,8 +184,8 @@ function makeSeries(i, dataType, useR, datums) {
       return {
         primary: x,
         secondary: y,
-        radius: r
+        radius: r,
       };
-    })
+    }),
   };
 }

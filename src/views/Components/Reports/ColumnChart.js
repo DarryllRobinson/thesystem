@@ -17,12 +17,20 @@ export default function ColumnChart(props) {
     () => [
       {
         label: 'Current',
-        data: [['30 Days', 1000], ['60 Days', 3000], ['90 Days', 5000]]
+        data: [
+          ['30 Days', 1000],
+          ['60 Days', 3000],
+          ['90 Days', 5000],
+        ],
       },
       {
         label: 'Target',
-        data: [['30 Days', 3000], ['60 Days', 5000], ['90 Days', 7000]]
-      }
+        data: [
+          ['30 Days', 3000],
+          ['60 Days', 5000],
+          ['90 Days', 7000],
+        ],
+      },
     ],
     []
   );
@@ -34,7 +42,7 @@ export default function ColumnChart(props) {
 
   const series = React.useMemo(
     () => ({
-      type: 'bar'
+      type: 'bar',
     }),
     []
   );
@@ -42,7 +50,7 @@ export default function ColumnChart(props) {
   const axes = React.useMemo(
     () => [
       { primary: true, type: 'ordinal', position: 'bottom' },
-      { position: 'left', type: 'linear', stacked: false }
+      { position: 'left', type: 'linear', stacked: false },
     ],
     []
   );
@@ -51,9 +59,9 @@ export default function ColumnChart(props) {
     <>
       <br />
       <br />
-      <div style={{ height: "250px", width: "250px"}}>
+      <div style={{ height: '250px', width: '250px' }}>
         <Chart data={data} series={series} axes={axes} tooltip />
       </div>
     </>
-  )
+  );
 }

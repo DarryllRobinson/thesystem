@@ -10,7 +10,8 @@ function Workspace(props) {
     const records = props.records;
     const tasks = props.tasks;
     const type = props.type;
-    const workspaceCapitalised = workspace.charAt(0).toUpperCase() + workspace.slice(1);
+    const workspaceCapitalised =
+      workspace.charAt(0).toUpperCase() + workspace.slice(1);
     const worklists = props.workspaces.worklists;
     //console.log('Workspace worklists: ', worklists);
 
@@ -34,16 +35,13 @@ function Workspace(props) {
     return (
       <>
         <h3 className="card-title">{workspaceCapitalised}</h3>
-        <AppButton workspace={workspace}/>
-        <div className="row">
-          {worklist}
-        </div>
+        <AppButton workspace={workspace} />
+        <div className="row">{worklist}</div>
       </>
     );
   } else {
-    return <div>Workspace loading...</div>
+    return <div>Workspace loading...</div>;
   }
 }
-
 
 export default Workspace;

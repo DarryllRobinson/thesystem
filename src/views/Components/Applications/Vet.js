@@ -1,7 +1,6 @@
 import MysqlLayer from '../../Utilities/MysqlLayer';
 
 export default class Vet {
-
   mysqlLayer = new MysqlLayer();
 
   async Declines(app) {
@@ -10,15 +9,14 @@ export default class Vet {
 
       // Run through all decline polcies to check if the app should be auto declined
       let cont = true;
-      declines.forEach(decline => {
+      declines.forEach((decline) => {
         let appDate = new Date();
-        const age = ((appDate - new Date(app.dob)) / 1000 / 60 / 60 / 24 / 365);
+        const age = (appDate - new Date(app.dob)) / 1000 / 60 / 60 / 24 / 365;
         if (age < 18) cont = false;
       });
 
       return cont;
-
-    } catch(e) {
+    } catch (e) {
       console.log('e: ', e);
       if (!e.response) {
         //alert('Major Get request error: ', e);
@@ -38,23 +36,24 @@ export default class Vet {
 
       let score = 0;
       // Run through each characteristic of the scorecard
-      scorecard.forEach(card => {
+      scorecard.forEach((card) => {
         if (card.operational === 1) {
           // Check each characteristic to calculate points
           if (card.code === 'S001' && app.sex === card.answer) {
             score = score + card.points;
           }
 
-          if (card.code === 'S002' && app.numDependents === parseInt(card.answer)) {
+          if (
+            card.code === 'S002' &&
+            app.numDependents === parseInt(card.answer)
+          ) {
             score = score + card.points;
           }
         }
-
       });
 
       return score;
-
-    } catch(e) {
+    } catch (e) {
       console.log('e: ', e);
       if (!e.response) {
         //alert('Major Get request error: ', e);
@@ -67,5 +66,4 @@ export default class Vet {
       }
     }
   }
-
 }

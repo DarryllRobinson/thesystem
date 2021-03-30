@@ -22,8 +22,8 @@ export default class Registration extends Component {
       f_clientId: '',
       createdDate: '',
       registrationErrors: '',
-      clients: []
-    }
+      clients: [],
+    };
 
     this.mysqlLayer = new MysqlLayer();
 
@@ -33,7 +33,9 @@ export default class Registration extends Component {
 
   async componentDidMount() {
     //console.log('Registration props: ', this.props);
-    let clients = await this.mysqlLayer.Get(`/admin/clients`, { withCredentials: true });
+    let clients = await this.mysqlLayer.Get(`/admin/clients`, {
+      withCredentials: true,
+    });
     //console.log('clients: ', clients);
     await this.setState({ clients: clients });
   }
@@ -42,7 +44,7 @@ export default class Registration extends Component {
     //console.log('[event.target.name]: ', [event.target.name]);
     //console.log('event.target.value: ', event.target.value);
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   }
 
@@ -59,7 +61,7 @@ export default class Registration extends Component {
       role,
       storeId,
       type,
-      f_clientId
+      f_clientId,
     } = this.state;
 
     if (f_clientId !== '' && role !== '' && storeId !== '') {
@@ -68,75 +70,82 @@ export default class Registration extends Component {
       //const hash = bcrypt.hashSync("b0oBi35", salt);
 
       bcrypt.hash(this.state.password, salt, (err, hash) => {
-         this.setState({ password: hash });
-         //console.log('hashed password: ', this.state.password);
+        this.setState({ password: hash });
+        //console.log('hashed password: ', this.state.password);
 
-         const createdDate = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+        const createdDate = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
 
-         const user = {
-           firstName: firstName,
-           surname: surname,
-           email: email,
-           phone: phone,
-           password: hash,
-           role: role,
-           storeId: storeId,
-           type: type,
-           f_clientId: f_clientId,
-           createdDate: createdDate
-         }
+        const user = {
+          firstName: firstName,
+          surname: surname,
+          email: email,
+          phone: phone,
+          password: hash,
+          role: role,
+          storeId: storeId,
+          type: type,
+          f_clientId: f_clientId,
+          active: 1,
+          createdDate: createdDate,
+        };
 
-         //console.log('user: ', user);
+        //console.log('user: ', user);
 
-         this.mysqlLayer.Post(`/admin/user`, user, { withCredentials: true }
-         ).then(response => {
-           //console.log('response: ', response);
-           if (response.data === 'user exists') {
-             let message = 'User already exists. Please create a new username (email).';
-             this.handleFailedReg(message);
-           } else if (response.data.affectedRows === 1) {
-             this.handleSuccessfulAuth();
-           } else {
-             console.log('Log error to registrationErrors');
-           }
-         }).catch(error => {
-           console.log('Registration error: ', error);
-         });
+        this.mysqlLayer
+          .Post(`/admin/user`, user, { withCredentials: true })
+          .then((response) => {
+            //console.log('response: ', response);
+            if (response.data === 'user exists') {
+              let message =
+                'User already exists. Please create a new username (email).';
+              this.handleFailedReg(message);
+            } else if (response.data.affectedRows === 1) {
+              this.handleSuccessfulAuth();
+            } else {
+              console.log('Log error to registrationErrors');
+            }
+          })
+          .catch((error) => {
+            console.log('Registration error: ', error);
+          });
       });
     } else {
-      toast('Please ensure you have selected a role and client from the lists', {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined
-      })
+      toast(
+        'Please ensure you have selected a role and client from the lists',
+        {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
     }
   }
 
   handleFailedReg(message) {
     toast(message, {
-      position: "top-center",
+      position: 'top-center',
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined
+      progress: undefined,
     });
   }
 
   handleSuccessfulAuth() {
     toast(`${this.state.firstName} has been added to the system`, {
-      position: "top-center",
+      position: 'top-center',
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined
+      progress: undefined,
     });
 
     this.setState({
@@ -149,16 +158,18 @@ export default class Registration extends Component {
       storeId: '',
       type: '',
       f_clientId: '',
-      createdDate: ''
+      createdDate: '',
     });
 
     this.props.loadUsers();
   }
 
   render() {
-    const clientList = this.state.clients.map((client, idx) =>
-        <option key={idx} value={client.id}>{client.name}</option>
-    );
+    const clientList = this.state.clients.map((client, idx) => (
+      <option key={idx} value={client.id}>
+        {client.name}
+      </option>
+    ));
 
     return (
       <>
@@ -231,7 +242,12 @@ export default class Registration extends Component {
 
             <Col>
               <Form.Group controlId="roleSelect">
-                <Form.Control as="select" onChange={this.handleChange} name="role" required>
+                <Form.Control
+                  as="select"
+                  onChange={this.handleChange}
+                  name="role"
+                  required
+                >
                   <option>Role</option>
                   <option value="agent">Agent</option>
                   <option value="store">Store agent</option>
@@ -245,7 +261,12 @@ export default class Registration extends Component {
 
             <Col>
               <Form.Group controlId="clientSelect">
-                <Form.Control as="select" onChange={this.handleChange} name="f_clientId" required>
+                <Form.Control
+                  as="select"
+                  onChange={this.handleChange}
+                  name="f_clientId"
+                  required
+                >
                   <option>Client</option>
                   {clientList}
                 </Form.Control>
@@ -253,10 +274,11 @@ export default class Registration extends Component {
             </Col>
           </Row>
 
-          <Button type="submit"
+          <Button
+            type="submit"
             style={{
-              background: "#48B711",
-              borderColor: "#48B711"
+              background: '#48B711',
+              borderColor: '#48B711',
             }}
           >
             Register
@@ -264,7 +286,6 @@ export default class Registration extends Component {
         </Form>
         <ToastContainer />
       </>
-
     );
   }
 }

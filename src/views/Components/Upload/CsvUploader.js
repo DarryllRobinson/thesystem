@@ -7,10 +7,9 @@ import ProgressCircle from 'components/ProgressCircle/ProgressCircle';
 // push file into state
 // extract existing customerRefNos from database
 // process each record by:
-  // checking if customerRefNo exists
-  // if so, reject and display reason
-  // if not, upload to database and display success/update progress bar
-
+// checking if customerRefNo exists
+// if so, reject and display reason
+// if not, upload to database and display success/update progress bar
 
 export default function CsvUploader(props) {
   const clientId = sessionStorage.getItem('cwsClient');
@@ -23,7 +22,9 @@ export default function CsvUploader(props) {
 
     async function fetchData() {
       const mysqlLayer = new MysqlLayer();
-      const result = await mysqlLayer.Get(`/business/collections/list_all_customers/${clientId}`);
+      const result = await mysqlLayer.Get(
+        `/business/collections/list_all_customers/${clientId}`
+      );
       if (!ignore) {
         setCustomers(result);
         //console.log('result: ', result);
@@ -32,7 +33,9 @@ export default function CsvUploader(props) {
     }
 
     fetchData();
-    return () => { ignore = true; }
+    return () => {
+      ignore = true;
+    };
   }, [clientId]);
 
   useEffect(() => {
@@ -44,29 +47,34 @@ export default function CsvUploader(props) {
       <h3>Import CSV</h3>
       <input
         type="file"
-        onChange={event => setFile(event.target.files[0])}
+        onChange={(event) => setFile(event.target.files[0])}
         accept=".csv"
       />
-      <button onClick={() => {
-        const progressUpdate = UploadFile(file, customers);
-        //setProgress(progress + progressUpdate);
-      }}>Upload</button>
-      <br /><br />
+      <button
+        onClick={() => {
+          const progressUpdate = UploadFile(file, customers);
+          //setProgress(progress + progressUpdate);
+        }}
+      >
+        Upload
+      </button>
+      <br />
+      <br />
     </div>
-  )
+  );
 }
 
 function UploadFile(file, customers) {
   console.log('upload start');
   if (!file) {
     console.log('no file: ', file);
-    return
+    return;
   }
 
   let fileReader = new FileReader();
   fileReader.readAsText(file);
 
-  fileReader.onload = async function() {
+  fileReader.onload = async function () {
     const dataset = fileReader.result;
     let lines = dataset.split('\r\n');
     let result = [];
@@ -74,7 +82,7 @@ function UploadFile(file, customers) {
 
     for (let i = 1; i < lines.length; i++) {
       let obj = {};
-      let currentline = lines[i].split(",");
+      let currentline = lines[i].split(',');
       for (let j = 0; j < headers.length; j++) {
         obj[headers[j].trim()] = currentline[j];
       }
@@ -89,12 +97,13 @@ function UploadFile(file, customers) {
           //console.log('uploadMsg: ', uploadMsg);
           if (uploadMsg === 'problem') console.log('problem uploading record');
         } else {
-          console.log(`Account ${obj.account_number} already exists on the database`);
+          console.log(
+            `Account ${obj.account_number} already exists on the database`
+          );
         }
       }
     }
     //console.log('result: ', result[0]);
-
   };
   return 1;
 }
@@ -102,7 +111,7 @@ function UploadFile(file, customers) {
 function checkUnique(accNum, customers) {
   console.log('checkUnique accNum: ', accNum);
   console.log('checkUnique customers: ', customers);
-  const found = customers.find(customer => customer === accNum);
+  const found = customers.find((customer) => customer === accNum);
   return !found;
 }
 
@@ -120,8 +129,8 @@ async function UploadData(record) {
       regIdNumber: record.id_number,
       //createdBy: `System Upload - ${user}`,
       createdBy: user,
-      f_clientId: sessionStorage.getItem('cwsClient')
-    }
+      f_clientId: sessionStorage.getItem('cwsClient'),
+    },
   ];
   //console.log('customer: ', customer);
 
@@ -157,8 +166,7 @@ async function UploadData(record) {
   }
   //console.log('caseResponse: ', caseResponse);
 
-
-/*  if (response.data.errno) {
+  /*  if (response.data.errno) {
     let error =[];
     error = customerErrors;
     error.push(response.data);
@@ -172,7 +180,9 @@ async function UploadData(record) {
 async function saveAccountRecordsToDatabase(user, record) {
   const paymentDueDate = null;
 
-  const debitOrderDate = record.debit_order_date ? record.debit_order_date : null; /*?
+  const debitOrderDate = record.debit_order_date
+    ? record.debit_order_date
+    : null; /*?
     moment(xlSerialToJsDate(record.debit_order_date)).format('YYYY-MM-DD HH:mm:ss') :
     null;
     console.log('record.debit_order_date: ', record.debit_order_date);
@@ -210,8 +220,8 @@ async function saveAccountRecordsToDatabase(user, record) {
       lastPaymentDate: lastPaymentDate,
       //paymentMethod: record.PaymentMethod,
       //paymentTermDays: record.PaymentTerms,
-      totalBalance: record.balance
-    }
+      totalBalance: record.balance,
+    },
   ];
 
   let response = await PostToDb(account, 'accounts');
@@ -222,64 +232,62 @@ async function saveAccountRecordsToDatabase(user, record) {
 async function saveContactRecordsToDatabase(record) {
   // check phone number length
   if (
-        record.telephone1.length < 14 &&
-        record.telephone2.length < 14 &&
-        record.telephone3.length < 14 &&
-        record.telephone4.length < 14 &&
-        record.telephone5.length < 14 &&
-        record.telephone6.length < 14 &&
-        record.telephone7.length < 14 &&
-        record.telephone8.length < 14 &&
-        record.telephone9.length < 14
-      ) {
-        console.log('number lengths okay');
-        let contact = [
-          {
-            f_accountNumber: record.account_number,
-            //primaryContactName: record.PrimaryContactName,
-            primaryContactNumber: record.telephone1,
-            //primaryContactEmail: record.PrimaryEmailAddress,
-            //representativeName: record.RepresentativeName,
-            //representativeNumber: record.RepresentativeContactNumber,
-            //representativeEmail: record.RepresentativeEmailAddress,
-            //alternativeRepName: record.AltRepName,
-            //alternativeRepNumber: record.AltRepContact,
-            //alternativeRepEmail: record.AltRepEmail,
-            otherNumber1: record.telephone2,
-            otherNumber2: record.telephone3,
-            otherNumber3: record.telephone4,
-            otherNumber4: record.telephone5,
-            otherNumber5: record.telephone6,
-            otherNumber6: record.telephone7,
-            otherNumber7: record.telephone8,
-            otherNumber8: record.telephone9,
-            otherNumber9: record.telephone10,
-            //otherEmail1: record.OtherEmail1,
-            //otherEmail2: record.OtherEmail2,
-            //otherEmail3: record.OtherEmail3,
-            //otherEmail4: record.OtherEmail4,
-            //otherEmail5: record.OtherEmail5,
-            //dnc1: record.DNC1,
-            //dnc2: record.DNC2,
-            //dnc3: record.DNC3,
-            //dnc4: record.DNC4,
-            //dnc5: record.DNC5
-          }
-        ];
+    record.telephone1.length < 14 &&
+    record.telephone2.length < 14 &&
+    record.telephone3.length < 14 &&
+    record.telephone4.length < 14 &&
+    record.telephone5.length < 14 &&
+    record.telephone6.length < 14 &&
+    record.telephone7.length < 14 &&
+    record.telephone8.length < 14 &&
+    record.telephone9.length < 14
+  ) {
+    console.log('number lengths okay');
+    let contact = [
+      {
+        f_accountNumber: record.account_number,
+        //primaryContactName: record.PrimaryContactName,
+        primaryContactNumber: record.telephone1,
+        //primaryContactEmail: record.PrimaryEmailAddress,
+        //representativeName: record.RepresentativeName,
+        //representativeNumber: record.RepresentativeContactNumber,
+        //representativeEmail: record.RepresentativeEmailAddress,
+        //alternativeRepName: record.AltRepName,
+        //alternativeRepNumber: record.AltRepContact,
+        //alternativeRepEmail: record.AltRepEmail,
+        otherNumber1: record.telephone2,
+        otherNumber2: record.telephone3,
+        otherNumber3: record.telephone4,
+        otherNumber4: record.telephone5,
+        otherNumber5: record.telephone6,
+        otherNumber6: record.telephone7,
+        otherNumber7: record.telephone8,
+        otherNumber8: record.telephone9,
+        otherNumber9: record.telephone10,
+        //otherEmail1: record.OtherEmail1,
+        //otherEmail2: record.OtherEmail2,
+        //otherEmail3: record.OtherEmail3,
+        //otherEmail4: record.OtherEmail4,
+        //otherEmail5: record.OtherEmail5,
+        //dnc1: record.DNC1,
+        //dnc2: record.DNC2,
+        //dnc3: record.DNC3,
+        //dnc4: record.DNC4,
+        //dnc5: record.DNC5
+      },
+    ];
 
-        let response = await PostToDb(contact, 'contacts');
-        //console.log('saveContactRecordsToDatabase response: ', response);
+    let response = await PostToDb(contact, 'contacts');
+    //console.log('saveContactRecordsToDatabase response: ', response);
 
-        return response;
-      } else {
-        console.log('numbers too long');
-        return 'Telephone number too long';
-      }
-
+    return response;
+  } else {
+    console.log('numbers too long');
+    return 'Telephone number too long';
+  }
 }
 
 async function saveCaseRecordsToDatabase(user, record) {
-
   /*const createdDate = record.DateCreated ?
     moment(this.ExcelDateToJSDate(record.DateCreated)).format('YYYY-MM-DD HH:mm:ss') :
     null;
@@ -312,8 +320,8 @@ async function saveCaseRecordsToDatabase(user, record) {
       //reopenedBy: record.ReopenedBy,
       //caseReason: record.CaseReason,
       //currentStatus: record.CurrentStatus,
-      caseNotes: record.dialler_comments
-    }
+      caseNotes: record.dialler_comments,
+    },
   ];
 
   let response = await PostToDb(caseUpdate, 'cases');
@@ -329,7 +337,10 @@ async function PostToDb(records, workspace) {
   let task = 'create_items';
   let clientId = sessionStorage.getItem('cwsClient');
 
-  const response = await mysqlLayer.Post(`/${type}/${workspace}/${task}/${clientId}`, records);
+  const response = await mysqlLayer.Post(
+    `/${type}/${workspace}/${task}/${clientId}`,
+    records
+  );
   //console.log('postToDb response: ', response);
   return response;
 }

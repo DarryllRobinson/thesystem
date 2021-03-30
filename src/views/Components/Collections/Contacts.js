@@ -1,12 +1,11 @@
 import React from 'react';
 import { Accordion, Button, Card, Col, Form, Row } from 'react-bootstrap';
-import {Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 library.add(faExternalLinkAlt);
-
 
 function clickableNumber(tel) {
   if (tel) {
@@ -36,27 +35,48 @@ function Contacts(props) {
   return (
     <Accordion>
       <Card>
-        <Accordion.Toggle as={Card.Header} eventKey="0" style={{ cursor: 'pointer' }}>
+        <Accordion.Toggle
+          as={Card.Header}
+          eventKey="0"
+          style={{ cursor: 'pointer' }}
+        >
           Click for more contact details
         </Accordion.Toggle>
-        <Accordion.Collapse eventKey="0" >
+        <Accordion.Collapse eventKey="0">
           <Card.Body>
             <Form>
               <Row>
                 <Col>
                   <Form.Label>Primary contact name</Form.Label>
-                  <Form.Control placeholder={props.contacts.primaryContactName} readOnly />
+                  <Form.Control
+                    placeholder={props.contacts.primaryContactName}
+                    readOnly
+                  />
                 </Col>
                 <Col>
                   <Form.Label>Primary contact number</Form.Label>
-                  <a href={clickableNumber(props.contacts.primaryContactNumber)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={clickableNumber(props.contacts.primaryContactNumber).substring(4)} readOnly />
+                  <a
+                    href={clickableNumber(props.contacts.primaryContactNumber)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={clickableNumber(
+                        props.contacts.primaryContactNumber
+                      ).substring(4)}
+                      readOnly
+                    />
                   </a>
                 </Col>
                 <Col>
                   <Form.Label>Primary contact email</Form.Label>
-                  <a href={clickableEmail(props.contacts.primaryContactEmail)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={props.contacts.primaryContactEmail} readOnly />
+                  <a
+                    href={clickableEmail(props.contacts.primaryContactEmail)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={props.contacts.primaryContactEmail}
+                      readOnly
+                    />
                   </a>
                 </Col>
               </Row>
@@ -65,18 +85,35 @@ function Contacts(props) {
               <Row>
                 <Col>
                   <Form.Label>Representative name</Form.Label>
-                  <Form.Control placeholder={props.contacts.representativeName} readOnly />
+                  <Form.Control
+                    placeholder={props.contacts.representativeName}
+                    readOnly
+                  />
                 </Col>
                 <Col>
                   <Form.Label>Representative number</Form.Label>
-                  <a href={clickableNumber(props.contacts.representativeNumber)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={clickableNumber(props.contacts.representativeNumber).substring(4)} readOnly />
+                  <a
+                    href={clickableNumber(props.contacts.representativeNumber)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={clickableNumber(
+                        props.contacts.representativeNumber
+                      ).substring(4)}
+                      readOnly
+                    />
                   </a>
                 </Col>
                 <Col>
                   <Form.Label>Representative email</Form.Label>
-                  <a href={clickableEmail(props.contacts.representativeEmail)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={props.contacts.representativeEmail} readOnly />
+                  <a
+                    href={clickableEmail(props.contacts.representativeEmail)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={props.contacts.representativeEmail}
+                      readOnly
+                    />
                   </a>
                 </Col>
               </Row>
@@ -85,18 +122,35 @@ function Contacts(props) {
               <Row>
                 <Col>
                   <Form.Label>Alternative representative name</Form.Label>
-                  <Form.Control placeholder={props.contacts.alternativeRepName} readOnly />
+                  <Form.Control
+                    placeholder={props.contacts.alternativeRepName}
+                    readOnly
+                  />
                 </Col>
                 <Col>
                   <Form.Label>Alternative representative number</Form.Label>
-                  <a href={clickableNumber(props.contacts.alternativeRepNumber)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={clickableNumber(props.contacts.alternativeRepNumber).substring(4)} readOnly />
+                  <a
+                    href={clickableNumber(props.contacts.alternativeRepNumber)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={clickableNumber(
+                        props.contacts.alternativeRepNumber
+                      ).substring(4)}
+                      readOnly
+                    />
                   </a>
                 </Col>
                 <Col>
                   <Form.Label>Alternative representative email</Form.Label>
-                  <a href={clickableEmail(props.contacts.alternativeRepEmail)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={props.contacts.alternativeRepEmail} readOnly />
+                  <a
+                    href={clickableEmail(props.contacts.alternativeRepEmail)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={props.contacts.alternativeRepEmail}
+                      readOnly
+                    />
                   </a>
                 </Col>
               </Row>
@@ -105,20 +159,44 @@ function Contacts(props) {
               <Row>
                 <Col>
                   <Form.Label>Other number 1</Form.Label>
-                  <a href={clickableNumber(props.contacts.otherNumber1)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={clickableNumber(props.contacts.otherNumber1).substring(4)} readOnly />
+                  <a
+                    href={clickableNumber(props.contacts.otherNumber1)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={clickableNumber(
+                        props.contacts.otherNumber1
+                      ).substring(4)}
+                      readOnly
+                    />
                   </a>
                 </Col>
                 <Col>
                   <Form.Label>Other number 2</Form.Label>
-                  <a href={clickableNumber(props.contacts.otherNumber2)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={clickableNumber(props.contacts.otherNumber2).substring(4)} readOnly />
+                  <a
+                    href={clickableNumber(props.contacts.otherNumber2)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={clickableNumber(
+                        props.contacts.otherNumber2
+                      ).substring(4)}
+                      readOnly
+                    />
                   </a>
                 </Col>
                 <Col>
                   <Form.Label>Other number 3</Form.Label>
-                  <a href={clickableNumber(props.contacts.otherNumber3)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={clickableNumber(props.contacts.otherNumber3).substring(4)} readOnly />
+                  <a
+                    href={clickableNumber(props.contacts.otherNumber3)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={clickableNumber(
+                        props.contacts.otherNumber3
+                      ).substring(4)}
+                      readOnly
+                    />
                   </a>
                 </Col>
               </Row>
@@ -127,14 +205,30 @@ function Contacts(props) {
               <Row>
                 <Col>
                   <Form.Label>Other number 4</Form.Label>
-                  <a href={clickableNumber(props.contacts.otherNumber4)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={clickableNumber(props.contacts.otherNumber4).substring(4)} readOnly />
+                  <a
+                    href={clickableNumber(props.contacts.otherNumber4)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={clickableNumber(
+                        props.contacts.otherNumber4
+                      ).substring(4)}
+                      readOnly
+                    />
                   </a>
                 </Col>
                 <Col>
                   <Form.Label>Other number 5</Form.Label>
-                  <a href={clickableNumber(props.contacts.otherNumber5)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={clickableNumber(props.contacts.otherNumber5).substring(4)} readOnly />
+                  <a
+                    href={clickableNumber(props.contacts.otherNumber5)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={clickableNumber(
+                        props.contacts.otherNumber5
+                      ).substring(4)}
+                      readOnly
+                    />
                   </a>
                 </Col>
                 <Col></Col>
@@ -142,20 +236,38 @@ function Contacts(props) {
               <Row>
                 <Col>
                   <Form.Label>Other email 1</Form.Label>
-                  <a href={clickableEmail(props.contacts.otherEmail1)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={props.contacts.otherEmail1} readOnly />
+                  <a
+                    href={clickableEmail(props.contacts.otherEmail1)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={props.contacts.otherEmail1}
+                      readOnly
+                    />
                   </a>
                 </Col>
                 <Col>
                   <Form.Label>Other email 2</Form.Label>
-                  <a href={clickableEmail(props.contacts.otherEmail2)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={props.contacts.otherEmail2} readOnly />
+                  <a
+                    href={clickableEmail(props.contacts.otherEmail2)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={props.contacts.otherEmail2}
+                      readOnly
+                    />
                   </a>
                 </Col>
                 <Col>
                   <Form.Label>Other email 3</Form.Label>
-                  <a href={clickableEmail(props.contacts.otherEmail3)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={props.contacts.otherEmail3} readOnly />
+                  <a
+                    href={clickableEmail(props.contacts.otherEmail3)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={props.contacts.otherEmail3}
+                      readOnly
+                    />
                   </a>
                 </Col>
               </Row>
@@ -164,14 +276,26 @@ function Contacts(props) {
               <Row>
                 <Col>
                   <Form.Label>Other email 4</Form.Label>
-                  <a href={clickableEmail(props.contacts.otherEmail4)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={props.contacts.otherEmail4} readOnly />
+                  <a
+                    href={clickableEmail(props.contacts.otherEmail4)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={props.contacts.otherEmail4}
+                      readOnly
+                    />
                   </a>
                 </Col>
                 <Col>
                   <Form.Label>Other email 5</Form.Label>
-                  <a href={clickableEmail(props.contacts.otherEmail5)} style={{ textDecoration: "underline" }}>
-                    <Form.Control placeholder={props.contacts.otherEmail5} readOnly />
+                  <a
+                    href={clickableEmail(props.contacts.otherEmail5)}
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    <Form.Control
+                      placeholder={props.contacts.otherEmail5}
+                      readOnly
+                    />
                   </a>
                 </Col>
                 <Col></Col>
@@ -207,20 +331,23 @@ function Contacts(props) {
 
               <Row>
                 <Col>
-                  <Link className="nav-link" to={{
-                      pathname: `/workzone/collections/contacts/${props.accountNumber}`
+                  <Link
+                    className="nav-link"
+                    to={{
+                      pathname: `/workzone/collections/contacts/${props.accountNumber}`,
                     }}
-                    style={{padding: 0}}
+                    style={{ padding: 0 }}
                     target="_blank"
-                    rel='noopener noreferrer'
+                    rel="noopener noreferrer"
                   >
                     <Button
                       style={{
-                        background: "#48B711",
-                        borderColor: "#48B711",
+                        background: '#48B711',
+                        borderColor: '#48B711',
                       }}
                     >
-                      Edit contact details <FontAwesomeIcon icon={faExternalLinkAlt} size="1x"  />
+                      Edit contact details{' '}
+                      <FontAwesomeIcon icon={faExternalLinkAlt} size="1x" />
                     </Button>
                   </Link>
                 </Col>

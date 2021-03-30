@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 /*function sectionToRender(workspace, worklist, records, task, type, item, count) {
   //console.log('sectionToRender ', worklist, tasks);
@@ -42,23 +42,24 @@ function Item(props) {
 
   return (
     <li className="list-group-item d-flex justify-content-between align-items-center">
-      <Link className="nav-link"
+      <Link
+        className="nav-link"
         to={{
           pathname: `/workzone/${workspace}`,
           state: {
             recordStatus: item,
             records: records,
             type: type,
-            workspace: workspace
-          }
+            workspace: workspace,
+          },
         }}
-        style={{padding: 0}}
+        style={{ padding: 0 }}
       >
         {item}
       </Link>
       <span className="badge badge-primary badge-pill">{count}</span>
     </li>
-  )
+  );
 }
 
 /*function oldItem(props) {

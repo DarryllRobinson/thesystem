@@ -2,7 +2,7 @@ import React from 'react';
 import ReactPlayer from 'react-player';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-import Button from "components/CustomButtons/Button.js";
+import Button from 'components/CustomButtons/Button.js';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 
@@ -36,11 +36,7 @@ export default function Explainer() {
 
   return (
     <div>
-      <Button
-        color="danger"
-        size="lg"
-        onClick={handleOpen}
-      >
+      <Button color="danger" size="lg" onClick={handleOpen}>
         <i className="fas fa-play" />
         Watch video
       </Button>
@@ -58,11 +54,7 @@ export default function Explainer() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <ReactPlayer
-              url={video}
-              controls={true}
-              playing={true}
-            />
+            <ReactPlayer url={video} controls={true} playing={true} />
           </div>
         </Fade>
       </Modal>

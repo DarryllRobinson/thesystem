@@ -44,64 +44,28 @@ const useStyles = makeStyles(styles);
 const reportList = [
   {
     name: 'Aging',
-    goals: [
-      '30 Days',
-      '60 Days'
-    ],
-    current: [
-      1000,
-      3000
-    ],
-    target: [
-      3000,
-      5000
-    ]
+    goals: ['30 Days', '60 Days'],
+    current: [1000, 3000],
+    target: [3000, 5000],
   },
   {
     name: 'Agent Performance',
-    goals: [
-      '30 Days',
-      '60 Days'
-    ],
-    current: [
-      7000,
-      11000
-    ],
-    target: [
-      13000,
-      17000
-    ]
+    goals: ['30 Days', '60 Days'],
+    current: [7000, 11000],
+    target: [13000, 17000],
   },
   {
     name: 'Another Report',
-    goals: [
-      '30 Days',
-      '60 Days'
-    ],
-    current: [
-      7000,
-      11000
-    ],
-    target: [
-      13000,
-      17000
-    ]
+    goals: ['30 Days', '60 Days'],
+    current: [7000, 11000],
+    target: [13000, 17000],
   },
   {
     name: 'Casey Report',
-    goals: [
-      '30 Days',
-      '60 Days'
-    ],
-    current: [
-      7000,
-      11000
-    ],
-    target: [
-      13000,
-      17000
-    ]
-  }
+    goals: ['30 Days', '60 Days'],
+    current: [7000, 11000],
+    target: [13000, 17000],
+  },
 ];
 
 function buildReport(report, classes, idx) {
@@ -119,40 +83,39 @@ function buildReport(report, classes, idx) {
                   <StyledTableCell align="right">Percentage</StyledTableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {buildTable(report)}
-              </TableBody>
+              <TableBody>{buildTable(report)}</TableBody>
             </Table>
           </TableContainer>
         </CardBody>
         <CardFooter>{report.name}</CardFooter>
       </Card>
     </GridItem>
-  )
+  );
 }
 
 function buildTable(report) {
   //console.log('report: ', report);
   let rows = [];
   for (let loop = 0; loop < report.goals.length; loop++) {
-    rows.push(createData(
-      report.goals[loop],
-      report.current[loop],
-      report.target[loop],
-      Math.floor(report.current[loop]/report.target[loop]*100)));
+    rows.push(
+      createData(
+        report.goals[loop],
+        report.current[loop],
+        report.target[loop],
+        Math.floor((report.current[loop] / report.target[loop]) * 100)
+      )
+    );
   }
-  return (
-    rows.map((row) => (
-      <StyledTableRow key={row.goal}>
-        <StyledTableCell component="th" scope="row">
-          {row.goal}
-        </StyledTableCell>
-        <StyledTableCell align="right">R {row.current}</StyledTableCell>
-        <StyledTableCell align="right">R {row.target}</StyledTableCell>
-        <StyledTableCell align="right">{row.percentage}%</StyledTableCell>
-      </StyledTableRow>
-    ))
-  )
+  return rows.map((row) => (
+    <StyledTableRow key={row.goal}>
+      <StyledTableCell component="th" scope="row">
+        {row.goal}
+      </StyledTableCell>
+      <StyledTableCell align="right">R {row.current}</StyledTableCell>
+      <StyledTableCell align="right">R {row.target}</StyledTableCell>
+      <StyledTableCell align="right">{row.percentage}%</StyledTableCell>
+    </StyledTableRow>
+  ));
 }
 
 function createData(goal, current, target, percentage) {
@@ -164,12 +127,10 @@ export default function Targets(props) {
 
   return (
     <div className={classes.container}>
-      <ColumnChart reports={reportList}/>
+      <ColumnChart reports={reportList} />
       <GridContainer justify="center">
-      {reportList.map((report, idx) => (
-        buildReport(report, classes, idx)
-      ))}
+        {reportList.map((report, idx) => buildReport(report, classes, idx))}
       </GridContainer>
     </div>
-  )
+  );
 }
