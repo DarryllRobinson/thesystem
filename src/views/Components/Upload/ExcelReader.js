@@ -115,7 +115,8 @@ class ExcelReader extends Component {
             console.log('data loaded: ', data.length);
             let cont = await this.checkData(workspace, this.state.data);
             //console.log('cont: ', cont);
-            if (cont) this.chunkData(this.state.data); //this.uploadData(workspace, this.state.data);
+            if (cont)
+              this.uploadData(workspace, this.chunkData(this.state.data));
           } catch (e) {
             console.log('Uploading Collection update file problem (e): ', e);
             this.errorReporting.sendMessage({
@@ -208,7 +209,7 @@ class ExcelReader extends Component {
       let records = data.slice(first, second);
       chunkedData.push(records);
     }
-    console.log('chunkedData: ', chunkedData);
+    //console.log('chunkedData: ', chunkedData);
     return chunkedData;
   }
 
@@ -247,64 +248,66 @@ class ExcelReader extends Component {
       if (chance > 100) {
         message = `${count} files have been successfully uploaded to the ${workspace} table. You should feel good about yourself.`;
       } else {
-        message = `${count} files have been successfully uploaded to the ${workspace} table.`;
+        message = `${response} files have been successfully uploaded to the ${workspace} table.`;
       }
       this.setState({ compliance: message });
     });
   }
 
-  async newsaveCustomerRecordsToDatabase(recordsAll) {
-    let customers = [];
-    let records = recordsAll.slice(0, 400);
-    console.log('records.length', records.length);
+  async newsaveCustomerRecordsToDatabase(recordChunks) {
+    let totalRecords = 0;
+    for (let i = 0; i < recordChunks.length; i++) {
+      let customers = [];
 
-    records.forEach((record) => {
-      let customer = null;
-      if (record.CustomerEntity === 'Enterprise') {
-        customer = [
-          {
-            operatorShortCode: record.OperatorShortCode,
-            customerRefNo: record.CustomerNumber,
-            customerName: record.Customer,
-            customerEntity: record.CustomerEntity,
-            regIdNumber: record.CompanyRegNo,
-            customerType: record.Customer_Type,
-            productType: record.ProductType,
-            createdBy: 'System',
-            regIdStatus: record.CIPCStatus,
-            f_clientId: sessionStorage.getItem('cwsClient'),
-          },
-        ];
-      } else if (record.CustomerEntity === 'Consumer') {
-        customer = [
-          {
-            operatorShortCode: record.OperatorShortCode,
-            customerRefNo: record.CustomerNumber,
-            customerName: record.Customer,
-            customerEntity: record.CustomerEntity,
-            regIdNumber: record.ConsumerIDNumber,
-            customerType: record.Customer_Type,
-            productType: record.ProductType,
-            createdBy: 'System',
-            regIdStatus: record.IDVStatus,
-            f_clientId: sessionStorage.getItem('cwsClient'),
-          },
-        ];
+      recordChunks[i].forEach((record) => {
+        let customer = null;
+        if (record.CustomerEntity === 'Enterprise') {
+          customer = [
+            {
+              operatorShortCode: record.OperatorShortCode,
+              customerRefNo: record.CustomerNumber,
+              customerName: record.Customer,
+              customerEntity: record.CustomerEntity,
+              regIdNumber: record.CompanyRegNo,
+              customerType: record.Customer_Type,
+              productType: record.ProductType,
+              createdBy: 'System',
+              regIdStatus: record.CIPCStatus,
+              f_clientId: sessionStorage.getItem('cwsClient'),
+            },
+          ];
+        } else if (record.CustomerEntity === 'Consumer') {
+          customer = [
+            {
+              operatorShortCode: record.OperatorShortCode,
+              customerRefNo: record.CustomerNumber,
+              customerName: record.Customer,
+              customerEntity: record.CustomerEntity,
+              regIdNumber: record.ConsumerIDNumber,
+              customerType: record.Customer_Type,
+              productType: record.ProductType,
+              createdBy: 'System',
+              regIdStatus: record.IDVStatus,
+              f_clientId: sessionStorage.getItem('cwsClient'),
+            },
+          ];
+        }
+        customers.push(customer);
+      });
+
+      const response = await this.postToDb(customers, 'customers');
+      console.log('saveCustomerRecordsToDatabase response: ', response);
+      if (response.data.errno) {
+        let error = [];
+        error = this.state.customerErrors;
+        error.push(response.data);
+        this.setState({ customerErrors: error });
       }
-      customers.push(customer);
-    });
-
-    const response = await this.postToDb(customers, 'customers');
-    console.log('saveCustomerRecordsToDatabase response: ', response);
-    if (response.data.errno) {
-      let error = [];
-      error = this.state.customerErrors;
-      error.push(response.data);
-      this.setState({ customerErrors: error });
+      totalRecords = totalRecords + response.data.affectedRows;
     }
 
     this.setState({ uploaded: { customers: true } });
-    return response.data.insertId;
+    return totalRecords;
   }
 
   async saveCustomerRecordsToDatabase(record) {
