@@ -2,9 +2,13 @@ import React, { Component } from 'react';
 import XLSX from 'xlsx';
 import { make_cols } from './MakeColumns';
 import { SheetJSFT } from './types';
+import LinearProgress from 'components/CustomLinearProgress/CustomLinearProgress';
 import MysqlLayer from 'utils/MysqlLayer';
 import ErrorReporting from 'utils/ErrorReporting';
 import moment from 'moment';
+import image from '../../../assets/img/green-tick.jpeg';
+
+//const workspaces = ['customers', 'accounts', 'contacts', 'cases', 'outcomes'];
 
 class ExcelReader extends Component {
   constructor(props) {
@@ -13,67 +17,57 @@ class ExcelReader extends Component {
       file: {},
       data: [],
       cols: [],
-      progress: 0,
-      accountErrors: [],
-      customerErrors: [],
-      contactErrors: [],
-      caseErrors: [],
-      outcomeErrors: [],
-      errors: [],
-      customerDone: false,
-      accountDone: false,
-      contactDone: false,
-      caseDone: false,
-      outcomeDone: false,
-      compliance: '',
-      uploaded: {
-        customers: false,
-        accounts: false,
-        contacts: false,
-        cases: false,
-        outcomes: false,
+      type: sessionStorage.getItem('cwsType'),
+      workspaces: {
+        ids: ['customers', 'accounts', 'contacts', 'cases', 'outcomes'],
+        entities: {
+          customers: {
+            errors: [],
+            loading: false,
+            numberRecords: 0,
+            checked: false,
+            progress: 0,
+          },
+          accounts: {
+            errors: [],
+            loading: false,
+            numberRecords: 0,
+            checked: false,
+            progress: 0,
+          },
+          contacts: {
+            errors: [],
+            loading: false,
+            numberRecords: 0,
+            checked: false,
+            progress: 0,
+          },
+          cases: {
+            errors: [],
+            loading: false,
+            numberRecords: 0,
+            checked: false,
+            progress: 0,
+          },
+          outcomes: {
+            errors: [],
+            loading: false,
+            numberRecords: 0,
+            checked: false,
+            progress: 0,
+          },
+        },
       },
-      workspaces: ['customers', 'accounts', 'contacts', 'cases', 'outcomes'],
     };
+
     this.handleFile = this.handleFile.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.uploadData = this.uploadData.bind(this);
-    this.saveCustomerRecordsToDatabase = this.saveCustomerRecordsToDatabase.bind(
-      this
-    );
-    this.saveAccountRecordsToDatabase = this.saveAccountRecordsToDatabase.bind(
-      this
-    );
-    this.saveContactRecordsToDatabase = this.saveContactRecordsToDatabase.bind(
-      this
-    );
-    this.saveCaseRecordsToDatabase = this.saveCaseRecordsToDatabase.bind(this);
-    this.saveOutcomeRecordsToDatabase = this.saveOutcomeRecordsToDatabase.bind(
-      this
-    );
 
     this.mysqlLayer = new MysqlLayer();
     this.errorReporting = new ErrorReporting();
   }
 
-  componentDidMount() {
-    //console.log('ExcelReader props: ', this.props);
-    //this.randmonGenerator();
-    //console.log('uploaded: ', this.state.uploaded);
-    this.setState({
-      type: sessionStorage.getItem('cwsType'),
-    });
-  }
-
-  randmonGenerator() {
-    const min = 1;
-    const max = 100;
-    const rand = Math.floor(min + Math.random() * (max - min));
-    return rand;
-  }
-
   handleChange(e) {
-    this.setState({ errors: [] });
     const files = e.target.files;
     if (files && files[0]) this.setState({ file: files[0] });
   }
@@ -85,38 +79,37 @@ class ExcelReader extends Component {
     const rABS = !!reader.readAsBinaryString;
 
     reader.onload = (e) => {
-      /* Parse data */
+      // Parse data
       const bstr = e.target.result;
       const wb = XLSX.read(bstr, {
         type: rABS ? 'binary' : 'array',
         bookVBA: true,
       });
-      /* Get first worksheet */
+
+      // Get first worksheet
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
-      /* Convert array of arrays */
+
+      // Convert array of arrays
       const data = XLSX.utils.sheet_to_json(ws);
-      // Update state and clear error messages
+
+      let workspaceObject = this.state.workspaces.entities[workspace];
+      workspaceObject.numberRecords = data.length;
+
       this.setState(
         {
           data: data,
           cols: make_cols(ws['!ref']),
-          accountErrors: [],
-          customerErrors: [],
-          contactErrors: [],
-          caseErrors: [],
-          outcomeErrors: [],
+          ...this.state,
+          workspaceObject,
         },
         async () => {
-          //console.log(JSON.stringify(this.state.data, null, 2));
-          //console.log('data: ', data);
           try {
-            //this.uploadData(this.state.data);
-            console.log('data loaded: ', data.length);
-            let cont = await this.checkData(workspace, this.state.data);
-            //console.log('cont: ', cont);
-            if (cont)
-              this.uploadData(workspace, this.chunkData(this.state.data));
+            if (this.checkData(workspace, data)) {
+              workspaceObject.checked = true;
+              this.setState({ ...this.state, workspaceObject });
+              this.uploadData(workspace, data);
+            }
           } catch (e) {
             console.log('Uploading Collection update file problem (e): ', e);
             this.errorReporting.sendMessage({
@@ -139,9 +132,7 @@ class ExcelReader extends Component {
   }
 
   checkData(workspace, records) {
-    this.setState({
-      compliance: `${records.length} ${workspace} records processed for compliance`,
-    });
+    let workspaceObject = this.state.workspaces.entities[workspace];
     let errors = [];
 
     switch (workspace) {
@@ -194,12 +185,14 @@ class ExcelReader extends Component {
         errors.push(`No workspace identified for ${workspace}`);
     }
 
-    this.setState({ errors: errors });
+    workspaceObject.errors = errors;
+    this.setState({ ...this.state, workspaceObject });
     if (errors.length > 0) return false;
     return true;
   }
 
   chunkData(data) {
+    //console.log('chunkData', data);
     const maxRowsThatCanBeInserted = 400;
     const chunks =
       data.length % maxRowsThatCanBeInserted === 0
@@ -212,374 +205,301 @@ class ExcelReader extends Component {
       let records = data.slice(first, second);
       chunkedData.push(records);
     }
-    //console.log('chunkedData: ', chunkedData);
+    this.setState({ chunkedData: chunkedData });
+    //console.log('chunkedData:', chunkedData);
     return chunkedData;
   }
 
   async uploadData(workspace, data) {
-    //let count = 0;
+    let workspaceObject = this.state.workspaces.entities[workspace];
+    workspaceObject.loading = true;
+    workspaceObject.progress = 0;
+    this.setState({ ...this.state, workspaceObject });
+    let totalRecords = 0;
+    let preppedData;
+    let chunkedData;
 
-    // Need new saveCustomerRecordsToDatabase function for comeplete data set
-    //const response = await this.newsaveCustomerRecordsToDatabase(data);
-    //console.log('response: ', response);
-
-    //console.log('data: ', data);
-    //data.forEach(async (datum) => {
-    let numRecords = 0;
     switch (workspace) {
       case 'customers':
-        numRecords = await this.saveCustomerRecordsToDatabase(data);
+        preppedData = this.prepCustomerRecords(data);
         break;
       case 'accounts':
-        numRecords = await this.saveAccountRecordsToDatabase(data);
+        preppedData = this.prepAccountRecords(data);
         break;
       case 'contacts':
-        numRecords = await this.saveContactRecordsToDatabase(data);
+        preppedData = this.prepContactRecords(data);
         break;
       case 'cases':
-        numRecords = await this.saveCaseRecordsToDatabase(data);
+        preppedData = this.prepCaseRecords(data);
         break;
       case 'outcomes':
-        numRecords = await this.saveOutcomeRecordsToDatabase(data);
+        preppedData = this.prepOutcomeRecords(data);
         break;
       default:
         break;
     }
-    //count++;
 
-    let message = `${numRecords} files have been successfully uploaded to the ${workspace} table.`;
+    chunkedData = this.chunkData(preppedData);
 
-    this.setState({ compliance: message });
-    //});
-  }
-
-  async saveCustomerRecordsToDatabase(recordChunks) {
-    let totalRecords = 0;
-    for (let i = 0; i < recordChunks.length; i++) {
-      let customers = [];
-
-      recordChunks[i].forEach((record) => {
-        let customer = null;
-        if (record.CustomerEntity === 'Enterprise') {
-          customer = [
-            {
-              operatorShortCode: record.OperatorShortCode,
-              customerRefNo: record.CustomerNumber,
-              customerName: record.Customer,
-              customerEntity: record.CustomerEntity,
-              regIdNumber: record.CompanyRegNo,
-              customerType: record.Customer_Type,
-              productType: record.ProductType,
-              createdBy: 'System',
-              regIdStatus: record.CIPCStatus,
-              f_clientId: sessionStorage.getItem('cwsClient'),
-            },
-          ];
-        } else if (record.CustomerEntity === 'Consumer') {
-          customer = [
-            {
-              operatorShortCode: record.OperatorShortCode,
-              customerRefNo: record.CustomerNumber,
-              customerName: record.Customer,
-              customerEntity: record.CustomerEntity,
-              regIdNumber: record.ConsumerIDNumber,
-              customerType: record.Customer_Type,
-              productType: record.ProductType,
-              createdBy: 'System',
-              regIdStatus: record.IDVStatus,
-              f_clientId: sessionStorage.getItem('cwsClient'),
-            },
-          ];
-        }
-        customers.push(customer);
-      });
-
-      const response = await this.postToDb(customers, 'customers');
-      //console.log('saveCustomerRecordsToDatabase response: ', response);
+    // Single post function makes more sense
+    for (let i = 0; i < chunkedData.length; i++) {
+      const response = await this.postToDb(chunkedData[i], workspace).then(
+        this.setState({
+          progress: Math.round(((i + 1) / chunkedData.length) * 100),
+        })
+      );
       if (response.data.errno) {
         let error = [];
         error = this.state.customerErrors;
         error.push(response.data);
         this.setState({ customerErrors: error });
       }
+
       totalRecords = totalRecords + response.data.affectedRows;
     }
 
-    this.setState({ uploaded: { customers: true } });
+    workspaceObject.loading = false;
+    workspaceObject.progress = 100;
+    this.setState({ ...this.state, workspaceObject });
     return totalRecords;
   }
 
-  async saveAccountRecordsToDatabase(recordChunks) {
-    let totalRecords = 0;
-    for (let i = 0; i < recordChunks.length; i++) {
-      let accounts = [];
+  prepCustomerRecords(records) {
+    let customers = [];
 
-      recordChunks[i].forEach((record) => {
-        const paymentDueDate = record.paymentDueDate
-          ? moment(this.ExcelDateToJSDate(record.paymentDueDate)).format(
-              'YYYY-MM-DD'
-            )
-          : null;
-
-        const debitOrderDate = record.debitOrderDate
-          ? moment(this.ExcelDateToJSDate(record.debitOrderDate)).format(
-              'YYYY-MM-DD'
-            )
-          : null;
-
-        const lastPaymentDate = record.lastPaymentDate
-          ? moment(this.ExcelDateToJSDate(record.lastPaymentDate)).format(
-              'YYYY-MM-DD'
-            )
-          : null;
-
-        const lastPTPDate = record.lastPTPDate
-          ? moment(this.ExcelDateToJSDate(record.lastPTPDate)).format(
-              'YYYY-MM-DD'
-            )
-          : null;
-
-        const openDate = record.DateCreated
-          ? moment(this.ExcelDateToJSDate(record.DateCreated)).format(
-              'YYYY-MM-DD'
-            )
-          : null;
-
-        let account = [
+    records.forEach((record) => {
+      let customer = [];
+      if (record.CustomerEntity === 'Enterprise') {
+        customer = [
           {
-            accountNumber: record.AccountNumber,
-            accountName: record.AccountName,
+            operatorShortCode: record.OperatorShortCode,
+            customerRefNo: record.CustomerNumber,
+            customerName: record.Customer,
+            customerEntity: record.CustomerEntity,
+            regIdNumber: record.CompanyRegNo,
+            customerType: record.Customer_Type,
+            productType: record.ProductType,
             createdBy: 'System',
-            //createdDate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-            openDate: openDate,
-            debtorAge: record.DebtorAge,
-            creditLimit: record.CreditLimit,
-            currentBalance: record.CurrentBalance,
-            days30: record.days30,
-            days60: record.days60,
-            days90: record.days90,
-            days120: record.days120,
-            days150: record.days150,
-            days180: record.days180,
-            days180Over: record.days180Over,
-            f_customerId: record.AccountNumber,
-            lastPTPDate: lastPTPDate,
-            paymentDueDate: paymentDueDate,
-            debitOrderDate: debitOrderDate,
-            lastPaymentDate: lastPaymentDate,
-            paymentMethod: record.PaymentMethod,
-            paymentTermDays: record.PaymentTerms,
-            totalBalance: record.TotalBalance,
+            regIdStatus: record.CIPCStatus,
+            f_clientId: sessionStorage.getItem('cwsClient'),
           },
         ];
-        accounts.push(account);
-      });
-      const response = await this.postToDb(accounts, 'accounts');
-      //console.log('saveAccountRecordsToDatabase response: ', response);
-      if (response.data.errno) {
-        let error = [];
-        error = this.state.accountErrors;
-        error.push(response.data);
-        this.setState({ accountErrors: error });
+      } else if (record.CustomerEntity === 'Consumer') {
+        customer = [
+          {
+            operatorShortCode: record.OperatorShortCode,
+            customerRefNo: record.CustomerNumber,
+            customerName: record.Customer,
+            customerEntity: record.CustomerEntity,
+            regIdNumber: record.ConsumerIDNumber,
+            customerType: record.Customer_Type,
+            productType: record.ProductType,
+            createdBy: 'System',
+            regIdStatus: record.IDVStatus,
+            f_clientId: sessionStorage.getItem('cwsClient'),
+          },
+        ];
       }
-      totalRecords = totalRecords + response.data.affectedRows;
-    }
+      customers.push(customer);
+    });
 
-    this.setState({ uploaded: { accounts: true } });
-    return totalRecords;
+    return customers;
   }
 
-  async saveCaseRecordsToDatabase(recordChunks) {
-    let totalRecords = 0;
-    for (let i = 0; i < recordChunks.length; i++) {
-      let cases = [];
+  prepAccountRecords(records) {
+    let accounts = [];
 
-      recordChunks[i].forEach((record) => {
-        const createdDate = record.DateCreated
-          ? moment(this.ExcelDateToJSDate(record.DateCreated)).format(
-              'YYYY-MM-DD HH:mm:ss'
-            )
-          : null;
+    records.forEach((record) => {
+      const paymentDueDate = record.paymentDueDate
+        ? moment(this.ExcelDateToJSDate(record.paymentDueDate)).format(
+            'YYYY-MM-DD'
+          )
+        : null;
 
-        const nextVisitDateTime = record.nextVisitDateTime
-          ? moment(this.ExcelDateToJSDate(record.nextVisitDateTime)).format(
-              'YYYY-MM-DD HH:mm:ss'
-            )
-          : null;
+      const debitOrderDate = record.debitOrderDate
+        ? moment(this.ExcelDateToJSDate(record.debitOrderDate)).format(
+            'YYYY-MM-DD'
+          )
+        : null;
 
-        const updatedDate = record.DateLastUpdated
-          ? moment(this.ExcelDateToJSDate(record.DateLastUpdated)).format(
-              'YYYY-MM-DD HH:mm:ss'
-            )
-          : null;
-        //console.log('updatedDate: ', updatedDate);
+      const lastPaymentDate = record.lastPaymentDate
+        ? moment(this.ExcelDateToJSDate(record.lastPaymentDate)).format(
+            'YYYY-MM-DD'
+          )
+        : null;
 
-        const reopenedDate = record.DateReopened
-          ? moment(this.ExcelDateToJSDate(record.DateReopened)).format(
-              'YYYY-MM-DD HH:mm:ss'
-            )
-          : null;
-        //console.log('reopenedDate: ', reopenedDate);
+      const lastPTPDate = record.lastPTPDate
+        ? moment(this.ExcelDateToJSDate(record.lastPTPDate)).format(
+            'YYYY-MM-DD'
+          )
+        : null;
 
-        let caseUpdate = [
-          {
-            caseNumber: record.CaseNumber,
-            f_accountNumber: record.AccountNumber,
-            createdDate: createdDate,
-            createdBy: record.CreatedBy,
-            currentAssignment: record.CurrentAssignment,
-            nextVisitDateTime: nextVisitDateTime,
-            updatedDate: updatedDate,
-            updatedBy: record.LastUpdatedBy,
-            reopenedDate: reopenedDate,
-            reopenedBy: record.ReopenedBy,
-            caseReason: record.CaseReason,
-            currentStatus: record.CurrentStatus,
-            caseNotes: record.CaseNotes,
-          },
-        ];
-        cases.push(caseUpdate);
-      });
-      const response = await this.postToDb(cases, 'cases');
-      //console.log('saveCaseRecordsToDatabase response: ', response);
-      if (response.data.errno) {
-        let error = [];
-        error = this.state.caseErrors;
-        error.push(response.data);
-        this.setState({ caseErrors: error });
-      }
-      totalRecords = totalRecords + response.data.affectedRows;
-    }
+      const openDate = record.DateCreated
+        ? moment(this.ExcelDateToJSDate(record.DateCreated)).format(
+            'YYYY-MM-DD'
+          )
+        : null;
 
-    this.setState({ uploaded: { cases: true } });
-    return totalRecords;
+      let account = [
+        {
+          accountNumber: record.AccountNumber,
+          accountName: record.AccountName,
+          createdBy: 'System',
+          openDate: openDate,
+          debtorAge: record.DebtorAge,
+          creditLimit: record.CreditLimit,
+          currentBalance: record.CurrentBalance,
+          days30: record.days30,
+          days60: record.days60,
+          days90: record.days90,
+          days120: record.days120,
+          days150: record.days150,
+          days180: record.days180,
+          days180Over: record.days180Over,
+          f_customerId: record.AccountNumber,
+          lastPTPDate: lastPTPDate,
+          paymentDueDate: paymentDueDate,
+          debitOrderDate: debitOrderDate,
+          lastPaymentDate: lastPaymentDate,
+          paymentMethod: record.PaymentMethod,
+          paymentTermDays: record.PaymentTerms,
+          totalBalance: record.TotalBalance,
+        },
+      ];
+      accounts.push(account);
+    });
+    return accounts;
   }
 
-  async saveOutcomeRecordsToDatabase(recordChunks) {
-    let totalRecords = 0;
-    for (let i = 0; i < recordChunks.length; i++) {
-      let outcomes = [];
+  prepCaseRecords(records) {
+    let cases = [];
 
-      recordChunks[i].forEach((record) => {
-        const createdDate = record.DateCreated ? record.DateCreated : null;
+    records.forEach((record) => {
+      const createdDate = record.DateCreated
+        ? moment(this.ExcelDateToJSDate(record.DateCreated)).format(
+            'YYYY-MM-DD HH:mm:ss'
+          )
+        : null;
 
-        /*const nextVisitDateTime = record.NextVisitDate ?
-          (record.NextVisitDate + ' ' + record.NextVisitTime) :
-          null;
+      const nextVisitDateTime = record.nextVisitDateTime
+        ? moment(this.ExcelDateToJSDate(record.nextVisitDateTime)).format(
+            'YYYY-MM-DD HH:mm:ss'
+          )
+        : null;
 
-          console.log('record.NextVisitDate: ', record.NextVisitDate);
-          console.log('record.NextVisitDate: ', moment(record.NextVisitDate).format('YYYY-MM-DD'));
-          console.log('record.NextVisitDate: ', moment(record.NextVisitDate).format('DD-MM-YYYY'));
-          console.log('record.NextVisitTime: ', moment(record.NextVisitTime).format('HH:mm:ss'));
-          const newDate = this.ExcelDateToJSDate(record.NextVisitDate);
-          console.log('newDate: ', moment(newDate).format('YYYY-MM-DD'));*/
+      const updatedDate = record.DateLastUpdated
+        ? moment(this.ExcelDateToJSDate(record.DateLastUpdated)).format(
+            'YYYY-MM-DD HH:mm:ss'
+          )
+        : null;
 
-        /*const nextVisitDate = record.NextVisitDate ?
-          moment(this.ExcelDateToJSDate(record.NextVisitDate)).format('YYYY-MM-DD') :
-          null;
+      const reopenedDate = record.DateReopened
+        ? moment(this.ExcelDateToJSDate(record.DateReopened)).format(
+            'YYYY-MM-DD HH:mm:ss'
+          )
+        : null;
 
-        const nextVisitTime = record.NextVisitTime ?
-          moment(record.NextVisitTime).format('YYYY-MM-DD HH:mm:ss') :
-          null;*/
-
-        const ptpDate = record.PTPDate
-          ? moment(this.ExcelDateToJSDate(record.PTPDate)).format(
-              'YYYY-MM-DD HH:mm:ss'
-            )
-          : null;
-
-        const debitResubmissionDate = record.DebtOrderDate
-          ? moment(this.ExcelDateToJSDate(record.DebtOrderDate)).format(
-              'YYYY-MM-DD HH:mm:ss'
-            )
-          : null;
-
-        let outcome = [
-          {
-            f_caseId: record.CaseNumber,
-            createdDate: createdDate,
-            createdBy: record.CreatedBy,
-            outcomeStatus: record.Status,
-            transactionType: record.TransactionType,
-            numberCalled: record.PhoneNumberCalled,
-            EmailAddressUsed: record.emailUsed,
-            contactPerson: record.ContactPerson,
-            outcomeResolution: record.Resolution,
-            nextSteps: record.NextSteps,
-            ptpDate: ptpDate,
-            ptpAmount: record.PTPAmount,
-            debitResubmissionDate: debitResubmissionDate,
-            debitResubmissionAmount: record.DebitOrderAmount,
-            outcomeNotes: record.OutcomeNotes,
-          },
-        ];
-        outcomes.push(outcome);
-      });
-      const response = await this.postToDb(outcomes, 'outcomes');
-      //console.log('saveOutcomeRecordsToDatabase response: ', response);
-      if (response.data.errno) {
-        let error = [];
-        error = this.state.outcomeErrors;
-        error.push(response.data);
-        this.setState({ outcomeErrors: error });
-      }
-      totalRecords = totalRecords + response.data.affectedRows;
-    }
-
-    this.setState({ uploaded: { outcomes: true } });
-    return totalRecords;
+      let caseUpdate = [
+        {
+          caseNumber: record.CaseNumber,
+          f_accountNumber: record.AccountNumber,
+          createdDate: createdDate,
+          createdBy: record.CreatedBy,
+          currentAssignment: record.CurrentAssignment,
+          nextVisitDateTime: nextVisitDateTime,
+          updatedDate: updatedDate,
+          updatedBy: record.LastUpdatedBy,
+          reopenedDate: reopenedDate,
+          reopenedBy: record.ReopenedBy,
+          caseReason: record.CaseReason,
+          currentStatus: record.CurrentStatus,
+          caseNotes: record.CaseNotes,
+        },
+      ];
+      cases.push(caseUpdate);
+    });
+    return cases;
   }
 
-  async saveContactRecordsToDatabase(recordChunks) {
-    let totalRecords = 0;
-    for (let i = 0; i < recordChunks.length; i++) {
-      let contacts = [];
+  prepOutcomeRecords(records) {
+    let outcomes = [];
 
-      recordChunks[i].forEach((record) => {
-        let contact = [
-          {
-            f_accountNumber: record.AccountNumber,
-            primaryContactName: record.PrimaryContactName,
-            primaryContactNumber: record.PrimaryContactNumber,
-            primaryContactEmail: record.PrimaryEmailAddress,
-            representativeName: record.RepresentativeName,
-            representativeNumber: record.RepresentativeContactNumber,
-            representativeEmail: record.RepresentativeEmailAddress,
-            alternativeRepName: record.AltRepName,
-            alternativeRepNumber: record.AltRepContact,
-            alternativeRepEmail: record.AltRepEmail,
-            otherNumber1: record.OtherContact1,
-            otherNumber2: record.OtherContact2,
-            otherNumber3: record.OtherContact3,
-            otherNumber4: record.OtherContact4,
-            otherNumber5: record.OtherContact5,
-            otherEmail1: record.OtherEmail1,
-            otherEmail2: record.OtherEmail2,
-            otherEmail3: record.OtherEmail3,
-            otherEmail4: record.OtherEmail4,
-            otherEmail5: record.OtherEmail5,
-            dnc1: record.DNC1,
-            dnc2: record.DNC2,
-            dnc3: record.DNC3,
-            dnc4: record.DNC4,
-            dnc5: record.DNC5,
-          },
-        ];
-        contacts.push(contact);
-      });
-      let response = await this.postToDb(contacts, 'contacts');
-      //console.log('saveContactRecordsToDatabase response: ', response);
-      if (response.data.errno) {
-        let error = [];
-        error = this.state.contactErrors;
-        error.push(response.data);
-        this.setState({ contactErrors: error });
-      }
-      totalRecords = totalRecords + response.data.affectedRows;
-    }
+    records.forEach((record) => {
+      const createdDate = record.DateCreated ? record.DateCreated : null;
 
-    this.setState({ uploaded: { contacts: true } });
-    return totalRecords;
+      const ptpDate = record.PTPDate
+        ? moment(this.ExcelDateToJSDate(record.PTPDate)).format(
+            'YYYY-MM-DD HH:mm:ss'
+          )
+        : null;
+
+      const debitResubmissionDate = record.DebtOrderDate
+        ? moment(this.ExcelDateToJSDate(record.DebtOrderDate)).format(
+            'YYYY-MM-DD HH:mm:ss'
+          )
+        : null;
+
+      let outcome = [
+        {
+          f_caseId: record.CaseNumber,
+          createdDate: createdDate,
+          createdBy: record.CreatedBy,
+          outcomeStatus: record.Status,
+          transactionType: record.TransactionType,
+          numberCalled: record.PhoneNumberCalled,
+          EmailAddressUsed: record.emailUsed,
+          contactPerson: record.ContactPerson,
+          outcomeResolution: record.Resolution,
+          nextSteps: record.NextSteps,
+          ptpDate: ptpDate,
+          ptpAmount: record.PTPAmount,
+          debitResubmissionDate: debitResubmissionDate,
+          debitResubmissionAmount: record.DebitOrderAmount,
+          outcomeNotes: record.OutcomeNotes,
+        },
+      ];
+      outcomes.push(outcome);
+    });
+
+    return outcomes;
+  }
+
+  prepContactRecords(records) {
+    let contacts = [];
+
+    records.forEach((record) => {
+      let contact = [
+        {
+          f_accountNumber: record.AccountNumber,
+          primaryContactName: record.PrimaryContactName,
+          primaryContactNumber: record.PrimaryContactNumber,
+          primaryContactEmail: record.PrimaryEmailAddress,
+          representativeName: record.RepresentativeName,
+          representativeNumber: record.RepresentativeContactNumber,
+          representativeEmail: record.RepresentativeEmailAddress,
+          alternativeRepName: record.AltRepName,
+          alternativeRepNumber: record.AltRepContact,
+          alternativeRepEmail: record.AltRepEmail,
+          otherNumber1: record.OtherContact1,
+          otherNumber2: record.OtherContact2,
+          otherNumber3: record.OtherContact3,
+          otherNumber4: record.OtherContact4,
+          otherNumber5: record.OtherContact5,
+          otherEmail1: record.OtherEmail1,
+          otherEmail2: record.OtherEmail2,
+          otherEmail3: record.OtherEmail3,
+          otherEmail4: record.OtherEmail4,
+          otherEmail5: record.OtherEmail5,
+          dnc1: record.DNC1,
+          dnc2: record.DNC2,
+          dnc3: record.DNC3,
+          dnc4: record.DNC4,
+          dnc5: record.DNC5,
+        },
+      ];
+      contacts.push(contact);
+    });
+    return contacts;
   }
 
   ExcelDateToJSDate(date) {
@@ -588,7 +508,6 @@ class ExcelReader extends Component {
 
   async postToDb(records, workspace) {
     let type = this.state.type;
-    //let workspace = workspace;
     let task = 'create_items';
     let clientId = sessionStorage.getItem('cwsClient');
 
@@ -596,45 +515,13 @@ class ExcelReader extends Component {
       `/${type}/${workspace}/${task}/${clientId}`,
       records
     );
-    //console.log('postToDb response: ', response);
     return response;
   }
 
-  checkToDisplay(workspace) {
-    let display = false;
-    for (const [key, value] of Object.entries(this.state.uploaded)) {
-      if (key === workspace) display = value;
-      //console.log(`${key}: ${value}`);
-    }
-    return display;
-  }
-
   render() {
-    const customerErrors = this.state.customerErrors.map((err, idx) => (
-      <p key={idx}>Customer error: {err.sqlMessage}</p>
-    ));
+    const { progress, workspaces } = this.state;
 
-    const accountErrors = this.state.accountErrors.map((err, idx) => (
-      <p key={idx}>Account error: {err.sqlMessage}</p>
-    ));
-
-    const contactErrors = this.state.contactErrors.map((err, idx) => (
-      <p key={idx}>Contact error: {err}</p>
-    ));
-
-    const caseErrors = this.state.caseErrors.map((err, idx) => (
-      <p key={idx}>Case error: {err.sqlMessage}</p>
-    ));
-
-    const outcomeErrors = this.state.outcomeErrors.map((err, idx) => (
-      <p key={idx}>Outcome error: {err.sqlMessage}</p>
-    ));
-
-    const recordErrors = this.state.errors.map((err, idx) => (
-      <p key={idx}>Upload error: {err}</p>
-    ));
-
-    const filesToUpload = this.state.workspaces.map((workspace, idx) => (
+    const workspaceDisplay = workspaces.ids.map((workspace, idx) => (
       <div key={idx} className="container">
         <div className="row">
           <div className="col-8">
@@ -645,8 +532,9 @@ class ExcelReader extends Component {
               id="file"
               accept={SheetJSFT}
               onChange={this.handleChange}
+              style={{ width: '400px' }}
             />
-            {!this.checkToDisplay(workspace) && (
+            {workspaces.entities[workspace].progress === 0 && (
               <input
                 type="submit"
                 name={workspace}
@@ -654,29 +542,25 @@ class ExcelReader extends Component {
                 onClick={this.handleFile}
               />
             )}
-            <br />
-            <br />
+
+            {workspaces.entities[workspace].loading && (
+              <>
+                <br />
+                <br />
+                <LinearProgress variant="determinate" value={progress} />
+              </>
+            )}
+            {workspaces.entities[workspace].progress === 100 && (
+              <img src={image} alt="Green tick" width="55" height="45" />
+            )}
           </div>
         </div>
+        <br />
+        <br />
       </div>
     ));
 
-    return (
-      <div className="container">
-        <div className="row">
-          <div className="col-8">{filesToUpload}</div>
-          <div className="col-4">
-            <p style={{ fontWeight: 'bold' }}>{this.state.compliance}</p>
-            {customerErrors}
-            {accountErrors}
-            {recordErrors}
-            {caseErrors}
-            {outcomeErrors}
-            {contactErrors}
-          </div>
-        </div>
-      </div>
-    );
+    return <div className="container">{workspaceDisplay}</div>;
   }
 }
 

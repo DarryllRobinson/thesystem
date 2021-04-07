@@ -27,9 +27,6 @@ class NavBar extends React.Component {
             <NavDropdown.Item href="/collections/csvupload">
               CSV Upload
             </NavDropdown.Item>
-            <NavDropdown.Item href="/collections/uploady">
-              Uploady
-            </NavDropdown.Item>
           </NavDropdown>
 
           <NavDropdown title="Reports" id="reports-dropdown">

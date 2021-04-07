@@ -29,8 +29,7 @@ import Victory from 'views/Components/Reports/Victory';
 
 // Excel uploading function
 import ExcelReader from 'views/Components/Upload/ExcelReader';
-import CsvUploader from 'views/Components/Upload/CsvUploader';
-import UploadyComponent from 'views/Components/Upload/Uploady/UploadyComponent';
+import {CsvUploader} from 'views/Components/Upload/CsvUploader';
 
 const ComponentRoutes = (props) => {
   //console.log('ComponentRoutes props: ', props);
@@ -153,11 +152,6 @@ const ComponentRoutes = (props) => {
               exact
               path="/collections/csvupload"
               component={CsvUploader}
-            />
-            <PrivateRoute
-              exact
-              path="/collections/uploady"
-              component={UploadyComponent}
             />
           </React.Fragment>
         );

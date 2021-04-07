@@ -14,6 +14,7 @@ import GridContainer from 'components/Grid/GridContainer.js';
 import GridItem from 'components/Grid/GridItem.js';
 import HeaderLinks from 'components/Header/HeaderLinks.js';
 import Parallax from 'components/Parallax/Parallax.js';
+import image from 'assets/img/landing-bg.jpg';
 
 import styles from 'assets/jss/material-kit-react/views/landingPage.js';
 
@@ -43,7 +44,7 @@ export default function LandingPage(props) {
         }}
         {...rest}
       />
-      <Parallax filter image={require('assets/img/landing-bg.jpg')}>
+      <Parallax filter image={image}>
         <div className={classes.container}>
           <GridContainer>
             <GridItem xs={12} sm={12} md={6}>

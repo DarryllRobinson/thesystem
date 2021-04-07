@@ -1,46 +1,159 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import MysqlLayer from 'utils/MysqlLayer';
-import ProgressCircle from 'components/ProgressCircle/ProgressCircle';
-//import FetchData from 'utils/useFetch';
-//import moment from 'moment';
 
-// push file into state
-// extract existing customerRefNos from database
-// process each record by:
-// checking if customerRefNo exists
-// if so, reject and display reason
-// if not, upload to database and display success/update progress bar
+/*function useStateCallback(initialState) {
+  const [state, setState] = useState(initialState);
+  const cbRef = useRef(null);
 
-export default function CsvUploader(props) {
+  const setStateCallback = useCallback((state, cb) => {
+    cbRef.current = cb;
+    setState(state);
+  }, []);
+
+  useEffect(() => {
+    if (cbRef.current) {
+      cbRef.current(state);
+      cbRef.current = null;
+    }
+  }, [state]);
+
+  return [state, setStateCallback];
+}*/
+
+export const CsvUploader = () => {
   const clientId = sessionStorage.getItem('cwsClient');
   const [file, setFile] = useState(null);
   const [customers, setCustomers] = useState(null);
-  const [progress, setProgress] = useState(0);
+  const [records, setRecords] = useState([]);
+  const [done, setDone] = useState(false);
+  //const [progress, setProgress] = useState(0);
+  const [compliance, setCompliance] = useState('');
+  const [errors, setErrors] = useState([]);
+  const firstTimeRender = useRef(true);
 
   useEffect(() => {
-    let ignore = false;
+    if (!firstTimeRender.current) {
+      displayRecords();
+      const cont = checkData(records);
+      if (cont) {
+        console.log('Need to create the chunking and upload functions');
+      }
+    }
+  }, [done]);
 
+  useEffect(() => {
+    firstTimeRender.current = false;
+  }, []);
+
+  useEffect(() => {
     async function fetchData() {
       const mysqlLayer = new MysqlLayer();
       const result = await mysqlLayer.Get(
         `/business/collections/list_all_customers/${clientId}`
       );
-      if (!ignore) {
-        setCustomers(result);
-        //console.log('result: ', result);
-        //console.log('customers: ', customers);
-      }
+      setCustomers(result);
     }
 
     fetchData();
-    return () => {
-      ignore = true;
-    };
   }, [clientId]);
 
-  useEffect(() => {
-    console.log('something changed: ', progress);
-  }, [progress]);
+  const UploadFile = (file, customers) => {
+    if (!file) {
+      console.log('No file provided to upload');
+      return;
+    }
+
+    let fileReader = new FileReader();
+    fileReader.readAsText(file);
+    let records = [];
+
+    fileReader.onload = function () {
+      const dataset = fileReader.result;
+      let lines = dataset.split('\r\n');
+      let headers = lines[0].split(',');
+
+      for (let i = 1; i < lines.length; i++) {
+        let obj = {};
+        let currentline = lines[i].split(',');
+
+        for (let j = 0; j < headers.length; j++) {
+          obj[headers[j].trim()] = currentline[j];
+        }
+
+        if (obj.account_number) {
+          if (checkUnique(obj.account_number, customers)) {
+            //setRecords(records => [...records, obj]);
+            records.push(obj);
+          } else {
+            console.log(
+              `Account ${obj.account_number} already exists on the database`
+            );
+          }
+        }
+      }
+      setRecords(records);
+      setDone(true);
+    };
+    //setRecords(records);
+    /*setRecords(
+      (prev) => prev.push(records),
+      () => {
+        console.log('records after setState: ', records);
+        checkData(records);
+      }
+    );*/
+  };
+
+  const displayRecords = () => {
+    console.log('records: ', records);
+  };
+
+  const checkUnique = (accNum, customers) => {
+    const found = customers.find((customer) => customer === accNum);
+    return !found;
+  };
+
+  const checkData = (records) => {
+    if (records.length === 0) {
+      console.log('no records');
+    }
+    //console.log('checkData records: ', records);
+    setCompliance(`${records.length} records processed for compliance`);
+    let errors = [];
+
+    records.forEach((record, idx) => {
+      //console.log('checking record: ', record);
+      /*if (record.CustomerNumber === undefined)
+        errors.push(`Record id: ${idx + 1} CustomerNumber is missing`);
+      if (record.Customer === undefined)
+        errors.push(`Record id: ${idx + 1} Customer is missing`);*/
+      if (record.account_number === undefined)
+        errors.push(`Record id: ${idx + 1} AccountNumber is missing`);
+      /*if (record.AccountStatus === undefined)
+        errors.push(`Record id: ${idx + 1} AccountStatus is missing`);
+      if (record.CustomerRefNo === undefined)
+        errors.push(`Record id: ${idx + 1} CustomerRefNo is missing`);
+      //if (record.DateCreated === undefined) errors.push(`Record id: ${idx + 1} DateCreated is missing`);
+      if (!moment(record.DateCreated).isValid())
+        errors.push(
+          `Record id: ${idx + 1} DateCreated is incorrectly formatted`
+        );
+      if (record.AccountNumber === undefined)
+        errors.push(`Record id: ${idx + 1} AccountNumber is missing`);
+      if (record.AccountNumber === undefined)
+        errors.push(`Record id: ${idx + 1} AccountNumber is missing`);
+      if (record.CurrentAssignment === undefined)
+        errors.push(`Record id: ${idx + 1} CurrentAssignment is missing`);
+      if (record.CurrentStatus === undefined)
+        errors.push(`Record id: ${idx + 1} CurrentStatus is missing`);
+      if (record.CaseNumber === undefined)
+        errors.push(`Record id: ${idx + 1} CaseNumber is missing`);*/
+    });
+
+    setErrors(errors);
+    if (errors.length > 0) return false;
+    return true;
+  };
 
   return (
     <div>
@@ -51,310 +164,17 @@ export default function CsvUploader(props) {
         accept=".csv"
       />
       <button
-        onClick={() => {
-          const progressUpdate = UploadFile(file, customers);
+        onClick={
+          () => UploadFile(file, customers)
           //setProgress(progress + progressUpdate);
-        }}
+        }
       >
         Upload
       </button>
       <br />
       <br />
+      {compliance}
+      {errors}
     </div>
   );
-}
-
-function UploadFile(file, customers) {
-  console.log('upload start');
-  if (!file) {
-    console.log('no file: ', file);
-    return;
-  }
-
-  let fileReader = new FileReader();
-  fileReader.readAsText(file);
-
-  fileReader.onload = async function () {
-    const dataset = fileReader.result;
-    let lines = dataset.split('\r\n');
-    let result = [];
-    let headers = lines[0].split(',');
-
-    for (let i = 1; i < lines.length; i++) {
-      let obj = {};
-      let currentline = lines[i].split(',');
-      for (let j = 0; j < headers.length; j++) {
-        obj[headers[j].trim()] = currentline[j];
-      }
-
-      console.log('obj: ', obj);
-
-      if (obj.account_number) {
-        if (checkUnique(obj.account_number, customers)) {
-          result.push(obj);
-          console.log('result: ', result);
-          const uploadMsg = await UploadData(obj);
-          //console.log('uploadMsg: ', uploadMsg);
-          if (uploadMsg === 'problem') console.log('problem uploading record');
-        } else {
-          console.log(
-            `Account ${obj.account_number} already exists on the database`
-          );
-        }
-      }
-    }
-    //console.log('result: ', result[0]);
-  };
-  return 1;
-}
-
-function checkUnique(accNum, customers) {
-  console.log('checkUnique accNum: ', accNum);
-  console.log('checkUnique customers: ', customers);
-  const found = customers.find((customer) => customer === accNum);
-  return !found;
-}
-
-async function UploadData(record) {
-  console.log('record: ', record);
-  const user = sessionStorage.getItem('cwsUser');
-
-  let customer = null;
-  customer = [
-    {
-      operatorShortCode: record.account_number,
-      customerRefNo: record.account_number,
-      customerName: record.customer_name,
-      customerEntity: 'Consumer',
-      regIdNumber: record.id_number,
-      //createdBy: `System Upload - ${user}`,
-      createdBy: user,
-      f_clientId: sessionStorage.getItem('cwsClient'),
-    },
-  ];
-  //console.log('customer: ', customer);
-
-  const response = await PostToDb(customer, 'customers');
-
-  if (response.data.errno) {
-    //console.log('problem');
-    return 'problem';
-  }
-  //console.log('response: ', response);
-
-  const accResponse = await saveAccountRecordsToDatabase(user, record);
-  console.log('accResponse: ', accResponse);
-
-  if (accResponse) {
-    //console.log('problem');
-    //return accResponse;
-  }
-
-  const contResponse = await saveContactRecordsToDatabase(record);
-  console.log('contResponse: ', contResponse);
-
-  if (contResponse.data.errno) {
-    //console.log('problem');
-    return 'contResponse problem';
-  }
-  //console.log('contResponse: ', contResponse);
-  const caseResponse = await saveCaseRecordsToDatabase(user, record);
-
-  if (caseResponse.data.errno) {
-    //console.log('problem');
-    return 'caseResponse problem';
-  }
-  //console.log('caseResponse: ', caseResponse);
-
-  /*  if (response.data.errno) {
-    let error =[];
-    error = customerErrors;
-    error.push(response.data);
-    setCustomerErrors(error);
-  }
-*/
-  //this.setState({ uploaded: { customers: true }});
-  return response.data.insertId;
-}
-
-async function saveAccountRecordsToDatabase(user, record) {
-  const paymentDueDate = null;
-
-  const debitOrderDate = record.debit_order_date
-    ? record.debit_order_date
-    : null; /*?
-    moment(xlSerialToJsDate(record.debit_order_date)).format('YYYY-MM-DD HH:mm:ss') :
-    null;
-    console.log('record.debit_order_date: ', record.debit_order_date);
-  console.log('typeof record.debit_order_date: ', typeof record.debit_order_date);
-  console.log('debitOrderDate: ', debitOrderDate);*/
-
-  const lastPaymentDate = null;
-
-  const lastPTPDate = null;
-
-  const openDate = null;
-
-  let account = [
-    {
-      accountNumber: record.account_number,
-      accountName: record.customer_name,
-      //createdBy: `System Upload - ${user}`,
-      createdBy: user,
-      //createdDate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      openDate: openDate,
-      debtorAge: record.age,
-      //creditLimit: record.CreditLimit,
-      currentBalance: record.current_value,
-      days30: record.Value_30_days,
-      days60: record.Value_60_days,
-      days90: record.Value_90_days,
-      days120: record.Value_120_days,
-      //days150: record.days150,
-      //days180: record.days180,
-      //days180Over: record.days180Over,
-      f_customerId: record.account_number,
-      lastPTPDate: lastPTPDate,
-      paymentDueDate: paymentDueDate,
-      debitOrderDate: debitOrderDate,
-      lastPaymentDate: lastPaymentDate,
-      //paymentMethod: record.PaymentMethod,
-      //paymentTermDays: record.PaymentTerms,
-      totalBalance: record.balance,
-    },
-  ];
-
-  let response = await PostToDb(account, 'accounts');
-  //console.log('saveAccountRecordsToDatabase response: ', response);
-  return response;
-}
-
-async function saveContactRecordsToDatabase(record) {
-  // check phone number length
-  if (
-    record.telephone1.length < 14 &&
-    record.telephone2.length < 14 &&
-    record.telephone3.length < 14 &&
-    record.telephone4.length < 14 &&
-    record.telephone5.length < 14 &&
-    record.telephone6.length < 14 &&
-    record.telephone7.length < 14 &&
-    record.telephone8.length < 14 &&
-    record.telephone9.length < 14
-  ) {
-    console.log('number lengths okay');
-    let contact = [
-      {
-        f_accountNumber: record.account_number,
-        //primaryContactName: record.PrimaryContactName,
-        primaryContactNumber: record.telephone1,
-        //primaryContactEmail: record.PrimaryEmailAddress,
-        //representativeName: record.RepresentativeName,
-        //representativeNumber: record.RepresentativeContactNumber,
-        //representativeEmail: record.RepresentativeEmailAddress,
-        //alternativeRepName: record.AltRepName,
-        //alternativeRepNumber: record.AltRepContact,
-        //alternativeRepEmail: record.AltRepEmail,
-        otherNumber1: record.telephone2,
-        otherNumber2: record.telephone3,
-        otherNumber3: record.telephone4,
-        otherNumber4: record.telephone5,
-        otherNumber5: record.telephone6,
-        otherNumber6: record.telephone7,
-        otherNumber7: record.telephone8,
-        otherNumber8: record.telephone9,
-        otherNumber9: record.telephone10,
-        //otherEmail1: record.OtherEmail1,
-        //otherEmail2: record.OtherEmail2,
-        //otherEmail3: record.OtherEmail3,
-        //otherEmail4: record.OtherEmail4,
-        //otherEmail5: record.OtherEmail5,
-        //dnc1: record.DNC1,
-        //dnc2: record.DNC2,
-        //dnc3: record.DNC3,
-        //dnc4: record.DNC4,
-        //dnc5: record.DNC5
-      },
-    ];
-
-    let response = await PostToDb(contact, 'contacts');
-    //console.log('saveContactRecordsToDatabase response: ', response);
-
-    return response;
-  } else {
-    console.log('numbers too long');
-    return 'Telephone number too long';
-  }
-}
-
-async function saveCaseRecordsToDatabase(user, record) {
-  /*const createdDate = record.DateCreated ?
-    moment(this.ExcelDateToJSDate(record.DateCreated)).format('YYYY-MM-DD HH:mm:ss') :
-    null;
-
-  const nextVisitDateTime = record.nextVisitDateTime ?
-    moment(this.ExcelDateToJSDate(record.nextVisitDateTime)).format('YYYY-MM-DD HH:mm:ss') :
-    null;
-
-  const updatedDate = record.DateLastUpdated ?
-    moment(this.ExcelDateToJSDate(record.DateLastUpdated)).format('YYYY-MM-DD HH:mm:ss') :
-    null;
-    //console.log('updatedDate: ', updatedDate);
-
-  const reopenedDate = record.DateReopened ?
-    moment(this.ExcelDateToJSDate(record.DateReopened)).format('YYYY-MM-DD HH:mm:ss') :
-    null;
-    //console.log('reopenedDate: ', reopenedDate);*/
-
-  let caseUpdate = [
-    {
-      //caseNumber: record.CaseNumber,
-      f_accountNumber: record.account_number,
-      //createdDate: createdDate,
-      createdBy: user,
-      currentAssignment: record.agentname,
-      //nextVisitDateTime: nextVisitDateTime,
-      //updatedDate: updatedDate,
-      //updatedBy: record.LastUpdatedBy,
-      //reopenedDate: reopenedDate,
-      //reopenedBy: record.ReopenedBy,
-      //caseReason: record.CaseReason,
-      //currentStatus: record.CurrentStatus,
-      caseNotes: record.dialler_comments,
-    },
-  ];
-
-  let response = await PostToDb(caseUpdate, 'cases');
-  //console.log('saveCaseRecordsToDatabase response: ', response);
-
-  return response;
-}
-
-async function PostToDb(records, workspace) {
-  const mysqlLayer = new MysqlLayer();
-  let type = 'business';
-  //let workspace = workspace;
-  let task = 'create_items';
-  let clientId = sessionStorage.getItem('cwsClient');
-
-  const response = await mysqlLayer.Post(
-    `/${type}/${workspace}/${task}/${clientId}`,
-    records
-  );
-  //console.log('postToDb response: ', response);
-  return response;
-}
-
-/*function ExcelDateToJSDate(date) {
-  console.log('date before: ', date);
-  console.log('date: ', new Date(Math.round((date - 25569)*86400*1000)));
-  return new Date(Math.round((date - 25569)*86400*1000));
-}
-
-function SerialDateToJSDate(serialDate, offsetUTC) {
-  return new Date(Date.UTC(0, 0, serialDate, offsetUTC));
-}
-
-function xlSerialToJsDate(xlSerial){
-  return new Date(-2209075200000 + (xlSerial - (xlSerial < 61 ? 0 : 1)) * 86400000);
-}*/
+};

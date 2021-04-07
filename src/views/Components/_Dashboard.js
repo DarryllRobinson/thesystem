@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import MysqlLayer from 'utils/MysqlLayer';
 import Security from 'utils/Security';
+import Welcome from './Workspace/Welcome';
 import Workspace from './Workspace/Workspace';
 import moment from 'moment';
 import { Container } from 'react-bootstrap';
 import Victory from './Reports/Victory';
 //import Container from '@material-ui/core/Container';
-import DashboardGrid from './DashboardGrid';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -486,11 +486,32 @@ class Dashboard extends Component {
     return self.indexOf(value) === index;
   }
 
-  dashboardRender() {
-    const { records, workspaces } = this.state;
-    if (!records || !workspaces) {
+  render() {
+    //if (this.state.loading) {
+    if (!this.state.workspaces || !this.state.records) {
       return (
+        <Container>
+          <Welcome user={this.state.user} />
+          <div
+            className="card border-light mb-3"
+            style={{
+              padding: '20px',
+              boxShadow: '0 10px 10px -5px', //"0px 0px 0px 0px #3D3735",
+              border: '2px solid #3D3735',
+              marginTop: '10px',
+            }}
+          >
+            No records have been loaded for you yet. Check back soon.
+          </div>
+        </Container>
+      );
+    } else {
+      //console.log('const workspaces: ', this.state.workspaces);
+      //console.log('const workspaces: ', workspaces);
+      const workspace = this.state.workspaces.map((workspace, idx) => (
+        //const workspace = workspaces.map((workspace, idx) =>
         <div
+          key={idx}
           className="card border-light mb-3"
           style={{
             padding: '20px',
@@ -499,13 +520,6 @@ class Dashboard extends Component {
             marginTop: '10px',
           }}
         >
-          No records have been loaded for you yet. Check back soon.
-        </div>
-      );
-    } else {
-      const workspace = workspaces.map((workspace, idx) => (
-        //const workspace = workspaces.map((workspace, idx) =>
-        <div key={idx}>
           {/*console.log('render workspace: ', workspace)*/}
           <Workspace
             key={idx}
@@ -519,15 +533,26 @@ class Dashboard extends Component {
       ));
 
       return (
-        <div>
-          <DashboardGrid workspace={workspace} />
-        </div>
+        <Container>
+          <div className="cols-12">
+            <Welcome user={this.state.user} />
+            {workspace}
+            <div
+              className="card border-light mb-3"
+              style={{
+                padding: '20px',
+                boxShadow: '0 10px 10px -5px', //"0px 0px 0px 0px #3D3735",
+                border: '2px solid #3D3735',
+                marginTop: '10px',
+              }}
+            >
+              <h3 className="card-title">Charts</h3>
+              <Victory />
+            </div>
+          </div>
+        </Container>
       );
     }
-  }
-
-  render() {
-    return <div>{this.dashboardRender()}</div>;
   }
 }
 
