@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Victory from './Reports/Victory';
+//import Victory from './Reports/Victory';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,18 +21,9 @@ export default function DashboardGrid(props) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
         <Grid item xs={12} sm={8}>
           <Paper className={classes.paper}>{props.workspace}</Paper>
-          <br />
-          <Paper className={classes.paper}>News Feed</Paper>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <Paper className={classes.paper}>
-            <Link to="/victory">
-              <Victory />
-            </Link>
-          </Paper>
         </Grid>
       </Grid>
     </div>

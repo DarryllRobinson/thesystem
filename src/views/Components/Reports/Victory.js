@@ -8,6 +8,7 @@ import {
   VictoryTheme,
   VictoryTooltip,
 } from 'victory';
+import CustomBar from './CustomBar';
 import MysqlLayer from 'utils/MysqlLayer';
 
 class Victory extends React.Component {
@@ -19,14 +20,17 @@ class Victory extends React.Component {
         entities: {
           aging: {
             data: null,
+            description: 'Amount owed per period',
             title: 'Aging',
           },
           agentPTP: {
             data: null,
+            description: 'PTP sum per agent',
             title: 'PTP by Agent',
           },
           datePTP: {
             data: null,
+            description: 'PTP sum per date',
             title: 'PTP by Date',
           },
         },
@@ -96,7 +100,7 @@ class Victory extends React.Component {
 
     const reportsDisplay = reports.ids.map((report, idx) => {
       return (
-        <div key={idx} className="col">
+        <div key={idx}>
           {reports.entities[report].data && (
             <div>
               <VictoryChart
@@ -107,8 +111,10 @@ class Victory extends React.Component {
                 }}
                 containerComponent={<VictoryContainer responsive={false} />}
                 domainPadding={{ x: 20, y: 5 }}
+                height={200}
                 padding={{ top: 50, bottom: 50, left: 80, right: 20 }}
                 theme={VictoryTheme.material}
+                width={250}
               >
                 <VictoryBar
                   data={reports.entities[report].data}
@@ -143,28 +149,77 @@ class Victory extends React.Component {
               </VictoryChart>
             </div>
           )}
-          {!reports.entities[report].data && <div key={idx}>Loading...</div>}
+          {!reports.entities[report].data && (
+            <div key={idx}>
+              <div className="ui segment">
+                <div className="ui active inverted dimmer">
+                  <div className="ui text loader">Loading</div>
+                </div>
+                <p></p>
+              </div>
+            </div>
+          )}
         </div>
       );
     });
     return reportsDisplay;
   }
 
+  customBarRender() {
+    const reports = this.state.reports;
+    const { styleType } = this.props;
+
+    const reportsDisplay = reports.ids.map((report, idx) => {
+      return (
+        <div key={idx}>
+          <div className="ui segment">
+            {reports.entities[report].data && (
+              <CustomBar
+                chartNumber={idx}
+                data={reports.entities[report].data}
+                description={reports.entities[report].description}
+                styleType={styleType}
+                title={reports.entities[report].title}
+              />
+            )}
+            {!reports.entities[report].data && (
+              <div key={idx}>
+                <div className="ui segment">
+                  <div className="ui active inverted dimmer">
+                    <div className="ui text loader">Loading</div>
+                  </div>
+                  <p></p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    });
+
+    return reportsDisplay;
+  }
+
+  refreshButtonRender() {
+    return (
+      <div className="ui  message">
+        Auto-refresh every 30 minutes or{' '}
+        <button
+          className="ui button primary"
+          onClick={() => {
+            this.loadData();
+          }}
+        >
+          Reload
+        </button>
+      </div>
+    );
+  }
+
   render() {
     return (
       <>
-        <div className="ui  message">
-          Auto-refresh every 30 minutes or{' '}
-          <button
-            className="ui button primary"
-            onClick={() => {
-              this.loadData();
-            }}
-          >
-            Reload
-          </button>
-        </div>
-        <div className="row">{this.reportsDisplay()}</div>
+        <div className="row">{this.customBarRender()}</div>
       </>
     );
   }

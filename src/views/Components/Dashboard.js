@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import MysqlLayer from 'utils/MysqlLayer';
 import Security from 'utils/Security';
 import Workspace from './Workspace/Workspace';
 import moment from 'moment';
-import { Container } from 'react-bootstrap';
+//import { Container } from 'react-bootstrap';
+//import { VictoryArea, VictoryChart, VictoryTheme } from 'victory';
 import Victory from './Reports/Victory';
 //import Container from '@material-ui/core/Container';
+import mieLogo from 'assets/img/mie-logo.jpeg';
 import DashboardGrid from './DashboardGrid';
 
 class Dashboard extends Component {
@@ -527,7 +530,26 @@ class Dashboard extends Component {
   }
 
   render() {
-    return <div>{this.dashboardRender()}</div>;
+    return (
+      <div className="ui top attached fluid container">
+        <div className="center align">
+          <div className="ui grid stackable">
+            <div className="ui two column grid">
+              <div className="four wide column">
+                <img src={mieLogo} alt="MIE logo" />
+              </div>
+              <div className="twelve wide column">
+                <Link to="/victory">
+                  <Victory styleType="dash" />
+                </Link>
+              </div>
+              <div className="four wide column">Top rows</div>
+              <div className="twelve wide column">{this.dashboardRender()}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 }
 
